@@ -12,6 +12,12 @@
 :root {
   --background: #F2F8FF;
   --foreground: #171717;
+
+  --color-primary: #005490;
+  --color-secondary: #F2F8FF;
+  --color-tertiary: #1E1E1E;
+  --color-quaternary: #C0C0C0;
+
 }
 
 body {
