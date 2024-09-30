@@ -1,0 +1,25 @@
+.middle-cards{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 30px;
+    position: absolute;
+    top: 645px;
+    z-index: 2;
+    width: 100%;
+    padding-right: 150px;
+    padding-left: 150px;
+  }
+
+  .blue-button{  /* Estilo para boton azul */
+    padding: 20px;
+    border-radius: 6px;
+    background-color: var(--color-primary);
+    z-index: 3;
+    box-shadow: 0px 3px 8px var(--color-tertiary);
+    color: var(--color-secondary);
+    font-size: 25px;
+  }
+
+  .button-icon{
+    font-size: 40px;
+  }
