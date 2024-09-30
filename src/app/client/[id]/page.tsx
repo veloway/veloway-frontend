@@ -1,12 +1,19 @@
 import { ShippingCalculator } from "@/components/client";
 import ClientButtons from "@/components/client/client-buttons/ClientButtons";
-import { Table } from "@/components/ui";
+import { ParsedUrlQuery } from "querystring";
+
 export const metadata = { title: "Client Home" };
 
-export default function ClientHome() {
+interface ClientPageProps {
+  params: ParsedUrlQuery
+}
+
+export default function ClientHomePage({params} : ClientPageProps) {
+  const { id } = params;
+
 	const dataClient = {
 		name: "Jose Francisco Arce",
-		numero: 1123124513,
+		numero: id,
 	};
 
 	const colums: string[] = ["N° de Envío", "Destino", "Estado", "Fecha y hora estimada"];
@@ -35,8 +42,8 @@ export default function ClientHome() {
 	return (
 		<div className='py-12'>
 			<section className='flex justify-between gap-4 flex-wrap'>
-				<div className='flex flex-col gap-6 justify-between'>
-					<div className='flex flex-col gap-2 after:content-[""] after:h-[2px] after:bg-quaternary after:mt-5 after:w-[600px]'>
+				<div className='flex flex-col gap-6 justify-between w-full xl:w-auto'>
+					<div className='flex flex-col gap-2 after:content-[""] after:h-[2px] after:bg-quaternary after:mt-5'>
 						<h1 className='text-[35px] font-semibold'>{dataClient.name}</h1>
 						<h3 className='text-[20px] font-normal'>N°Cliente: {dataClient.numero}</h3>
 					</div>
@@ -45,7 +52,6 @@ export default function ClientHome() {
 				<ShippingCalculator />
 			</section>
 			<section>
-				<Table colums={colums} data={data} tableName='Envios activos o pendientes'/>
 			</section>
 		</div>
 	);
