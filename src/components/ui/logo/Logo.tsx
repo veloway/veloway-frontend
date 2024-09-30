@@ -1,5 +1,7 @@
+import Link from "next/link";
+
 export default function Logo() {
   return (
-    <p className={`text-3xl font-nico-moji`}>Veloway</p>
+    <Link href="/" className={`text-3xl font-nico-moji`}>Veloway</Link>
   )
 }

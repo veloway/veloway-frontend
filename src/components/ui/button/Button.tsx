@@ -28,7 +28,7 @@ const Button = ({
 		color: textColor,
 	}
 	const buttonVariants = {
-		primary: "bg-primary text-secondary hover:opacity-90", 
+		primary: "bg-primary text-secondary hover:opacity-80", 
 		secondary: "bg-secondary text-primary border-[1px] border-primary hover:bg-primary hover:text-secondary",
 		tertiary: "bg-secondary text-tertiary hover:bg-tertiary hover:text-secondary",
 	}
