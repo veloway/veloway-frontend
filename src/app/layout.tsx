@@ -2,10 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Rubik } from "next/font/google"
 import { Footer } from "@/components/ui";
+import localFont from "next/font/local"
 
 export const rubik = Rubik({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],	
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-rubik",	
+})
+
+// Font personalizada
+export const nicoMoji = localFont({
+  src: "../../public/fonts/NicoMoji-Regular.ttf",
+  variable: "--font-nico-moji",
 })
 
 export const metadata: Metadata = {
@@ -23,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${rubik.className} antialiased`}
+        className={`${rubik.className} ${nicoMoji.variable} antialiased`}
       >
         {children}
         <Footer/>

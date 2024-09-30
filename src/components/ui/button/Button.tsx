@@ -3,15 +3,44 @@ import "./Button.css";
 interface Props {
 	children: React.ReactNode;
 	className?: string;
-	color?: string;
+	bgColor?: string;
+	textColor?: string;
+	iconPosition?: "left" | "right";
+	icon?: React.ReactNode;
+	type?: "button" | "submit" | "reset";
+	variant?: "primary" | "secondary" | "tertiary";
+	onClick?(): void;
 }
 
-const Button = ({ children, className, color }: Props) => {
+const Button = ({ 
+	children, 
+	className, 
+	bgColor, 
+	textColor,
+	iconPosition = "left",
+	type = "button",
+	icon = null,
+	variant = "primary",
+	onClick
+}: Props) => {
+	const styles = {
+		backgroundColor: bgColor,
+		color: textColor,
+	}
+	const buttonVariants = {
+		primary: "bg-primary text-secondary hover:opacity-90", 
+		secondary: "bg-secondary text-primary border-[1px] border-primary hover:bg-primary hover:text-secondary",
+		tertiary: "bg-secondary text-tertiary hover:bg-tertiary hover:text-secondary",
+	}
 	return (
 		<button
-			className={`${className} px-3 py-2 rounded-md inline-flex items-center gap-2 justify-center font-medium relative overflow-hidden box-border transition-all hover:!bg-opacity-50 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-default focus:outline-none`}
-			style={{ backgroundColor: color }}>
-			{children}
+			className={`${className} ${buttonVariants[variant]} px-3 py-2 rounded-md inline-flex items-center gap-2 justify-center font-medium transition-all`}
+			style={styles}
+			onClick={onClick}
+			type={type}
+		>
+			{iconPosition === "left" && icon} {children}{" "}
+			{iconPosition === "right" && icon}
 		</button>
 	);
 };

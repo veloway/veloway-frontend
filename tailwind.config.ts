@@ -16,6 +16,10 @@ const config: Config = {
         tertiary: "var(--color-tertiary)",
         quaternary: "var(--color-quaternary)",
       },
+      fontFamily:{
+        "rubik": ["var(--font-rubik)", "sans-serif"],
+        "nico-moji": ["var(--font-nico-moji)", "sans-serif"], 
+      }
     },
   },
   plugins: [],

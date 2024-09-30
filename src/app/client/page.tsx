@@ -1,4 +1,6 @@
 import { ShippingCalculator } from "@/components/client";
+import { Button } from "@/components/ui";
+import { GoPlusCircle } from "react-icons/go";
 
 export const metadata = { title: "Client Home" };
 
@@ -8,8 +10,8 @@ export default function ClientHome() {
 		numero: 1123124513,
 	};
 	return (
-		<div>
-			<section className='flex justify-between py-4 gap-4'>
+		<div className="py-12">
+			<section className='flex justify-between gap-4 flex-wrap'>
 				<div className='flex flex-col gap-6 justify-between'>
 					<div className='flex flex-col gap-2'>
 						<h1 className='text-[35px] font-semibold'>{dataClient.name}</h1>
@@ -17,8 +19,10 @@ export default function ClientHome() {
 					</div>
 					<div className='h-[2px] bg-[var(--color-quaternary)]'></div>
 					<div className='flex gap-4'>
-						<button>Nuevo Envio</button>
-						<button>Seguir Envio</button>
+						<Button variant='secondary' icon={<GoPlusCircle className='text-2xl' />}>
+							Nuevo envío
+						</Button>
+						<Button variant="secondary">Seguir envío</Button>
 					</div>
 				</div>
 				<ShippingCalculator />

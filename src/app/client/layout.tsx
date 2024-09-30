@@ -6,9 +6,11 @@ export default function ClientLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10">
+    <div>
       <Navbar />
-      {children}
-    </main>
+      <main className="max-w-screen-lg mt-[90px] xl:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10">
+        {children}
+      </main>
+    </div>
   );
 }
