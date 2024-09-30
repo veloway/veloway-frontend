@@ -11,7 +11,7 @@ export function ThirdViewHome(){
             <p>Sé parte de una red de profesionales en crecimiento. <br /> 
             Flexibilidad, buenas ganancias y oportunidades de <br />
             crecimiento te esperan.</p>
-            <a href="" style={{color: 'var(--color-primary)'}}><Button className="whiteButton" color="white">Registrarse como conductor</Button></a>
+            <a href=""><Button bgColor="white" textColor="#005490">Registrarse como conductor</Button></a>
           </div>
           <picture className="picture-home-3">
             <img className="img-home-3" src="/images/repartidor.webp" alt="Repartidor" />
