@@ -15,7 +15,7 @@ export function HeaderHome (){
                 </div>
                 <div className="links-header-2">
                     <li><a href="">Iniciar Sesion</a></li>
-                    <li><a href="" style={{color: 'black'}}><Button className="whiteButton" color="white">Registrarse</Button></a></li>
+                    <li><a href="" style={{color: 'black'}}><Button className="whiteButton" bgColor="white">Registrarse</Button></a></li>
                 </div>
             </ul>
             </nav>

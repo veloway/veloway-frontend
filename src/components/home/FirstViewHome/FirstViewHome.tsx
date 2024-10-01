@@ -14,10 +14,11 @@ export function FirstViewHome(){
             </div>
           <form>
             <div className="input-conteiner">
-              <input type="text" id="cod-seg" name="cod-seg" value="" placeholder="Ingrese su numero de seguimiento"/>
+              <input type="text" id="cod-seg" name="cod-seg" placeholder="Ingrese su numero de seguimiento"/>
               <button className="button-seguim" type="submit"></button>
             </div>
           </form>
         </section>
     )
 }
+
