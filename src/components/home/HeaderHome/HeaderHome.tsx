@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui'
+import { PiLightning } from "react-icons/pi";
 import './HeaderHome.css'
 
 export function HeaderHome (){
@@ -6,7 +7,7 @@ export function HeaderHome (){
         <header className="header-home">
             <nav>
             <ul className="links-header-home">
-                <li className="logo-empresa">Logo Empresa</li>
+                <li className="logo-empresa"><PiLightning style={{color: "blue"}}/>Veloway</li>
                 <div className="links-header-1">
                     <li><a href="">Inicio</a></li>
                     <li><a href="">Realizar Envio</a></li>

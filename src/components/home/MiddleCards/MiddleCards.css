@@ -3,7 +3,7 @@
     grid-template-columns: repeat(3,1fr);
     gap: 30px;
     position: absolute;
-    top: 645px;
+    top: 90%;
     z-index: 2;
     width: 100%;
     padding-right: 150px;

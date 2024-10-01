@@ -17,27 +17,27 @@
   .logo-empresa{
     display: flex;
     justify-content: center;
-    /* border: 1px solid black; */
-    padding: 10px 0px 10px 15px;
+    padding: 10px 0px 10px 80px;
+    font-family: var(--font-nico-moji);
+    font-size: 30px;
   }
   
-  .links-header-1{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    padding: 5px;
-    /* border: 1px solid black; */
-  }
-  
-  .links-header-2{
+  .links-header-1, .links-header-2{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 5px;
-    gap: 30px;
+    font-weight: 500;
     /* border: 1px solid black; */
+  }
+
+  .links-header-1{
+    gap: 70px;
+  }
+  
+  .links-header-2{
+    gap: 30px;
   }
 
   .white-button{

@@ -1,4 +1,5 @@
 import { GiPathDistance } from "react-icons/gi";
+import { InputHome } from "../InputHome/InputHome";
 import './FirstViewHome.css'
 
 export function FirstViewHome(){
@@ -11,13 +12,8 @@ export function FirstViewHome(){
           <div className="text-img-home-1">
               <GiPathDistance className="envio-icon"/>
               <h3><strong>Seguí tu envio</strong></h3>
-            </div>
-          <form>
-            <div className="input-conteiner">
-              <input type="text" id="cod-seg" name="cod-seg" value="" placeholder="Ingrese su numero de seguimiento"/>
-              <button className="button-seguim" type="submit"></button>
-            </div>
-          </form>
+          </div>
+          <InputHome />
         </section>
     )
 }
