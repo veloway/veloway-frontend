@@ -9,14 +9,14 @@ export function HeaderHome (){
             <ul className="links-header-home">
                 <li className="logo-empresa"><PiLightning style={{color: "blue"}}/>Veloway</li>
                 <div className="links-header-1">
-                    <li><a href="">Inicio</a></li>
-                    <li><a href="">Realizar Envio</a></li>
-                    <li><a href="">Conductores</a></li>
-                    <li><a href="">API</a></li>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="/client/[id]">Realizar Envio</a></li>
+                    <li><a href="/driver/[id]">Conductores</a></li>
+                    <li><a href="#">API</a></li>
                 </div>
                 <div className="links-header-2">
-                    <li><a href="">Iniciar Sesion</a></li>
-                    <li><a href=""><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
+                    <li><a href="/auth/login">Iniciar Sesion</a></li>
+                    <li><a href="#"><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
                 </div>
             </ul>
             </nav>
