@@ -16,7 +16,7 @@ const RoutingMachine = () => {
   const map = useMap();
 
   useEffect(() => {
-    if (map) {
+    if (typeof window === 'undefined' || map) {
       loadRoutingMachine(map);
     }
   }, [map]);

@@ -31,10 +31,8 @@ export default function TravelDetail() {
             </div>
         </div>
         <div className="flex justify-center mt-8">
-            <Button className="flex bg-secondary items-center p-2 rounded-lg w-full text-black" >Siguiente Checkpoint</Button>
+            <Button className="flex bg-secondary w-full !text-primary" >Siguiente Checkpoint</Button>
         </div>
-
-
     </div>
   )
 }

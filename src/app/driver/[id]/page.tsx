@@ -37,7 +37,7 @@ export default function DriverHomePage({params}: driverPageProp ) {
             <Table title="Historial de viajes" columns={columns}>
                 {
                 data.map((data) => (
-                    <tr>
+                    <tr key={data.nro}>
                         <td className="py-2 px-4 text-center">{data.nro}</td>
                         <td className="py-2 px-4 text-center">{data.origen}</td>
                         <td className="py-2 px-4 text-center">{data.destino}</td>
