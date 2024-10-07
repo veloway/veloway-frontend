@@ -1,56 +1,44 @@
 "use client";
 
-import { useEffect } from 'react';
-import L from 'leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import L from 'leaflet';
 import 'leaflet-routing-machine';
 
-const MapTravel: React.FC = () => {
+const loadRoutingMachine = async (map: L.Map) => {
+  const { RoutingMachine } = await import('./Routing');
+  RoutingMachine(map);
+};
+
+const RoutingMachine = () => {
+  const map = useMap();
+
   useEffect(() => {
-    let map: L.Map | null = null;
-    let routingControl: L.Routing.Control | null = null;
-
-    if (typeof window !== 'undefined') {
-      // Inicializa el mapa solo si la ventana está disponible
-      map = L.map('map').setView([-34.92102192210491, -57.95456607172279], 15);
-
-      // Ícono personalizado para el autito
-      const carIcon = L.icon({
-        iconUrl: 'https://img.icons8.com/?size=100&id=KX1EJ8mb4zzD&format=png&color=005490',
-        iconSize: [48, 48],
-        iconAnchor: [24, 24],
-      });
-
-      // Capa base del mapa
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
-
-      L.Routing.control({
-        waypoints: [
-            L.latLng(-34.88435373023903, -58.05395088137856),
-            L.latLng(-34.904045188515084, -57.92589693187078),
-        ],
-        }).addTo(map);
-
+    if (map) {
+      loadRoutingMachine(map);
     }
+  }, [map]);
 
-    return () => {
-        if (map) {
-            map.remove();
-          }
-    };
-  }, []);
+  return null;
+};
 
+const MapTravel: React.FC = () => {
   return (
-    <div
-      id="map"
+    <MapContainer
+      center={[39.5, -98.35]}
+      zoom={4}
       className="w-[900px] h-[450px]"
-    />
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <RoutingMachine />
+    </MapContainer>
   );
 };
 
 export default MapTravel;
 
-// L.latLng(-34.88435373023903, -58.05395088137856),
-// L.latLng(-34.904045188515084, -57.92589693187078),
