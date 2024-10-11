@@ -31,8 +31,8 @@ const NavBar = ({ links }: NavbarProps) => {
 	};
 
 	return (
-		<header className='fixed top-0 z-[9999999] w-full shadow-lg shadow-gray-400/30 h-[90px] m-auto bg-secondary'>
-			<div className='flex relative z-[9999999] bg-secondary h-full justify-between items-center max-w-screen-lg lg:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10'>
+		<header className='fixed top-0 z-[9999999] w-full shadow-lg shadow-gray-400/30 h-[90px] m-auto bg-tertiary text-white'>
+			<div className='flex bg-tertiary relative z-[9999999] h-full justify-between items-center max-w-screen-lg lg:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10'>
 				<div className='flex gap-[80px] py-[15px]'>
 					<Logo />
 					<nav className='hidden lg:flex align-center'>
@@ -63,7 +63,7 @@ const NavBar = ({ links }: NavbarProps) => {
 				</ContainerFlex>
 			</div>
 			<ContainerFlex
-				className={` ${clickMenu ? "flex flex-col" : "-translate-y-full relative -top-[90px] z-[99999]"} transition-transform lg:hidden bg-tertiary text-secondary shadow-lg shadow-gray-400/30 !justify-start !items-start py-6`}>
+				className={`${clickMenu ? "flex flex-col" : "-translate-y-full relative -top-[90px] z-[99999]"} transition-transform lg:hidden bg-tertiary text-secondary shadow-lg shadow-gray-400/30 !justify-start !items-start py-6`}>
 				<ul className={`flex flex-col gap-[30px] font-medium w-full m-auto px-[40px] max-w-5xl`}>
 					{links.map((link) => (
 						<li key={link.name}>
