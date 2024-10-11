@@ -8,7 +8,7 @@ export default function ClientLayout({
   const links = [
     {
       name: "Inicio",
-      href: "/"
+      href: "/client/dashboard"
     },
     {
       name: "Realizar Envio",
