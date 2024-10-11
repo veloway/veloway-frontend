@@ -29,25 +29,25 @@ export default function DriverHomePage({params}: driverPageProp ) {
   ]
 
   return (
-    <div>
-      <ContainerFlex>
-          <SinViaje/>
-      </ContainerFlex>
-      <ContainerFlex>
-          <Table title="Historial de viajes" columns={columns}>
-            {
-              data.map((data) => (
-                <tr>
-                    <td className="py-2 px-4 text-center">{data.nro}</td>
-                    <td className="py-2 px-4 text-center">{data.origen}</td>
-                    <td className="py-2 px-4 text-center">{data.destino}</td>
-                    <td className="py-2 px-4 text-center">{data.fecha}</td>
-                    <td className="py-2 px-4 text-center">{data.monto}</td>
-                </tr>
-              ))
-            }
-          </Table>
-      </ContainerFlex>
+    <div className="py-20">
+        <ContainerFlex>
+            <SinViaje/>
+        </ContainerFlex>
+        <ContainerFlex>
+            <Table title="Historial de viajes" columns={columns}>
+                {
+                data.map((data) => (
+                    <tr key={data.nro}>
+                        <td className="py-2 px-4 text-center">{data.nro}</td>
+                        <td className="py-2 px-4 text-center">{data.origen}</td>
+                        <td className="py-2 px-4 text-center">{data.destino}</td>
+                        <td className="py-2 px-4 text-center">{data.fecha}</td>
+                        <td className="py-2 px-4 text-center">{data.monto}</td>
+                    </tr>
+                ))
+                }
+            </Table>
+        </ContainerFlex>
     </div>
   )
 }
