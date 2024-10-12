@@ -30,7 +30,11 @@ export default function ShipmentRegisterPage() {
 				</FormControl>
 			</form>
 			<div className='flex justify-end'>
-				<Button variant='contained' className='mt-4' href="/client/shipment-register/package" LinkComponent={Link}>
+				<Button
+					variant='contained'
+					className='mt-4'
+					href='/client/shipment-register/details'
+					LinkComponent={Link}>
 					Siguiente
 				</Button>
 			</div>

@@ -21,9 +21,9 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
     
 	return (
 		<div className='py-16 w-full'>
-			<Typography variant='h1' className='text-3xl font-semibold mb-8'>
+			<h1 className='text-3xl font-semibold mb-8'>
 				Realiza tu envio
-			</Typography>
+			</h1>
 			<div className='grid md:grid-cols-2 gap-6'>
 				{children}
 				<div>
