@@ -13,16 +13,18 @@
   --background: #F2F8FF;
   --foreground: #171717;
 
-  --color-primary: #2771D8;
+  --color-primary: #1565c0;
   --color-secondary: #F2F8FF;
   --color-tertiary: #1E1E1E;
   --color-quaternary: #C0C0C0;
+
+  --background-secondary: background: -webkit-linear-gradient(0deg, #ffffff,#d8ebff);/* Chrome 10-25, Safari 5.1-6 */                          background: linear-gradient(0deg, #ffffff,#d8ebff);/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */                                             
 
 }
 
 body {
   color: var(--foreground);
-  background-color: var(--background);
+  background-color: var(--background-secondary);
   font-family: Arial, Helvetica, sans-serif;
 }
 

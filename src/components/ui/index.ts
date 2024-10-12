@@ -6,3 +6,4 @@ export { default as Footer } from "./footer/Footer";
 export { default as Logo } from "./logo/Logo";
 export { default as Input } from "./input/Input"; 
 export { default as Label } from "./label/Label";
+export { default as TableComponent } from "./table-component/TableComponent";

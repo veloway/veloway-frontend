@@ -1,6 +1,6 @@
 import ContainerFlex from "@/components/ui/container-flex/ContainerFlex";
 import SinViaje from "@/components/driver/sinViaje/SinViaje"
-import Table from "@/components/ui/table/Table";
+import Table from "@/components/ui/table-component/TableComponent";
 import { ParsedUrlQuery } from "querystring";
 
 interface driverPageProp {

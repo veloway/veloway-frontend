@@ -1,22 +1,22 @@
 "use client";
-import { Button } from "@/components/ui";
-import { useRouter } from "next/navigation";
-import { GoPlusCircle } from "react-icons/go";
+
+import AddIcon from '@mui/icons-material/Add';
 import "./ClientButtons.css";
+import { Button } from "@mui/material";
+import Link from "next/link";
 
 export default function ClientButtons() {
-	const router = useRouter();
-	const handleClick = (): void => {
-		router.push("/client/shipment-register");
-	};
+
 	return (
 		<div className='flex gap-6'>
-			<Button
-				onClick={handleClick}
-				variant='primary'
-				className='py-2 px-4 lg:flex-row lg:py-3 lg:px-9'
-				iconPosition="left"
-				icon={<GoPlusCircle className='text-4xl lg:text-3xl' />}>
+			<Button 
+				variant="contained" 
+				color="primary"
+				startIcon={<AddIcon className='!text-2xl lg:text-3xl' /> }
+				LinkComponent={Link}
+				className="rounded-md flex"
+				href="/client/shipment-register"
+			>
 				Nuevo envío
 			</Button>
 			<button className='animated-button '>
