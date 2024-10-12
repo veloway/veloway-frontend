@@ -18,7 +18,7 @@ export default function TableComponent({ title, columns, children, className }: 
 					<TableHead>
 						<TableRow>
 							{columns.map((column, index) => (
-								<TableCell key={index} className='bg-tertiary text-[#fff] py-2 px-4 text-center'>{column}</TableCell>
+								<TableCell key={index} className='bg-tertiary text-[#fff] py-2 px-4 text-center '>{column}</TableCell>
 							))}
 						</TableRow>
 					</TableHead>

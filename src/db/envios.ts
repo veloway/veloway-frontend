@@ -1,58 +1,89 @@
+import { origen } from "@/components/driver/mapTravel/Routing";
+
 export const dataEnviosTabla = [
     {
         id: 1,
-        destino: "7 1569 e/ 63 y 64",
+        destino: "Calle 25 e/ 32 y 33",
+        origen: "Calle 8 y 60",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
+        fecha: "13/12/2021 14:30",
+        reserva: true,
+        dni: 43897801
+      },
+      {
         id: 2,
-        destino: "7 1569 e/ 63 y 64",
+        destino: "Avenida 44 e/ 7 y 8",
+        origen: "Calle 7 y 50",
         estado: "Entregado",
-        fecha: "12/12/2021 12:00",
-    },
-    {
+        fecha: "12/12/2021 16:45",
+        reserva: true,
+        dni: 43897801
+      },
+      {
         id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        destino: "Calle 50 e/ 15 y 16",
+        origen: "Avenida 13 y 44",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "14/12/2021 09:00",
+        reserva: true,
+        dni: 43897801
+      },
+      {
+        id: 4,
+        destino: "Avenida 32 e/ 19 y 20",
+        origen: "Calle 10 y 64",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "12/12/2021 18:30",
+        reserva: false,
+        dni: 43897801
+      },
+      {
+        id: 5,
+        destino: "Calle 10 e/ 50 y 51",
+        origen: "Avenida 53 y 11",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "15/12/2021 10:15",
+        reserva: true,
+        dni: 43897801
+      },
+      {
+        id: 6,
+        destino: "Calle 18 e/ 67 y 68",
+        origen: "Calle 6 y 59",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "13/12/2021 12:45",
+        reserva: true,
+        dni: 43897801
+      },
+      {
+        id: 7,
+        destino: "Calle 7 e/ 42 y 43",
+        origen: "Calle 9 y 66",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "14/12/2021 11:00",
+        reserva: true,
+        dni: 43897801
+      },
+      {
+        id: 8,
+        destino: "Avenida 60 e/ 7 y 8",
+        origen: "Avenida 7 y 70",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
-    {
-        id: 3,
-        destino: "7 1569 e/ 63 y 64",
+        fecha: "13/12/2021 17:00",
+        reserva: true,
+        dni: 43897801
+      },
+      {
+        id: 9,
+        destino: "Calle 48 e/ 2 y 3",
+        origen: "Calle 12 y 48",
         estado: "En camino",
-        fecha: "12/12/2021 12:00",
-    },
+        fecha: "15/12/2021 09:30",
+        reserva: true,
+        dni: 43897801
+      }
+      
+      
     
 ];
 
