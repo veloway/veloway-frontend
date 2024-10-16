@@ -29,7 +29,7 @@ const MapTravel: React.FC = () => {
     <MapContainer
       center={[39.5, -98.35]}
       zoom={4}
-      className="w-[900px] h-[450px]"
+      className="w-[900px] h-[450px] rounded-md"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

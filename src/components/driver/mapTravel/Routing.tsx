@@ -9,8 +9,8 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-const origen: LatLngTuple = [-34.88032898748368, -58.08847674063383];
-const destino: LatLngTuple = [-34.88451393713312, -58.055525805036574];
+const origen: LatLngTuple = [-34.92208926643218, -57.9529867527089];
+const destino: LatLngTuple = [-34.904045188515084, -57.92589693187078];
 
 let carMarker: L.Marker | null = null; // Variable para almacenar el marcador del auto
 let checkpoints: LatLngTuple[] = [];   // Variable para almacenar los checkpoints

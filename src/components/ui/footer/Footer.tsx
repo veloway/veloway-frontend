@@ -6,7 +6,7 @@ import Logo from "../logo/Logo";
 
 export default function () {
 	return (
-		<Box component='footer' className='py-4 text-secondary' bgcolor={theme.palette.secondary.main}>
+		<Box component='footer' className='py-4 text-secondary bg-tertiary'>
 			<div className='mb-5 max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10 flex justify-between'>
 				<Logo />
 				<div>

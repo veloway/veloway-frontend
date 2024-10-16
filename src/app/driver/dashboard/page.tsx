@@ -71,7 +71,7 @@ export default function DriverHomePage({ params }: driverPageProp) {
                     <p className='font-medium text-gray-50 text-xl px-8 py-4 rounded-t-md bg-primary'>
                         Reservas
                     </p>
-                    <div className='bg-white shadow-lg space-y-5 pb-6 flex-1 rounded-b-md'>
+                    <div className='bg-white shadow-lg space-y-5 pb-6 flex-1 rounded-b-md '> 
 						<ReservationsTable columns={columnsReservations} className="rounded-none shadow-none"/>
                     </div>
                 </div>
