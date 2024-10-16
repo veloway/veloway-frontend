@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography'; 
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
 interface Props {
@@ -11,17 +10,16 @@ interface Props {
   vehiculos: any[];
 }
 
-
 const StyledTitle = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   fontSize: '24px',
   fontWeight: 'bold',
-  color: theme.palette.primary.main, 
-  marginBottom: '20px',
+  color: theme.palette.primary.main,
+  marginBottom: '25px',
 }));
 
 const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) => {
-  const [anio, setAnio] = useState<string | number>(''); 
+  const [anio, setAnio] = useState<string>('');
   const [color, setColor] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [nomSeguro, setNomSeguro] = useState('');
@@ -55,17 +53,21 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
 
     if (documentoTitular.length < 6 || documentoTitular.length > 10 || isNaN(Number(documentoTitular))) {
       errors.documentoTitular = "El documento debe ser un número entre 6 y 10 dígitos.";
-    } else {
-      delete errorMessages.documentoTitular;
     }
 
     if (!/^[a-zA-Z\s]+$/.test(titular)) {
       errors.titular = "El nombre del titular solo debe contener caracteres alfabéticos.";
-    } else {
-      delete errorMessages.titular; 
     }
 
-    if (!anio || !color || !descripcion || !nomSeguro || !patente || !tipoVehiculo || !modeloNombre || !marcaNombre) {
+    if (!/^\d{4}$/.test(anio)) {
+      errors.anio = "El año debe ser un número de 4 dígitos.";
+    }
+
+    if (!marcaNombre) {
+      errors.marcaNombre = "La marca es obligatoria.";
+    }
+
+    if (!color || !descripcion || !nomSeguro || !patente || !tipoVehiculo || !modeloNombre) {
       errors.generic = "Todos los campos son obligatorios.";
     }
 
@@ -76,7 +78,7 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
     }
 
     const vehiculo = {
-      anio: String(anio), 
+      anio: String(anio),
       color,
       descripcion,
       nomSeguro,
@@ -105,103 +107,121 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
     setMarcaNombre('');
     setTitular('');
     setDocumentoTitular('');
-    setErrorMessages({}); 
+    setErrorMessages({});
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', maxWidth: 600, margin: 'auto', mt: 4 }}>
-      <StyledTitle> Registro de Vehículo </StyledTitle> 
+    <div onSubmit={handleSubmit} style={{ maxWidth: 900, margin: 'auto', marginTop: '24px' }}>
+      <h2 className="text-2xl font-bold text-center mb-6">Registro del Vehículo</h2>
 
       {errorMessages.generic && <div style={{ color: 'red' }}>{errorMessages.generic}</div>}
+      {errorMessages.anio && <div style={{ color: 'red' }}>{errorMessages.anio}</div>}
+      {errorMessages.marcaNombre && <div style={{ color: 'red' }}>{errorMessages.marcaNombre}</div>}
 
-      <TextField
-        label="Titular del Vehículo"
-        value={titular}
-        onChange={(e) => setTitular(e.target.value)}
-        error={!!errorMessages.titular}
-        helperText={errorMessages.titular}
-        fullWidth
-      />
+      <div className="space-y-4">
+        <input
+          type="text"
+          name="titular"
+          value={titular}
+          onChange={(e) => setTitular(e.target.value)}
+          placeholder="Titular del Vehículo"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        />
+        {errorMessages.titular && <div style={{ color: 'red' }}>{errorMessages.titular}</div>}
 
-      <TextField
-        label="Documento del Titular"
-        value={documentoTitular}
-        onChange={(e) => setDocumentoTitular(e.target.value)}
-        error={!!errorMessages.documentoTitular}
-        helperText={errorMessages.documentoTitular}
-        fullWidth
-      />
+        <input
+          type="text"
+          name="documentoTitular"
+          value={documentoTitular}
+          onChange={(e) => setDocumentoTitular(e.target.value)}
+          placeholder="Documento del Titular"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {errorMessages.documentoTitular && <div style={{ color: 'red' }}>{errorMessages.documentoTitular}</div>}
 
-      <TextField
-        label=""
-        select
-        value={anio}
-        onChange={(e) => setAnio(e.target.value)}
-        fullWidth
-        SelectProps={{
-          native: true,
-        }}
-      >
-        <option value="">Seleccione un año</option>
-        {[...Array(31)].map((_, index) => {
-          const year = new Date().getFullYear() - index;
-          return <option key={year} value={year}>{year}</option>;
-        })}
-      </TextField>
+        <input
+          type="text"
+          name="anio"
+          value={anio}
+          onChange={(e) => setAnio(e.target.value)}
+          placeholder="Año"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <TextField
-        label="Color"
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        error={!!errorMessages.color}
-        helperText={errorMessages.color}
-        fullWidth
-      />
+        <input
+          type="text"
+          name="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          placeholder="Color"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <TextField
-        label="Descripción"
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-        fullWidth
-        multiline
-        rows={4}
-      />
+        <textarea
+          name="descripcion"
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Descripción"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows={2} 
+        />
 
-      <TextField
-        label="Nombre del Seguro"
-        value={nomSeguro}
-        onChange={(e) => setNomSeguro(e.target.value)}
-        fullWidth
-      />
+        <input
+          type="text"
+          name="nomSeguro"
+          value={nomSeguro}
+          onChange={(e) => setNomSeguro(e.target.value)}
+          placeholder="Nombre del Seguro"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <TextField
-        label="Patente"
-        value={patente}
-        onChange={(e) => setPatente(e.target.value)}
-        fullWidth
-      />
+        <input
+          type="text"
+          name="patente"
+          value={patente}
+          onChange={(e) => setPatente(e.target.value)}
+          placeholder="Patente"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <TextField
-        label="Tipo de Vehículo"
-        value={tipoVehiculo}
-        onChange={(e) => setTipoVehiculo(e.target.value)}
-        fullWidth
-      />
+        <input          type="text"
+          name="tipoVehiculo"
+          value={tipoVehiculo}
+          onChange={(e) => setTipoVehiculo(e.target.value)}
+          placeholder="Tipo de Vehículo"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <TextField
-        label="Modelo"
-        value={modeloNombre}
-        onChange={(e) => setModeloNombre(e.target.value)}
-        fullWidth
-      />
+        <input
+          type="text"
+          name="modeloNombre"
+          value={modeloNombre}
+          onChange={(e) => setModeloNombre(e.target.value)}
+          placeholder="Modelo"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-        <Button type="submit" variant="contained" color="primary">
-          Guardar Vehículo
-        </Button>
-      </Box>
+        <input
+          type="text"
+          name="marcaNombre"
+          value={marcaNombre}
+          onChange={(e) => setMarcaNombre(e.target.value)}
+          placeholder="Marca"
+          required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-    </Box>
+    </div>
   );
 };
 
