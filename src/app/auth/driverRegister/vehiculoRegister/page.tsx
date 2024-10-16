@@ -1,104 +1,84 @@
 "use client";
 
 import React, { useState } from "react";
-import NavBar from "@/components/ui/navbar/Navbar";
-import VehiculoForm from "@/components/vehiculo/VehiculoForm";
-import {
-  Container,
-  Box,
-  Typography,
-  LinearProgress,
-  Stepper,
-  Step,
-  StepLabel,
-  Paper,
-  Grid,
-} from "@mui/material";
-import { CheckCircle, DriveEta, Home } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import { Container } from "@mui/material";
+import { FaArrowLeft } from "react-icons/fa"; 
+import VehiculoForm from "@/components/vehiculo/VehiculoForm"; 
 
-interface Vehiculo {
-  anio: string;
-  color: string;
-  descripcion: string;
-  nomSeguro: string;
-  patente: string;
-  tipoVehiculo: {
-    nombre: string;
-    modelo: { nombre: string; marca: string };
-  };
-  titular: { nombre: string; documento: string };
-}
+const RegisterVehiculo: React.FC = () => {
+    const router = useRouter();
+    const [vehiculoData, setVehiculoData] = useState<any>(null); 
 
-const steps = [
-  { label: "Registro del Conductor", icon: <Home /> },
-  { label: "Registro del Vehículo", icon: <DriveEta /> },
-  { label: "Fin del Registro", icon: <CheckCircle /> },
-];
+    const addVehiculo = (vehiculo: any) => {
+        setVehiculoData(vehiculo); 
+    };
 
-const VehiculoPage: React.FC = () => {
-  const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [activeStep, setActiveStep] = useState(1);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(vehiculoData);
+    };
 
-  const addVehiculo = (vehiculo: Vehiculo) => {
-    setVehiculos((prev) => 
-      editIndex !== null 
-        ? prev.map((v, i) => (i === editIndex ? vehiculo : v)) 
-        : [...prev, vehiculo]
+    return (
+        <StyledContainer>
+
+            <BackButton 
+                onClick={() => router.push('/auth/driverRegister')} 
+            />
+
+<form 
+    onSubmit={handleSubmit} 
+    className="w-full max-w-2xl space-y-6" 
+>
+    <VehiculoForm 
+        addVehiculo={addVehiculo} 
+        editIndex={null} 
+        vehiculos={vehiculoData ? [vehiculoData] : []} 
+    />
+
+
+    <button 
+        type="submit" 
+        className="w-full py-3 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 mt-4" 
+    >
+        Registrar Vehículo
+    </button>
+</form>
+
+        </StyledContainer>
     );
-    setEditIndex(null);
-    setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-  };
-
-  const deleteVehiculo = (index: number) => {
-    setVehiculos((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const links = [
-    { name: "Inicio", href: "/" },
-    { name: "Vehículos", href: "/vehiculos" },
-    { name: "Contactar", href: "/contacto" },
-  ];
-
-  return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
-        <NavBar links={links} />
-      </div>
-      <Container maxWidth="lg" sx={{ padding: "2rem", background: "linear-gradient(to right, #42a5f5, #478ed1)" }}>
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} md={8}>
-            <Paper sx={{ padding: "1.5rem", backgroundColor: "#fff", borderRadius: "8px", boxShadow: 3, textAlign: "center" }}>
-              <Typography variant="h5" gutterBottom>Seguimiento del Registro</Typography>
-              <Stepper activeStep={activeStep} alternativeLabel>
-                {steps.map((step, index) => (
-                  <Step key={step.label}>
-                    <StepLabel>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        {step.icon}
-                        <Typography sx={{ marginLeft: 1 }}>{step.label}</Typography>
-                      </Box>
-                    </StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              <LinearProgress
-                variant="determinate"
-                value={(activeStep / (steps.length - 1)) * 100}
-                sx={{ marginTop: 2, backgroundColor: "#e0e0e0", "& .MuiLinearProgress-bar": { backgroundColor: "#42a5f5" }}}
-              />
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={8}>
-            <Paper sx={{ padding: "1.5rem", backgroundColor: "#fff", borderRadius: "8px", boxShadow: 3 }}>
-              <VehiculoForm addVehiculo={addVehiculo} editIndex={editIndex} vehiculos={vehiculos} />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
-    </>
-  );
 };
 
-export default VehiculoPage;
+const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+    return (
+        <div className="w-full flex justify-start mb-4"> 
+            <button 
+                className="text-blue-600 hover:text-blue-800 flex items-center space-x-2" 
+                onClick={onClick}
+            >
+                <FaArrowLeft /> <span>Registrar conductor</span>
+            </button>
+        </div>
+    );
+};
+
+const StyledContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return (
+        <Container
+            maxWidth="xl"
+            sx={{
+                padding: "0", 
+                background: "#fff", 
+                minHeight: "100vh", 
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", 
+                justifyContent: "center", 
+            }}
+        >
+            {children}
+        </Container>
+    );
+};
+
+export default RegisterVehiculo;
