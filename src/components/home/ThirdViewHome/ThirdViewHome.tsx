@@ -1,4 +1,5 @@
-import Button from "@/components/ui/button/Button"
+//import Button from "@/components/ui/button/Button"
+import Button from '@mui/material/Button'; // Importar botón de Material UI
 import './ThirdViewHome.css'
 
 export function ThirdViewHome(){
@@ -11,7 +12,22 @@ export function ThirdViewHome(){
             <p>Sé parte de una red de profesionales en crecimiento. <br /> 
             Flexibilidad, buenas ganancias y oportunidades de <br />
             crecimiento te esperan.</p>
-            <a href=""><Button bgColor="white" textColor="#005490">Registrarse como conductor</Button></a>
+            <a href="">
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: 'white', 
+                  color: 'blue', 
+                  '&:hover': { backgroundColor: '#f0f0f0' }, 
+                  fontFamily: 'Rubik', 
+                  textTransform: 'none'
+                  }}
+              >
+                Registrarse como conductor
+            </Button>
+            </a>
           </div>
           <picture className="picture-home-3">
             <img className="img-home-3" src="/images/repartidor.webp" alt="Repartidor" />
