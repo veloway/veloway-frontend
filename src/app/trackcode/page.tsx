@@ -5,7 +5,9 @@ export default function TrackCode(){
     return(
         <>
         <Header/>
+        <div className='p-8 h-screen'>
         <ViewTC/>
+        </div>
         </>
     );
 }
