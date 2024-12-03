@@ -7,3 +7,4 @@ export { default as Logo } from "./logo/Logo";
 export { default as Input } from "./input/Input"; 
 export { default as Label } from "./label/Label";
 export { default as TableComponent } from "./table-component/TableComponent";
+export { default as Header } from "./header/Header";
