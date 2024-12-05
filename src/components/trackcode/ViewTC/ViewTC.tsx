@@ -6,7 +6,9 @@ const steps = [
     { label: "Llegó a nuestra sucursal", isActive: false },
     { label: "Visita a domicilio", isActive: false },
     { label: "Entregado", isActive: false },
-  ];
+];
+
+
 
 const lastActiveStep = steps.filter((step) => step.isActive).pop();
 
