@@ -16,7 +16,7 @@ export function HeaderHome (){
                 </div>
                 <div className="links-header-2">
                     <li><a href="/auth/login">Iniciar Sesion</a></li>
-                    <li><a href="#"><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
+                    <li><a href="/auth/clientRegister"><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
                 </div>
             </ul>
             </nav>
