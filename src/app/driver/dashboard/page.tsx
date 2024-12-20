@@ -3,7 +3,8 @@
 import ContainerFlex from "@/components/ui/container-flex/ContainerFlex";
 import SinViaje from "@/components/driver/sinViaje/SinViaje";
 import { ParsedUrlQuery } from "querystring";
-import { Button, Pagination } from "@mui/material";
+import Button from "@mui/material/Button";
+import Pagination from "@mui/material/Pagination";
 import { TableComponent } from "@/components/ui";
 import { dataViajes } from "@/db/viajes";
 import { clientes } from "@/db/usuarios";

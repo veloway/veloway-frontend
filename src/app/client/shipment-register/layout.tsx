@@ -1,14 +1,11 @@
 import { clientes, domicilios } from "@/db/usuarios";
-import {
-	Input,
-	FormControl,
-	InputLabel,
-	Button,
-	Typography,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-} from "@mui/material";
+import Input from "@mui/material/Input";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Button from "@mui/material/Button";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 
 import { IoIosArrowDown } from "react-icons/io";
 interface ShipmentRegisterLayoutProps {
