@@ -1,4 +1,5 @@
 "use client";
+import { useShipmentRegisterStore } from "@/stores/shipmentRegisterStore";
 import {
 	FormControl,
 	InputLabel,
@@ -23,15 +24,27 @@ const enum ShipmentType {
 export default function DetailsPage() {
 	const [isReservation, setIsReservation] = useState<ShipmentType>(ShipmentType.Now);
 	const [timeReservation, setTimeReservation] = useState<boolean>(false);
+	const shipment = useShipmentRegisterStore((state) => state.shipment);
+	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
+	const [peso, setPeso] = useState(shipment.pesoGramos);
+	const [descripcion, setDescripcion] = useState(shipment.description);
+	const [fecha, setFecha] = useState(shipment.fecha);
+	const [hora, setHora] = useState(shipment.hora);
 
 	const radioHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		setIsReservation(e.target.value as ShipmentType);
+		
+		setShipment({ ...shipment, fecha: dayjs().format("DD-MM-YYYY"), hora: dayjs().format("HH:mm") });
+		if (e.target.value === ShipmentType.Reservation) {
+			setShipment({ ...shipment, reserva: true});
+		}else{
+			setShipment({ ...shipment, reserva: false});
+		}
 	};
 
 	useEffect(() => {
 		if (isReservation === ShipmentType.Reservation) {
 			const date = new Date();
-			console.log(date.getHours());
 			if (date.getHours() < 8 || date.getHours() >= 18) {
 				setTimeReservation(true);
 			}
@@ -45,18 +58,44 @@ export default function DetailsPage() {
 			</p>
 			<form className='bg-white shadow-lg rounded-b-md space-y-5 px-8 py-6 flex flex-col gap-4 flex-1'>
 				<FormControl>
-					<InputLabel htmlFor='calle'>Peso (gramos)</InputLabel>
-					<Input id='calle' aria-describedby='Calle' type='number' />
+					<InputLabel htmlFor='peso'>Peso (gramos)</InputLabel>
+					<Input 
+						id='peso' 
+						aria-describedby='peso' 
+						type='peso' 
+						onChange={(e) => setShipment({...shipment, pesoGramos: parseInt(e.target.value)})}
+						defaultValue={shipment.pesoGramos}
+					/>
 				</FormControl>
 				<FormControl>
-					<InputLabel htmlFor='calle'>Descripción del contenido</InputLabel>
-					<Input id='calle' aria-describedby='Calle' />
+					<InputLabel htmlFor='descripcion'>Descripción del contenido</InputLabel>
+					<Input 
+						id='descripcion' 
+						aria-describedby='descripcion'
+						onChange={(e) => setShipment({...shipment, description: e.target.value})}
+						defaultValue={shipment.description}
+					/>
 				</FormControl>
 				<FormControl>
 					<FormLabel>¿Cuándo quiere realizar el envío?</FormLabel>
-					<RadioGroup row onChange={radioHandler}>
-						<FormControlLabel value='ahora' control={<Radio />} label='Ahora' />
-						<FormControlLabel value='reserva' control={<Radio />} label='Reservar' />
+					<RadioGroup row onChange={radioHandler} defaultValue={() => {
+						if (shipment.reserva) {
+							setIsReservation(ShipmentType.Reservation);
+							return ShipmentType.Reservation;
+						}
+						setIsReservation(ShipmentType.Now);
+						return ShipmentType.Now;
+					}}>
+						<FormControlLabel 
+							value='ahora' 
+							control={<Radio />} 
+							label='Ahora' 
+						/>
+						<FormControlLabel 
+							value='reserva' 
+							control={<Radio />} 
+							label='Reservar' 
+						/>
 					</RadioGroup>
 				</FormControl>
 
@@ -75,8 +114,10 @@ export default function DetailsPage() {
 								className='max-w-'
 								label='Elija un horario'
 								ampm={false}
-								minTime={dayjs().set("hour", 8)}
+								minTime={dayjs().set("hour", 8).set("minute", 0)}
 								maxTime={dayjs().set("hour", 18)}
+								onChange={(e) => setShipment({...shipment, hora: e?.format("HH:mm") || ""})}
+								defaultValue={dayjs(shipment.hora, "HH:mm")}
 							/>
 						</LocalizationProvider>
 					</div>
