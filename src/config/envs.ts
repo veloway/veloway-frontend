@@ -1,6 +1,3 @@
-import 'dotenv/config'
-
 export const {
-    API_URL,
-    NODE_ENV,
+    API_URL
 } = process.env

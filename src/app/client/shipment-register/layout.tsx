@@ -1,3 +1,4 @@
+'use client';
 import { clientes, domicilios } from "@/db/usuarios";
 import Input from "@mui/material/Input";
 import FormControl from "@mui/material/FormControl";
@@ -8,6 +9,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 
 import { IoIosArrowDown } from "react-icons/io";
+import { useShipmentRegisterStore } from "@/stores/shipmentRegisterStore";
+import { useEffect } from "react";
 interface ShipmentRegisterLayoutProps {
 	children: React.ReactNode;
 }
@@ -15,7 +18,46 @@ interface ShipmentRegisterLayoutProps {
 export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLayoutProps) {
 	const user = clientes[0];
     const userDomicilio = domicilios.find(d => d.idDomicilio === user.idDomicilio);
-    
+	const shipment = useShipmentRegisterStore((state) => state.shipment);
+	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
+	
+	const handleShipment = () => {
+		if (!userDomicilio) return;
+		const origenCliente = {
+			calle: userDomicilio?.calle,
+			numero: userDomicilio?.numero,
+			piso: userDomicilio?.piso,
+			depto: userDomicilio?.depto,
+			descripcion: userDomicilio?.descripcion,
+			localidadID: 5
+		}	
+		setShipment({
+			...shipment, 
+			cliente: "asdas-asdasd-asdasd-asdasd-asdass",
+			origen: origenCliente
+		});
+	}	
+
+	useEffect(() => {
+		handleShipment();
+	}, [])
+
+	const isFormCompleted = () => {
+		if (
+			// Si a shipment le falta algun campo requerido, retornar false
+			!shipment.descripcion ||
+			!shipment.fecha ||
+			!shipment.hora ||
+			!shipment.pesoGramos ||
+			!shipment.destino.calle ||
+			!shipment.destino.numero ||
+			!shipment.cliente
+		) {
+			return false;
+		}
+		return true;
+	}
+
 	return (
 		<div className='py-16 w-full'>
 			<h1 className='text-3xl font-semibold mb-8'>
@@ -76,7 +118,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
                             </div>
 						</div>
                         <div className='pt-4 flex justify-end'>
-                            <Button variant='contained' disabled={true}>Realizar envio</Button>
+                            <Button variant='contained' disabled={!isFormCompleted()}>Realizar envio</Button>
                         </div>
 					</div>
 

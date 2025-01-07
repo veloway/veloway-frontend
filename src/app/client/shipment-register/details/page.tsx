@@ -21,20 +21,18 @@ const enum ShipmentType {
 	Reservation = "reserva",
 }
 
+
 export default function DetailsPage() {
 	const [isReservation, setIsReservation] = useState<ShipmentType>(ShipmentType.Now);
 	const [timeReservation, setTimeReservation] = useState<boolean>(false);
 	const shipment = useShipmentRegisterStore((state) => state.shipment);
 	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
-	const [peso, setPeso] = useState(shipment.pesoGramos);
-	const [descripcion, setDescripcion] = useState(shipment.description);
-	const [fecha, setFecha] = useState(shipment.fecha);
-	const [hora, setHora] = useState(shipment.hora);
-
+	const [fechaActual] = useState(dayjs().format("DD-MM-YYYY"));
+	const [horarioActual] = useState(dayjs().format("HH:mm"));
 	const radioHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		setIsReservation(e.target.value as ShipmentType);
 		
-		setShipment({ ...shipment, fecha: dayjs().format("DD-MM-YYYY"), hora: dayjs().format("HH:mm") });
+		setShipment({ ...shipment, fecha: fechaActual, hora: horarioActual });
 		if (e.target.value === ShipmentType.Reservation) {
 			setShipment({ ...shipment, reserva: true});
 		}else{
@@ -49,6 +47,9 @@ export default function DetailsPage() {
 				setTimeReservation(true);
 			}
 		}
+		if (isReservation === ShipmentType.Now) {
+			setShipment({ ...shipment, fecha: fechaActual, hora: horarioActual });
+		}
 	}, [timeReservation, isReservation]);
 
 	return (
@@ -62,9 +63,9 @@ export default function DetailsPage() {
 					<Input 
 						id='peso' 
 						aria-describedby='peso' 
-						type='peso' 
+						type='number' 
 						onChange={(e) => setShipment({...shipment, pesoGramos: parseInt(e.target.value)})}
-						defaultValue={shipment.pesoGramos}
+						defaultValue={shipment.pesoGramos === 0 ? null : shipment.pesoGramos}
 					/>
 				</FormControl>
 				<FormControl>
@@ -72,8 +73,8 @@ export default function DetailsPage() {
 					<Input 
 						id='descripcion' 
 						aria-describedby='descripcion'
-						onChange={(e) => setShipment({...shipment, description: e.target.value})}
-						defaultValue={shipment.description}
+						onChange={(e) => setShipment({...shipment, descripcion: e.target.value})}
+						defaultValue={shipment.descripcion}
 					/>
 				</FormControl>
 				<FormControl>
