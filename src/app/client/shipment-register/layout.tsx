@@ -39,19 +39,20 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	}	
 
 	useEffect(() => {
-		handleShipment();
+		handleShipment(); //TODO: ESTO LO HACE POR DEFECTO, IMPLEMENTAR MODFICACION DE ORIGEN EN EL FORMULARIO
 	}, [])
 
 	const isFormCompleted = () => {
 		if (
-			// Si a shipment le falta algun campo requerido, retornar false
 			!shipment.descripcion ||
 			!shipment.fecha ||
 			!shipment.hora ||
 			!shipment.pesoGramos ||
 			!shipment.destino.calle ||
 			!shipment.destino.numero ||
-			!shipment.cliente
+			!shipment.destino.localidadID ||
+			!shipment.cliente ||
+			shipment.reserva === null
 		) {
 			return false;
 		}
@@ -82,23 +83,23 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 								<AccordionDetails className='flex flex-col gap-8'>
 									<FormControl>
 										<InputLabel htmlFor='calle'>Calle</InputLabel>
-										<Input id='calle' aria-describedby='Calle' value={userDomicilio?.calle}/>
+										<Input id='calle' aria-describedby='Calle' defaultValue={userDomicilio?.calle}/>
 									</FormControl>
 									<FormControl>
 										<InputLabel htmlFor='numero'>Número</InputLabel>
-										<Input id='numero' aria-describedby='Número' value={userDomicilio?.numero}/>
+										<Input id='numero' aria-describedby='Número' defaultValue={userDomicilio?.numero}/>
 									</FormControl>
 									<FormControl>
 										<InputLabel htmlFor='departamento'>Departamento</InputLabel>
-										<Input id='departamento' aria-describedby='Departamento' value={userDomicilio?.depto}/>
+										<Input id='departamento' aria-describedby='Departamento' defaultValue={userDomicilio?.depto}/>
 									</FormControl>
 									<FormControl>
 										<InputLabel htmlFor='piso'>Piso</InputLabel>
-										<Input id='piso' aria-describedby='Piso' value={userDomicilio?.piso}/>
+										<Input id='piso' aria-describedby='Piso' defaultValue={userDomicilio?.piso}/>
 									</FormControl>
 									<FormControl>
 										<InputLabel htmlFor='descripcion'>Descripción (opcional)</InputLabel>
-										<Input id='descripcion' aria-describedby='Descripción (opcional)' value={userDomicilio?.descripcion}/>
+										<Input id='descripcion' aria-describedby='Descripción (opcional)' defaultValue={userDomicilio?.descripcion}/>
 									</FormControl>
 								</AccordionDetails>
 							</Accordion>

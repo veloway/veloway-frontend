@@ -17,25 +17,16 @@ interface ShipmentRegister {
     origen: DomicilioRegister
     destino: DomicilioRegister
     cliente: string 
-    reserva: boolean
+    reserva: boolean | null
 }
 
 interface ShipmentStore {
-    domicilio: DomicilioRegister;
     shipment: ShipmentRegister;
     setShipment: (shipment: ShipmentRegister) => void;
 }
 
 
 export const useShipmentRegisterStore = create<ShipmentStore>((set) => ({
-    domicilio: {
-        calle: '',
-        numero: 0,
-        piso: null,
-        depto: null,
-        descripcion: null,
-        localidadID: 0
-    },
     shipment: {
         descripcion: '',
         fecha: '',
@@ -58,8 +49,8 @@ export const useShipmentRegisterStore = create<ShipmentStore>((set) => ({
             localidadID: 0
         },
         cliente: '',
-        reserva: false
+        reserva: null
     },
-    setDomicilio: (domicilio: DomicilioRegister) => set({ domicilio }), // TODO: IMPLEMENTARLO PARA QUE SE ACTUALIZE Y FUNCIONE EL DISABLE
+
     setShipment: (shipment: ShipmentRegister) => set({ shipment })
 }));

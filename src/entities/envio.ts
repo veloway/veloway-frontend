@@ -9,6 +9,7 @@ export interface Envio{
     hora: string, 
     pesoGramos: number,
     monto: number,
+    reserva: boolean
     estado: EstadoEnvio,
     origen: Domicilio,
     destino: Domicilio
