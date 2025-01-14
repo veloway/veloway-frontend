@@ -1,32 +1,13 @@
+import { EnvioDto } from '@/entities/envio';
+import { EnviosService } from '@/services/envios.service';
 import { create } from 'zustand';
 
-interface DomicilioRegister {
-    calle: string
-    numero: number
-    piso: number | null
-    depto: string | null
-    descripcion: string | null
-    localidadID: number
-}
-
-interface ShipmentRegister {
-    descripcion: string
-    fecha: string
-    hora: string
-    pesoGramos: number
-    origen: DomicilioRegister
-    destino: DomicilioRegister
-    cliente: string 
-    reserva: boolean | null
-}
-
 interface ShipmentStore {
-    shipment: ShipmentRegister;
-    setShipment: (shipment: ShipmentRegister) => void;
+    shipment: EnvioDto;
+    setShipment: (shipment: EnvioDto) => void;
 }
 
-
-export const useShipmentRegisterStore = create<ShipmentStore>((set) => ({
+export const useShipmentRegisterStore = create<ShipmentStore>((set, get) => ({
     shipment: {
         descripcion: '',
         fecha: '',
@@ -52,5 +33,5 @@ export const useShipmentRegisterStore = create<ShipmentStore>((set) => ({
         reserva: null
     },
 
-    setShipment: (shipment: ShipmentRegister) => set({ shipment })
+    setShipment: (shipment: EnvioDto) => set({ shipment }),
 }));

@@ -49,7 +49,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 							<td className='text-center'>{envio.fecha}</td>
 						</tr>
 					))}
-				</TableComponent>'
+				</TableComponent>
 				<div className='flex justify-center'>
 					<Pagination count={8} color="primary"/>
 				</div>

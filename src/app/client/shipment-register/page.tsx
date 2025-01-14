@@ -13,16 +13,15 @@ import SearchIcon from '@mui/icons-material/Search';
 
 export default function ShipmentRegisterPage() {
 	const shipment = useShipmentRegisterStore((state) => state.shipment);
-	const setShipmet = useShipmentRegisterStore((state) => state.setShipment);
+	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
 	const [localidades, setLocalidades] = useState<Localidad[]>([]);
 
 	useEffect(() => {
 		LocalidadesService.getLocalidades().then((localidades) => setLocalidades(localidades));
-		console.log(shipment);
 	}, []);
 
 	const handleChange = (key: string, value: any) =>{
-		setShipmet({
+		setShipment({
 			...shipment,
 			destino: {
 				...shipment.destino,

@@ -10,7 +10,7 @@ import {
 	RadioGroup,
 	Radio,
 } from "@mui/material";
-import { DesktopTimePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -43,7 +43,6 @@ export default function DetailsPage() {
 			setShipment({ ...shipment, reserva: true, fecha: fechaActual });
 			const hora = Number(shipment.hora.split(":")[0]);
 			if (hora < 8 || hora > 18) {
-				console.log("El horario esta mal");
 				setShipment({ ...shipment, hora: "", reserva: true, fecha: fechaActual });
 			}
 			return;
@@ -111,7 +110,9 @@ export default function DetailsPage() {
 							if (shipment.reserva === false) {
 								return ShipmentType.Now;
 							}
-						}}>
+						}}
+						className="text-gray-800"
+						>
 						<FormControlLabel
 							value='ahora'
 							control={<Radio />}
@@ -137,10 +138,15 @@ export default function DetailsPage() {
 								className='max-w-full'
 								label='Elija un horario'
 								ampm={false}
-								minTime={dayjs().set("hour", 7).set("minute", 59)}
+								minTime={dayjs().set("hour", 8).set("minute", 0)}
 								maxTime={dayjs().set("hour", 17).set("minute", 59)}
 								onChange={(e) => handleHorario(e)}
 								defaultValue={dayjs(shipment.hora, "HH:mm")}
+								slotProps={{
+									textField:{
+										error: false,
+									}
+								}}
 							/>
 						</LocalizationProvider>
 					</div>
