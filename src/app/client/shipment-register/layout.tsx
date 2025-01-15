@@ -17,6 +17,8 @@ import { LocalidadesService } from "@/services/localidades.service";
 import { Localidad } from "@/entities/localidad";
 import { EnviosService } from "@/services/envios.service";
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
+import Link from "next/link";
 
 interface ShipmentRegisterLayoutProps {
 	children: React.ReactNode;
@@ -30,7 +32,9 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	const [localidades, setLocalidades] = useState<Localidad[]>([]);
 	const [loading, setLoading] = useState<boolean>(false)
 	const [cancelSource, setCancelSource] = useState(axios.CancelToken.source());
-	const [intentos, setIntentos] = useState(0);
+	const [isCreated, setIsCreated] = useState(false);
+	const [nroSeguimiento, setNroSeguimiento] = useState<number>(0);
+	const [isConfirmed, setIsConfirmed] = useState(false);
 
 	const handleShipment = () => {
 		if (!userDomicilio) return;
@@ -82,47 +86,54 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 		return true;
 	};
 
-	const handleIntento = (nuevoIntento: number) => {
-        setIntentos(nuevoIntento);
-    };
-
 	const handleSaveShipment = () => {
 		setLoading(true);
-		EnviosService.create(shipment, cancelSource, handleIntento)
+		toast.promise(
+			EnviosService.create(shipment, cancelSource)
 			.then((data) => {
 				if (data.message) {
-					console.log(data.message);
+					toast.error(data.message);
 				}
-				console.log(data.nroSeguimiento);
-			})
-			.catch((error) => {
-				if (axios.isCancel(error)) {
-					console.log('Solicitud cancelada');
-				} else {
-					console.log(error.message);
+				if (data.nroSeguimiento){
+					setLoading(false);
+					setIsConfirmed(true);
+					setNroSeguimiento(data.nroSeguimiento);
+					// Delay para mostrar la pantalla de éxito, mientras se ejecuta la animación
+					setTimeout(() => {
+                        setIsCreated(true); 
+                        setIsConfirmed(false);
+                    }, 3000);
 				}
 			})
 			.finally(() => {
 				setLoading(false);
-				setIntentos(0);
-			});
+			}),{ 
+				loading: 'Realizando envío...',
+			}
+		)
+		
 	}
 
 	const handleCancelar = () => {
         cancelSource.cancel(); // Cancela la operación
         setCancelSource(axios.CancelToken.source()); // Reinicia el token de cancelación para futuras solicitudes
+		setLoading(false);
     };
 
-	if (loading)
+	const handleGoBack = () => {
+		setIsCreated(false);
+		setNroSeguimiento(0);
+	}	
+
+	if (loading){
 		return (
 		  <div className="flex justify-center items-center h-full w-full">
 			<div className="flex flex-col gap-10">
 				<picture className="flex justify-center">
-					<img src="/gifs/auto-envio3.gif" className="rounded-md w-[50%]" alt="" />
+					<img src="/gifs/buscar-conductor.gif" className={`rounded-md w-[50%] ${loading ? "opacity-100" : "opacity-0 transition-opacity delay-500 ease-linear"}`} alt="" />
 				</picture>
 				<div className="flex flex-col items-center gap-4">
 					<p className="text-xl font-semibold">Buscando conductores disponibles...</p>
-					<p>Intento {intentos} de 10</p>
 					<CircularProgress />
 				</div>
 				<div className="flex justify-center">
@@ -137,6 +148,52 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 			</div>
 		  </div>
 		);
+	}
+
+
+	if (isConfirmed) {
+		return (
+			<div className="relative flex justify-center items-center h-screen w-full overflow-hidden">
+				<div className="flex flex-col items-center gap-4 z-10">
+					<div className={`relative w-16 h-16 rounded-full bg-green-500 transition-transform duration-500`}>
+						<svg
+							className={`absolute inset-0 w-10 h-10 m-auto text-white transition-opacity duration-500`}
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={3}
+								d="M5 13l4 4L19 7"
+							/>
+						</svg>
+					</div>
+					<p className={"text-xl font-semibold"}>
+						Conductor encontrado
+					</p>
+				</div>
+		  	</div>
+		);
+	}
+
+	if (isCreated) {
+		return (
+			<div className="flex justify-center items-center h-full w-full">
+				<div className="flex flex-col gap-10">
+					<div className="flex flex-col items-center gap-4">
+						<p className="text-xl font-semibold">Envío realizado con éxito</p>
+						<p>Nro. de seguimiento: {nroSeguimiento}</p>
+						<Button variant="contained" LinkComponent={Link} href="/client/dashboard" onClick={handleGoBack}>
+							Volver al Inicio
+						</Button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+	
 
 	return (
 		<div className='py-16 w-full'>
@@ -280,6 +337,13 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 					</div>
 				</div>
 			</div>
+			<Toaster containerStyle={{zIndex: 99999999}} toastOptions={{
+				style: {
+					borderRadius: '4px',
+				},
+				duration: 5000,
+				removeDelay: 400,
+			}}/>
 		</div>
-	);
+	)
 }
