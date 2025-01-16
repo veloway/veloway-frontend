@@ -4,6 +4,7 @@ import { Rubik } from "next/font/google";
 import { Footer } from "@/components/ui";
 import localFont from "next/font/local";
 import MuiProvider from "@/context/mui";
+import { Slide, ToastContainer } from "react-toastify";
 
 export const rubik = Rubik({
 	subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
 			<MuiProvider>
 				<body className={`${rubik.className} ${nicoMoji.variable} antialiased`}>
 					{children}
+					<ToastContainer style={{zIndex: 999999999}} position="top-center" transition={Slide} autoClose={4000}/>
 					<Footer />
 				</body>
 			</MuiProvider>

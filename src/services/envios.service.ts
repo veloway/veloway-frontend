@@ -3,7 +3,7 @@ import axios, { CancelTokenSource} from 'axios';
 import dayjs from 'dayjs';
 
 export class EnviosService {
-    static async create(envio: EnvioDto, cancelToken: CancelTokenSource): Promise<any> {
+    static async create(envio: EnvioDto, cancelToken: CancelTokenSource, onIntento: (intentos: number) => void): Promise<any> {
         const maxTiempo = 20000; // 20 segundos
         const intervalo = 2000; // 2 segundos entre solicitudes
         const intentosMaximos = Math.floor(maxTiempo / intervalo);
@@ -24,10 +24,11 @@ export class EnviosService {
                     }
                 );
 
-                if (res.status === 200) {
+                if (res.status === 201) {
                     return res.data;
                 } else {
-                    if (res.data.message !== 'No hay conductores disponibles') return res.data;
+                    if (res.data.message !== 'No hay conductores disponibles') throw new Error(res.data.message);
+                    onIntento(intentos + 1);
                     console.log(`Intento ${intentos + 1} de ${intentosMaximos}: ${res.data.message}`);
                 }
 
@@ -39,23 +40,18 @@ export class EnviosService {
             
         } catch (error) {
             if (axios.isCancel(error)) {
+                onIntento(0);
                 throw new Error("Operación cancelada.");
             } else if (axios.isAxiosError(error)) {
                 // Controlar errores específicos de Axios
                 if (error.response) {
-                    console.error("Error en la respuesta de la API:");
-                    console.error("Código de estado:", error.response.status);
-                    console.error("Datos:", error.response.data);
                     throw new Error(error.response.data.message);
                 } else if (error.request) {
-                    console.error("No se recibió respuesta del servidor:", error.request);
                     throw new Error(error.request);
                 } else {
-                    console.error("Error en la configuración de la solicitud:", error.message);
                     throw new Error(error.message);
                 }
             } else if (error instanceof Error) {
-                console.error("Error desconocido:", error);
                 throw new Error(error.message);
             }else{
                 throw new Error("Error desconocido");

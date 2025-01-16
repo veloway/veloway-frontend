@@ -2,9 +2,10 @@ import { Button, CircularProgress } from "@mui/material";
 
 interface LoadingFindDriverProps {
     handleCancelar: () => void;
+    intentos: number;
 }
 
-export const LoadingFindDriver = ({handleCancelar}: LoadingFindDriverProps) => {
+export const LoadingFindDriver = ({ handleCancelar, intentos }: LoadingFindDriverProps) => {
 	return (
 		<>
 			<div className='flex justify-center items-center h-full w-full'>
@@ -16,6 +17,7 @@ export const LoadingFindDriver = ({handleCancelar}: LoadingFindDriverProps) => {
 						<p className='text-xl font-semibold'>Buscando conductores disponibles...</p>
 						<CircularProgress />
 					</div>
+                    { intentos !== 0 && <p className='text-sm text-gray-500 text-center'>Intentos: {intentos} de 10</p> }
 					<div className='flex justify-center'>
 						<Button onClick={handleCancelar} variant='contained' color='primary'>
 							Cancelar

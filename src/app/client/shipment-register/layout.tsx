@@ -12,16 +12,16 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useShipmentRegisterStore } from "@/stores/shipmentRegisterStore";
 import { useEffect, useState } from "react";
 import { calcularPrecioEnvio } from "@/utils/utils";
-import { Autocomplete, CircularProgress, Stack, TextField } from "@mui/material";
+import { Autocomplete, Stack, TextField } from "@mui/material";
 import { LocalidadesService } from "@/services/localidades.service";
 import { Localidad } from "@/entities/localidad";
 import { EnviosService } from "@/services/envios.service";
 import axios from 'axios';
-import { Toaster, toast } from "react-hot-toast";
 import Link from "next/link";
 import { DomiciliosService } from "@/services/domicilios.service";
 import { LoadingFindDriver } from "@/components/client/loading-find-driver/LoadingFindDriver";
 import { ConfirmFindDriver } from "@/components/client/confirm-find-driver/ConfirmFindDriver";
+import { toast } from 'react-toastify';
 
 interface ShipmentRegisterLayoutProps {
 	children: React.ReactNode;
@@ -37,7 +37,8 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	const [isCreated, setIsCreated] = useState(false);
 	const [nroSeguimiento, setNroSeguimiento] = useState<number>(0);
 	const [isConfirmed, setIsConfirmed] = useState(false);
-	
+	const [intentos, setIntentos] = useState(0);
+
 	useEffect(() => {
 		//TODO: Cambiar el id del cliente por el id del cliente logueado
 		DomiciliosService.getDomicilioByClienteId("").then((userDomicilio) => {
@@ -87,35 +88,34 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 		return true;
 	};
 
+	const onIntento = (intentos: number) => {
+		setIntentos(intentos);
+		if (intentos === 10){
+			setIntentos(0);
+		}
+	}
+
 	const handleSaveShipment = () => {
 		setLoading(true);
-		toast.promise(
-			EnviosService.create(shipment, cancelSource)
-			.then((data) => {
-				if (data.message) {
-					toast.error(data.message);
-				}
-				if (data.nroSeguimiento){
-					setLoading(false);
-					setIsConfirmed(true);
-					setNroSeguimiento(data.nroSeguimiento);
-					// Delay para mostrar la pantalla de éxito, mientras se ejecuta la animación
-					setTimeout(() => {
-                        setIsCreated(true); 
-                        setIsConfirmed(false);
-                    }, 3000);
-				}
-			})
-			.catch((error) => {
-				toast.error(error.message);
-			})
-			.finally(() => {
+		EnviosService.create(shipment, cancelSource, onIntento)
+		.then((data) => {
+			if (data.nroSeguimiento){
 				setLoading(false);
-			}),{ 
-				loading: 'Buscando conductor disponible...', 
+				setIsConfirmed(true);
+				setNroSeguimiento(data.nroSeguimiento);
+				// Delay para mostrar la pantalla de éxito, mientras se ejecuta la animación
+				setTimeout(() => {
+					setIsCreated(true); 
+					setIsConfirmed(false);
+				}, 3000);
 			}
-		)
-		
+		})
+		.catch((error) => {
+			toast.error(error.message);
+		})
+		.finally(() => {
+			setLoading(false);
+		})
 	}
 
 	const handleCancelar = () => {
@@ -129,7 +129,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 		setNroSeguimiento(0);
 	}	
 
-	if (loading) return <LoadingFindDriver handleCancelar={handleCancelar} />;
+	if (loading) return <LoadingFindDriver handleCancelar={handleCancelar} intentos={intentos} />;
 
 	if (isConfirmed) return <ConfirmFindDriver/>;
 
@@ -148,7 +148,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 			</div>
 		);
 	}
-
+	
 	return (
 		<div className='py-16 w-full'>
 			<h1 className='text-3xl font-semibold mb-8'>Realiza tu envio</h1>
@@ -291,13 +291,15 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 					</div>
 				</div>
 			</div>
-			<Toaster containerStyle={{zIndex: 99999999}} toastOptions={{
+			{/* <Toaster containerStyle={{zIndex: 99999999}} toastOptions={{
 				style: {
 					borderRadius: '4px',
 				},
 				duration: 5000,
 				removeDelay: 400,
-			}}/>
+			}}/> */}
+
+			
 		</div>
 	)
 }
