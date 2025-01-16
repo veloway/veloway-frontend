@@ -54,10 +54,12 @@ export class EnviosService {
                     console.error("Error en la configuración de la solicitud:", error.message);
                     throw new Error(error.message);
                 }
-            } else {
+            } else if (error instanceof Error) {
                 console.error("Error desconocido:", error);
+                throw new Error(error.message);
+            }else{
+                throw new Error("Error desconocido");
             }
-            throw error;
         }
     }
 }

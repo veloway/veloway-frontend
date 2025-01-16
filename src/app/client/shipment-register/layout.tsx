@@ -19,6 +19,10 @@ import { EnviosService } from "@/services/envios.service";
 import axios from 'axios';
 import { Toaster, toast } from "react-hot-toast";
 import Link from "next/link";
+import { DomicilioDto } from "@/entities/domicilio";
+import { DomiciliosService } from "@/services/domicilios.service";
+import { LoadingFindDriver } from "@/components/client/loading-find-driver/LoadingFindDriver";
+import { ConfirmFindDriver } from "@/components/client/confirm-find-driver/ConfirmFindDriver";
 
 interface ShipmentRegisterLayoutProps {
 	children: React.ReactNode;
@@ -26,7 +30,7 @@ interface ShipmentRegisterLayoutProps {
 
 export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLayoutProps) {
 	const user = clientes[0];
-	const userDomicilio = domicilios.find((d) => d.idDomicilio === user.idDomicilio);
+	const [userDomicilio, setUserDomicilio] = useState<DomicilioDto | undefined>(undefined);
 	const shipment = useShipmentRegisterStore((state) => state.shipment);
 	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
 	const [localidades, setLocalidades] = useState<Localidad[]>([]);
@@ -35,26 +39,25 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	const [isCreated, setIsCreated] = useState(false);
 	const [nroSeguimiento, setNroSeguimiento] = useState<number>(0);
 	const [isConfirmed, setIsConfirmed] = useState(false);
-
-	const handleShipment = () => {
-		if (!userDomicilio) return;
-		const origenCliente = {
-			calle: userDomicilio?.calle,
-			numero: userDomicilio?.numero,
-			piso: userDomicilio?.piso,
-			depto: userDomicilio?.depto,
-			descripcion: userDomicilio?.descripcion,
-			localidadID: 5,
-		};
-		setShipment({
-			...shipment,
-			cliente: "123e4567-e89b-12d3-a456-426614174000",
-			origen: origenCliente,
-		});
-	};
-
+	
 	useEffect(() => {
-		handleShipment();
+		//TODO: Cambiar el id del cliente por el id del cliente logueado
+		DomiciliosService.getDomicilioByClienteId("").then((userDomicilio) => {
+			if (!userDomicilio) return;
+			const origenCliente = {
+				calle: userDomicilio.calle,
+				numero: userDomicilio.numero,
+				piso: userDomicilio.piso,
+				depto: userDomicilio.depto,
+				descripcion: userDomicilio.descripcion,
+				localidadID: userDomicilio.localidadID,
+			};
+			setShipment({
+				...shipment,
+				cliente: "123e4567-e89b-12d3-a456-426614174000",
+				origen: origenCliente,
+			});
+		});
 		LocalidadesService.getLocalidades().then((localidades) => setLocalidades(localidades));
 	}, []);
 
@@ -105,10 +108,13 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
                     }, 3000);
 				}
 			})
+			.catch((error) => {
+				toast.error(error.message);
+			})
 			.finally(() => {
 				setLoading(false);
 			}),{ 
-				loading: 'Realizando envío...',
+				loading: 'Buscando conductor disponible...', 
 			}
 		)
 		
@@ -125,58 +131,9 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 		setNroSeguimiento(0);
 	}	
 
-	if (loading){
-		return (
-		  <div className="flex justify-center items-center h-full w-full">
-			<div className="flex flex-col gap-10">
-				<picture className="flex justify-center">
-					<img src="/gifs/buscar-conductor.gif" className={`rounded-md w-[50%] ${loading ? "opacity-100" : "opacity-0 transition-opacity delay-500 ease-linear"}`} alt="" />
-				</picture>
-				<div className="flex flex-col items-center gap-4">
-					<p className="text-xl font-semibold">Buscando conductores disponibles...</p>
-					<CircularProgress />
-				</div>
-				<div className="flex justify-center">
-					<Button
-					onClick={handleCancelar}
-					variant="contained"
-					color="primary"
-					>
-					Cancelar
-					</Button>
-				</div>
-			</div>
-		  </div>
-		);
-	}
+	if (loading) return <LoadingFindDriver handleCancelar={handleCancelar} />;
 
-
-	if (isConfirmed) {
-		return (
-			<div className="relative flex justify-center items-center h-screen w-full overflow-hidden">
-				<div className="flex flex-col items-center gap-4 z-10">
-					<div className={`relative w-16 h-16 rounded-full bg-green-500 transition-transform duration-500`}>
-						<svg
-							className={`absolute inset-0 w-10 h-10 m-auto text-white transition-opacity duration-500`}
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={3}
-								d="M5 13l4 4L19 7"
-							/>
-						</svg>
-					</div>
-					<p className={"text-xl font-semibold"}>
-						Conductor encontrado
-					</p>
-				</div>
-		  	</div>
-		);
-	}
+	if (isConfirmed) return <ConfirmFindDriver/>;
 
 	if (isCreated) {
 		return (
@@ -193,7 +150,6 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 			</div>
 		);
 	}
-	
 
 	return (
 		<div className='py-16 w-full'>
@@ -221,7 +177,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 											id='calle'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
 											aria-describedby='Calle'
-											defaultValue={userDomicilio?.calle}
+											defaultValue={shipment.origen.calle}
 										/>
 									</FormControl>
 									<FormControl>
@@ -230,25 +186,25 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 											id='numero'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
 											aria-describedby='Número'
-											defaultValue={userDomicilio?.numero}
+											defaultValue={shipment.origen.numero}
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='depto'>Departamento</InputLabel>
+										<InputLabel htmlFor='depto'>Departamento (opcional)</InputLabel>
 										<Input
 											id='depto'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
 											aria-describedby='depto'
-											defaultValue={userDomicilio?.depto}
+											defaultValue={shipment.origen.depto}
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='piso'>Piso</InputLabel>
+										<InputLabel htmlFor='piso'>Piso (opcional)</InputLabel>
 										<Input
 											id='piso'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
 											aria-describedby='Piso'
-											defaultValue={userDomicilio?.piso}
+											defaultValue={shipment.origen.piso}
 										/>
 									</FormControl>
 									<FormControl>
@@ -257,7 +213,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 											id='descripcion'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
 											aria-describedby='Descripción (opcional)'
-											defaultValue={userDomicilio?.descripcion}
+											defaultValue={shipment.origen.descripcion}
 										/>
 									</FormControl>
 									<FormControl>
