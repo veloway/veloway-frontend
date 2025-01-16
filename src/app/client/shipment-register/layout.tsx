@@ -1,5 +1,5 @@
 "use client";
-import { clientes, domicilios } from "@/db/usuarios";
+import { clientes } from "@/db/usuarios";
 import Input from "@mui/material/Input";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -19,7 +19,6 @@ import { EnviosService } from "@/services/envios.service";
 import axios from 'axios';
 import { Toaster, toast } from "react-hot-toast";
 import Link from "next/link";
-import { DomicilioDto } from "@/entities/domicilio";
 import { DomiciliosService } from "@/services/domicilios.service";
 import { LoadingFindDriver } from "@/components/client/loading-find-driver/LoadingFindDriver";
 import { ConfirmFindDriver } from "@/components/client/confirm-find-driver/ConfirmFindDriver";
@@ -30,7 +29,6 @@ interface ShipmentRegisterLayoutProps {
 
 export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLayoutProps) {
 	const user = clientes[0];
-	const [userDomicilio, setUserDomicilio] = useState<DomicilioDto | undefined>(undefined);
 	const shipment = useShipmentRegisterStore((state) => state.shipment);
 	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
 	const [localidades, setLocalidades] = useState<Localidad[]>([]);
