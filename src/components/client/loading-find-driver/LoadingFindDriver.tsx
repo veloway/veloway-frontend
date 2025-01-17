@@ -8,7 +8,7 @@ interface LoadingFindDriverProps {
 export const LoadingFindDriver = ({ handleCancelar, intentos }: LoadingFindDriverProps) => {
 	return (
 		<>
-			<div className='flex justify-center items-center h-full w-full'>
+			<div className='flex justify-center items-center w-full'>
 				<div className='flex flex-col gap-10'>
 					<picture className='flex justify-center'>
 						<img src='/gifs/buscar-conductor.gif' className='rounded-md w-[50%]' alt='' />

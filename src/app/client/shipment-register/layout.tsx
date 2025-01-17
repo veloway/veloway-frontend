@@ -135,7 +135,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 
 	if (isCreated) {
 		return (
-			<div className="flex justify-center items-center h-full w-full">
+			<div className="flex justify-center items-center w-full">
 				<div className="flex flex-col gap-10">
 					<div className="flex flex-col items-center gap-4">
 						<p className="text-xl font-semibold">Envío realizado con éxito</p>
@@ -150,9 +150,9 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	}
 	
 	return (
-		<div className='py-16 w-full'>
-			<h1 className='text-3xl font-semibold mb-8'>Realiza tu envio</h1>
-			<div className='grid md:grid-cols-2 gap-6'>
+		<div className='py-10 max-w-screen-xl 2xl:max-w-screen-2xl px-4 md:px-10 flex flex-col justify-center w-full m-auto'>
+			<h1 className='text-3xl font-semibold mb-8 max-w-screen-2xl'>Realiza tu envio</h1>
+			<div className='grid md:grid-cols-2 gap-6 max-w-screen-2xl'>
 				{children}
 				<div>
 					<div className='rounded-md h-full flex flex-col'>

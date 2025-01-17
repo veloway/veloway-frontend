@@ -1,0 +1,90 @@
+"use client";
+import { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { EnviosService } from '@/services/envios.service';
+import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
+
+const AllShipmentsPage = () => {
+    const [shipments, setShipments] = useState<GetEnvioDto[]>([]);
+
+    useEffect(() => {
+        EnviosService.getAllByClienteId('123e4567-e89b-12d3-a456-426614174000').then((envios) => {
+            setShipments(envios);
+        });
+    }, []);
+
+    const handleViewShipment = (nroSeguimiento: number) => {
+        // Implement view shipment logic
+        console.log(`View shipment with ID: ${nroSeguimiento}`);
+    };
+
+    return (
+        <div className='w-full'>
+            <header className='bg-primary shadow'>
+                <div className='max-w-screen-xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>
+                    <div className='flex flex-col gap-2 text-white'>
+                        <h1 className='text-[30px] font-semibold'>Todos los envíos</h1>
+                    </div>
+                </div>
+            </header>
+            <TableContainer component={Paper} className='max-w-screen-xl mx-auto px-6'>
+                <Table>
+                    <TableHead className='w-full'>
+                        <TableRow>
+                            <TableCell className='font-bold'>#</TableCell>
+                            <TableCell className='font-bold'>Nro de seguimiento</TableCell>
+                            <TableCell className='font-bold'>Fecha y Hora</TableCell>
+                            <TableCell className='font-bold'>Destino</TableCell>
+                            <TableCell className='font-bold'>Origen</TableCell>
+                            <TableCell className='font-bold'>Descripción</TableCell>
+                            <TableCell className='font-bold'>Estado</TableCell>
+                            <TableCell className='font-bold'>Acciones</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {shipments.map((shipment, index) => (
+                            <TableRow key={index} hover>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell className='font-bold'>{shipment.nroSeguimiento}</TableCell>
+                                <TableCell>{shipment.fecha} {shipment.hora}</TableCell>
+                                <TableCell>{shipment.destino.calle} {shipment.destino.numero} {shipment.destino.piso && `, Piso ${shipment.destino.piso}`} {shipment.destino.depto && `Dto ${shipment.destino.depto }`} , {shipment.destino.localidad.nombre} - {shipment.destino.localidad.provincia.nombre}</TableCell>
+                                <TableCell>
+                                    {shipment.origen.calle} {shipment.origen.numero} {shipment.origen.piso && `, Piso ${shipment.origen.piso}`} {shipment.origen.depto && `Dto ${shipment.origen.depto }`} , {shipment.origen.localidad.nombre} - {shipment.origen.localidad.provincia.nombre}
+                                </TableCell>
+                                <TableCell>{shipment.descripcion}</TableCell>
+                                <TableCell>
+                                    <span
+                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            shipment.estado === "Entregado"
+                                                ? "bg-green-100 text-green-800"
+                                                : shipment.estado === "En traslado a destino"
+                                                    ? "bg-yellow-100 text-yellow-800"
+                                                    : shipment.estado === "En proceso de retiro"
+                                                        ? "bg-blue-100 text-blue-800"
+                                                        : shipment.estado === "Confirmado"
+                                                            ? "bg-purple-100 text-purple-800"
+                                                            : "bg-red-100 text-red-800"
+                                        }`}
+                                    >
+                                        {shipment.estado}
+                                    </span>
+                                </TableCell>
+                                <TableCell>
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        onClick={() => handleViewShipment(shipment.nroSeguimiento)}
+                                    >
+                                        Ver
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+    );
+};
+
+export default AllShipmentsPage;

@@ -1,4 +1,5 @@
 import { EnvioDto } from '@/entities/envio';
+import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
 import axios, { CancelTokenSource} from 'axios';
 import dayjs from 'dayjs';
 
@@ -56,6 +57,19 @@ export class EnviosService {
             }else{
                 throw new Error("Error desconocido");
             }
+        }
+    }
+
+
+    static async getAllByClienteId(clienteId: string): Promise<GetEnvioDto[]>{
+        try{
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}`);
+            
+            if (res.status !== 200) throw new Error(res.data.message);
+
+            return res.data;
+        }catch(error){
+            throw new Error("No se pudo obtener la lista de envíos");
         }
     }
 }
