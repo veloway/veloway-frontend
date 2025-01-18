@@ -9,6 +9,7 @@ import { EnviosService } from "@/services/envios.service";
 import Link from "next/link";
 import { NewShipmentButton } from "@/components/client/new-shipment-button/NewShipmentButton";
 import { TrackShipmentButton } from "@/components/client/track-shipment-button/TrackShipmentButton";
+import { SkeletonDashboard } from "@/components/client/skeleton-dashboard/SkeletonDashboard";
 
 // export const metadata = { title: "Client Home" };
 
@@ -176,7 +177,11 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 											<dl>
 												<dt className='text-sm font-medium text-gray-500 truncate'>Total Envíos</dt>
 												<dd>
-													<div className='text-lg font-medium text-gray-900'>{cantEnvios}</div>
+													{shipments.length === 0 ? (
+														<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
+													) : (
+														<div className='text-lg font-medium text-gray-900'>{cantEnvios}</div>
+													)}
 												</dd>
 											</dl>
 										</div>
@@ -211,9 +216,13 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 											<dl>
 												<dt className='text-sm font-medium text-gray-500 truncate'>En Tránsito</dt>
 												<dd>
-													<div className='text-lg font-medium text-gray-900'>
-														{cantiEnviosEnTransito}
-													</div>
+													{shipments.length === 0 ? (
+														<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
+													) : (
+														<div className='text-lg font-medium text-gray-900'>
+															{cantiEnviosEnTransito}
+														</div>
+													)}
 												</dd>
 											</dl>
 										</div>
@@ -249,38 +258,61 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 									</h3>
 									<div className='mt-5 flow-root min-h-[200px]'>
 										<ul className='-my-4 divide-y divide-gray-200'>
-											{shipments.slice(0, 3).map((shipment, index) => (
-												<li key={shipment.nroSeguimiento} className='py-4'>
-													<div className='flex items-center space-x-4'>
-														<div className='flex-1 min-w-0'>
-															<p className='text-sm font-medium text-gray-900 truncate'>
-																Envío #{index + 1}
-															</p>
-															<p className='text-sm text-gray-500 truncate'>
-																{shipment.destino.calle} {shipment.destino.numero}{" "}
-																{shipment.destino.localidad.nombre}{" "}
-																{shipment.destino.localidad.provincia.nombre}
-															</p>
+											{shipments.length === 0 ? (
+												Array(3).fill(0).map((_, index) => (
+													<li key={index} className='py-4'>
+														<div className='flex items-center space-x-4'>
+															<div className='flex-1 min-w-0'>
+																<div className='h-4 bg-gray-300 rounded w-32 animate-pulse mb-2'></div>
+																<div className='h-4 bg-gray-300 rounded w-48 animate-pulse'></div>
+															</div>
+															<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
+															<div className='h-8 bg-gray-300 rounded w-24 animate-pulse'></div>
 														</div>
-														<div>
-															<span
-																className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-																	shipment.estado === "Entregado"
-																		? "bg-green-100 text-green-800"
-																		: shipment.estado === "En traslado a destino"
-																			? "bg-yellow-100 text-yellow-800"
-																			: shipment.estado === "En proceso de retiro"
-																				? "bg-blue-100 text-blue-800"
-																				: shipment.estado === "Confirmado"
-																					? "bg-purple-100 text-purple-800"
-																					: "bg-red-100 text-red-800"
-																}`}>
-																{shipment.estado}
-															</span>
+													</li>
+												))
+											) : (
+												shipments.slice(0, 3).map((shipment, index) => (
+													<li key={shipment.nroSeguimiento} className='py-4'>
+														<div className='flex items-center space-x-4'>
+															<div className='flex-1 min-w-0'>
+																<p className='text-sm font-medium text-gray-900 truncate'>
+																	Envío #{index + 1}
+																</p>
+																<p className='text-sm text-gray-500 truncate'>
+																	{shipment.destino.calle} {shipment.destino.numero}{" "}
+																	{shipment.destino.localidad.nombre}{" "}
+																	{shipment.destino.localidad.provincia.nombre}
+																</p>
+															</div>
+															<div>
+																<span
+																	className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+																		shipment.estado === "Entregado"
+																			? "bg-green-100 text-green-800"
+																			: shipment.estado === "En traslado a destino"
+																				? "bg-yellow-100 text-yellow-800"
+																				: shipment.estado === "En proceso de retiro"
+																					? "bg-blue-100 text-blue-800"
+																					: shipment.estado === "Confirmado"
+																						? "bg-purple-100 text-purple-800"
+																						: "bg-red-100 text-red-800"
+																	}`}>
+																	{shipment.estado}
+																</span>
+															</div>
+															<Button 
+																variant="outlined" 
+																color="primary" 
+																LinkComponent={Link}
+																href={`/client/shipment/${shipment.nroSeguimiento}`}
+															>
+																Ver
+															</Button>
 														</div>
-													</div>
-												</li>
-											))}
+													</li>
+												))
+											)}
 										</ul>
 									</div>
 									<div className='mt-6'>
@@ -317,21 +349,37 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 									</h3>
 									<div className='mt-5'>
 										<div className='flex items-end'>
-											{monthlyStats.map((stat, index) => (
-												<div key={index} className='flex-1 text-center'>
-													<div className='relative'>
-														<div className='absolute inset-0 flex items-center justify-center'>
-															<span className='text-sm font-medium text-gray-600'>
-																{stat.shipments}
-															</span>
+												{shipments.length === 0 ? (
+													Array(12).fill(0).map((_, index) => (
+														<div key={index} className='flex-1 text-center'>
+															<div className='relative'>
+																<div className='absolute inset-0 flex items-center justify-center'>
+																	<div className='h-4 bg-gray-300 rounded w-8 animate-pulse'></div>
+																</div>
+																<div
+																	className='bg-gray-300 rounded-t animate-pulse'
+																	style={{ height: '50px' }}></div>
+															</div>
+															<span className='text-sm text-gray-500'>{monthlyStatsInitial[index].month}</span>
 														</div>
-														<div
-															className='bg-blue-500 rounded-t'
-															style={{ height: `${stat.shipments * 2}px` }}></div>
-													</div>
-													<span className='text-sm text-gray-500'>{stat.month}</span>
-												</div>
-											))}
+													))
+												) : (
+													monthlyStats.map((stat, index) => (
+														<div key={index} className='flex-1 text-center'>
+															<div className='relative'>
+																<div className='absolute inset-0 flex items-center justify-center'>
+																	<span className='text-sm font-medium text-gray-600'>
+																		{stat.shipments}
+																	</span>
+																</div>
+																<div
+																	className='bg-blue-500 rounded-t'
+																	style={{ height: `${stat.shipments * 2}px` }}></div>
+															</div>
+															<span className='text-sm text-gray-500'>{stat.month}</span>
+														</div>
+													))
+												)}
 										</div>
 									</div>
 								</div>

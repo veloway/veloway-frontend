@@ -72,4 +72,16 @@ export class EnviosService {
             throw new Error("No se pudo obtener la lista de envíos");
         }
     }
+
+    static async getByNroSeguimiento(nroSeguimiento: number): Promise<GetEnvioDto>{
+        try{
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/nro-seguimiento/${nroSeguimiento}`);
+            
+            if (res.status !== 200) throw new Error(res.data.message);
+
+            return res.data;
+        }catch(error){
+            throw new Error("No se pudo obtener el envío");
+        }
+    }
 }

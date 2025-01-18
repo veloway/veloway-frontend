@@ -33,3 +33,7 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+.containerMarginResposive{
+  @apply max-w-screen-lg lg:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 md:px-10
+}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { EnviosService } from '@/services/envios.service';
 import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
+import Link from 'next/link';
 
 const AllShipmentsPage = () => {
     const [shipments, setShipments] = useState<GetEnvioDto[]>([]);
@@ -13,21 +14,16 @@ const AllShipmentsPage = () => {
         });
     }, []);
 
-    const handleViewShipment = (nroSeguimiento: number) => {
-        // Implement view shipment logic
-        console.log(`View shipment with ID: ${nroSeguimiento}`);
-    };
-
     return (
         <div className='w-full'>
             <header className='bg-primary shadow'>
-                <div className='max-w-screen-xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>
+                <div className='containerMarginResposive'>
                     <div className='flex flex-col gap-2 text-white'>
                         <h1 className='text-[30px] font-semibold'>Todos los envíos</h1>
                     </div>
                 </div>
             </header>
-            <TableContainer component={Paper} className='max-w-screen-xl mx-auto px-6'>
+            <TableContainer component={Paper} className='containerMarginResposive'>
                 <Table>
                     <TableHead className='w-full'>
                         <TableRow>
@@ -73,7 +69,8 @@ const AllShipmentsPage = () => {
                                     <Button 
                                         variant="contained" 
                                         color="primary" 
-                                        onClick={() => handleViewShipment(shipment.nroSeguimiento)}
+                                        LinkComponent={Link}
+                                        href={`/client/shipment/${shipment.nroSeguimiento}`}
                                     >
                                         Ver
                                     </Button>
