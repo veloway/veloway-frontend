@@ -1,5 +1,4 @@
 import { EnvioDto } from '@/entities/envio';
-import { EnviosService } from '@/services/envios.service';
 import { create } from 'zustand';
 
 interface ShipmentStore {

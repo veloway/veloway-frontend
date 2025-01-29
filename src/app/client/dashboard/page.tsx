@@ -75,16 +75,16 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 	};
 
 	useEffect(() => {
-		EnviosService.getAllByClienteId(clietId).then((envios) => {
-			setShipments(envios);
-			setCantEnvios(envios.length);
+		EnviosService.getAllByClienteId(clietId).then((data) => {
+			setShipments(data.envios);
+			setCantEnvios(data.envios.length);
 			setCantiEnviosEnTransito(
-				envios.filter(
+				data.envios.filter(
 					(envio) =>
 						envio.estado === "En proceso de retiro" || envio.estado === "En traslado a destino"
 				).length
 			);
-			setMonthlyStats(calculateMonthlyStats(envios))
+			setMonthlyStats(calculateMonthlyStats(data.envios))
 		});
 	}, []);
 
@@ -272,7 +272,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 													</li>
 												))
 											) : (
-												shipments.slice(0, 3).map((shipment, index) => (
+												shipments.slice().reverse().slice(0, 3).map((shipment, index) => (
 													<li key={shipment.nroSeguimiento} className='py-4'>
 														<div className='flex items-center space-x-4'>
 															<div className='flex-1 min-w-0'>

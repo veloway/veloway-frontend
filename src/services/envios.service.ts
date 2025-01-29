@@ -3,6 +3,14 @@ import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
 import axios, { CancelTokenSource} from 'axios';
 import dayjs from 'dayjs';
 
+interface GetEnvioDtoPagination{
+    totalEnvios: number
+    lastPage: number
+    previusPage: number
+    nextPage: number
+    envios: GetEnvioDto[]
+}
+
 export class EnviosService {
     static async create(envio: EnvioDto, cancelToken: CancelTokenSource, onIntento: (intentos: number) => void): Promise<any> {
         const maxTiempo = 20000; // 20 segundos
@@ -61,7 +69,7 @@ export class EnviosService {
     }
 
 
-    static async getAllByClienteId(clienteId: string): Promise<GetEnvioDto[]>{
+    static async getAllByClienteId(clienteId: string): Promise<GetEnvioDtoPagination>{
         try{
             const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}`);
             

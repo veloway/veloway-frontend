@@ -2,55 +2,62 @@
 import SkeletonShipmentFound from "@/components/client/skeleton-shipment-found/SkeletonShipmentFound";
 import { GetEnvioDto } from "@/entities/envios/getEnvioDto";
 import { EnviosService } from "@/services/envios.service";
+import { Step, StepLabel, Stepper } from "@mui/material";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
 
-type ShipmentStatus = 'Confirmado' | 'Cancelado' | 'En proceso de retiro' | 'En traslado a destino' | 'Entregado';
+enum ShipmentStatus {
+  Confirmado = 'Confirmado',
+  Cancelado = 'Cancelado',
+  EnProcesoDeRetiro = 'En proceso de retiro',
+  EnTrasladoADestino = 'En traslado a destino',
+  Entregado = 'Entregado'
+}
 
-function getStatusColor(status: string) {
+function getStatusColor(status: ShipmentStatus) {
   switch (status) {
-    case 'Confirmado':
+    case ShipmentStatus.Confirmado:
       return 'bg-amber-100 text-amber-800 border-amber-200';
-    case 'Cancelado':
+    case ShipmentStatus.Cancelado:
       return 'bg-red-100 text-red-800 border-red-200';
-    case 'En proceso de retiro':
+    case ShipmentStatus.EnProcesoDeRetiro:
       return 'bg-purple-100 text-purple-800 border-purple-200';
-    case 'En traslado a destino':
+    case ShipmentStatus.EnTrasladoADestino:
       return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-    case 'Entregado':
+    case ShipmentStatus.Entregado:
       return 'bg-emerald-100 text-emerald-800 border-emerald-200';
   }
 }
 
-function getStatusIcon(status: string) {
+function getStatusIcon(status: ShipmentStatus) {
   const baseClasses = "w-5 h-5";
   
   switch (status) {
-    case 'Confirmado':
+    case ShipmentStatus.Confirmado:
       return (
         <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       );
-    case 'Cancelado':
+    case ShipmentStatus.Cancelado:
       return (
         <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       );
-    case 'En proceso de retiro':
+    case ShipmentStatus.EnProcesoDeRetiro:
       return (
         <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
         </svg>
       );
-    case 'En traslado a destino':
+    case ShipmentStatus.EnTrasladoADestino:
       return (
         <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       );
-    case 'Entregado':
+    case ShipmentStatus.Entregado:
       return (
         <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -90,8 +97,8 @@ function ShipmentPage() {
               </svg>
               <span className="text-lg font-medium">Estado del Envío</span>
             </div>
-            <div className={`px-4 py-2 rounded-full border ${getStatusColor(shipment.estado)} flex items-center gap-2`}>
-              {getStatusIcon(shipment.estado)}
+            <div className={`px-4 py-2 rounded-full border ${getStatusColor(shipment.estado as ShipmentStatus)} flex items-center gap-2`}>
+              {getStatusIcon(shipment.estado as ShipmentStatus)}
               <span className="font-medium">{shipment.estado}</span>
             </div>
           </div>
@@ -99,7 +106,7 @@ function ShipmentPage() {
       </div>
 
       {/* Main Content */}
-      <div className="containerMarginResposive py-8 w-full flex flex-col justify-between flex-1 ">
+      <div className="containerMarginResposive py-8 w-full flex flex-col justify-between flex-1 gap-10">
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -120,32 +127,18 @@ function ShipmentPage() {
           </div>
         </div>
 
-        {/* Progress Steps */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-          <div className="flex justify-between items-center w-full">
-            {['Confirmado', 'En proceso de retiro', 'En traslado a destino', 'Entregado'].map((step, index) => (
-              <div key={step} className="flex flex-col items-center relative">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === shipment.estado ? 'bg-[#1565c0] text-white' : 'bg-gray-100 text-gray-400'
-                }`}>
-                  {index + 1}
-                </div>
-                <p className={`text-xs mt-2 text-center ${
-                  step === shipment.estado ? 'text-[#1565c0] font-medium' : 'text-gray-500'
-                }`}>
-                  {step}
-                </p>
-                {index < 3 && (
-                  <div className={`absolute top-4 left-8 w-[calc(100%-2rem)] h-0.5 ${
-                    index < ['Confirmado', 'En proceso de retiro', 'En traslado a destino', 'Entregado'].indexOf(shipment.estado)
-                      ? 'bg-[#1565c0]'
-                      : 'bg-gray-200'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Progress Stepper */}
+        <Stepper 
+          activeStep={[ShipmentStatus.Confirmado, ShipmentStatus.EnProcesoDeRetiro, ShipmentStatus.EnTrasladoADestino, ShipmentStatus.Entregado].indexOf(shipment.estado as ShipmentStatus)} 
+          alternativeLabel
+          className="py-6"
+          >
+          {[ShipmentStatus.Confirmado, ShipmentStatus.EnProcesoDeRetiro, ShipmentStatus.EnTrasladoADestino, ShipmentStatus.Entregado].map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+      </Stepper>
 
         {/* Shipping Route */}
         <div className="grid md:grid-cols-2 gap-8">
@@ -187,7 +180,7 @@ function ShipmentPage() {
         </div>
 
          {/* Info Cards */}
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-5">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4">
             <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
