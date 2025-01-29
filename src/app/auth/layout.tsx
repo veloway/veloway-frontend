@@ -14,7 +14,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       </div>
 
       {/* Mitad derecha con scroll solo en el formulario */}
-      <div className="w-1/2 h-screen overflow-y-auto flex justify-center items-center bg-gray-100">
+      <div className="w-1/2 h-screen flex justify-center items-center bg-gray-100">
         <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
           {children}
         </div>

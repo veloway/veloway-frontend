@@ -38,44 +38,41 @@ const RegisterConductor = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto bg-white rounded space-y-6">
-            {/* Botón de regreso */}
-            <button 
-                className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-4"
-                onClick={() => router.push('/auth/login')}
-            >
-                <FaArrowLeft /> <span>Inicio de Sesión</span>
-            </button>
-
-            <form onSubmit={handleSubmit} className="space-y-0">
-                <h2 className="text-2xl font-bold text-center mb-6">Registro de Conductor</h2>
-                <Registro onChange={handleChange} values={values} />
-
-                {/* Plegar/Desplegar Licencia */}
-                <div className="space-y-4">
-                    <button 
-                        type="button" 
-                        className="w-full py-2 px-4 bg-gray-100 rounded-md flex justify-between items-center mt-4"
-                        onClick={() => setShowLicense(!showLicense)}
-                    >
-                        <span>Registro de Licencia</span>
-                        {showLicense ? <FaChevronUp /> : <FaChevronDown />}
-                    </button>
-
-                    {showLicense && (
-                        <Licencia onChange={handleChange} values={values} />
-                    )}
-                </div>
-                    <div className='mt-4'><FichaMedica onChange={handleChange} compartirFichaMedica={values.compartirFichaMedica}/></div>
-                
-
+        
+        <>
+        <button 
+        className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-4"
+        onClick={() => router.push('/auth/login')}>
+        <FaArrowLeft /> <span>Inicio de Sesión</span>
+        </button>
+        <div className="max-w-md mx-auto bg-white rounded space-y-6 max-h-[80vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="space-y-0">
+            <h2 className="text-2xl font-bold text-center mb-6">Registro de Conductor</h2>
+            <Registro onChange={handleChange} values={values} />
+            {/* Plegar/Desplegar Licencia */}
+            <div className="space-y-4">
                 <button 
-                    type="submit" 
-                    className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
-                    Registrarse como Conductor
+                    type="button" 
+                    className="w-full py-2 px-4 bg-gray-100 rounded-md flex justify-between items-center mt-4"
+                    onClick={() => setShowLicense(!showLicense)}
+                >
+                    <span>Registro de Licencia</span>
+                    {showLicense ? <FaChevronUp /> : <FaChevronDown />}
                 </button>
-            </form>
-        </div>
+
+                {showLicense && (
+                    <Licencia onChange={handleChange} values={values} />
+                )}
+            </div>
+                <div className='mt-4'><FichaMedica onChange={handleChange} compartirFichaMedica={values.compartirFichaMedica}/></div>
+            <button 
+                type="submit" 
+                className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
+                Registrarse como Conductor
+            </button>
+        </form>
+    </div></>
+        
     );
 };
 

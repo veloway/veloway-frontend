@@ -1,7 +1,6 @@
-//import { Button } from '@/components/ui'
 import { PiLightning } from "react-icons/pi";
 import './HeaderHome.css';
-import Button from '@mui/material/Button'; // Importar botón de Material UI
+import Button from '@mui/material/Button';
 import Link from "next/link";
 export function HeaderHome (){
     return(
@@ -16,23 +15,8 @@ export function HeaderHome (){
                     <li><Link href="#">API</Link></li>
                 </div>
                 <div className="links-header-2">
-                    <li><Link href="/auth/login">Iniciar Sesion</Link></li>
-                    <li><Link href="#">
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                                backgroundColor: 'white', 
-                                color: 'black', 
-                                '&:hover': { backgroundColor: '#f0f0f0' }, 
-                                fontFamily: 'Rubik', 
-                                textTransform: 'none'
-                              }}
-                        >
-                        Registrarse
-                        </Button>
-                    </Link></li>
+                    <li><a href="/auth/login">Iniciar Sesion</a></li>
+                    <li><a href="/auth/clientRegister"><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
                 </div>
             </ul>
             </nav>

@@ -1,50 +1,95 @@
-// auth/clientregister/page.tsx
 "use client";
 
-import React, { useState } from 'react';
-import Registro from '../../../components/auth/Registro';
-import { useRouter } from 'next/navigation';
-import { FaArrowLeft } from 'react-icons/fa'; // Icono de flecha para el botón de regreso
+import React, { useState } from "react";
+import Registro from "../../../components/auth/Registro";
+import DomicilioForm from "../../../components/auth/DomicilioForm";
+import { useRouter } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
 
 const RegisterCliente = () => {
-    const [values, setValues] = useState({
-        email: '',
-        password: '',
-        dni: '',
-        fechaNacimiento: '',
-        nombre: '',
-        apellido: '',
-        telefono: '',
+    const [step, setStep] = useState(1);
+    const [userValues, setUserValues] = useState({
+        email: "",
+        password: "",
+        dni: "",
+        fechaNacimiento: "",
+        nombre: "",
+        apellido: "",
+        telefono: "",
     });
-    
+    const [addressValues, setAddressValues] = useState({
+        calle: "",
+        numero: "",
+        descripcion: "",
+        piso: "",
+        depto: "",
+        localidadID: "",
+    });
+
     const router = useRouter();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
+    const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserValues({ ...userValues, [e.target.name]: e.target.value });
+    };
+
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAddressValues({ ...addressValues, [e.target.name]: e.target.value });
+    };
+
+    const handleNext = () => {
+        if (Object.values(userValues).some(value => value === "")) {
+            alert("Por favor, completa todos los campos antes de continuar.");
+            return;
+        }
+        setStep(2);
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Manejar envío de formulario
-        console.log(values);
-        router.push('/'); // Redirigir a una página después de registro
+        if (Object.values(addressValues).some(value => value === "")) {
+            alert("Por favor, completa todos los campos del domicilio.");
+            return;
+        }
+        console.log({ user: userValues, address: addressValues });
+        router.push("/");
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white rounded space-y-6">
-            {/* Botón de regreso */}
-            <button 
+            <button
                 className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-4"
-                onClick={() => router.push('/auth/login')}
+                onClick={() => step === 1 ? router.push("/auth/login") : setStep(1)} // Cambio en el onClick
+                type="button"
             >
-                <FaArrowLeft /> <span>Inicio de Sesión</span>
+                <FaArrowLeft />
+                <span>{step === 1 ? "Inicio de Sesión" : "Volver al Formulario de Usuario"}</span>
             </button>
 
-            <h2 className="text-2xl font-bold text-center">Registro de Cliente</h2>
-            <Registro onChange={handleChange} values={values} />
-            <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
-                Registrarse como Cliente
-            </button>
+            <h2 className="text-2xl font-bold text-center">
+                {step === 1 ? "Registro de Cliente" : "Datos de Domicilio"}
+            </h2>
+
+            {step === 1 ? (
+                <>
+                    <Registro onChange={handleUserChange} values={userValues} />
+                    <button
+                        type="button"
+                        onClick={handleNext}
+                        className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                    >
+                        Siguiente
+                    </button>
+                </>
+            ) : (
+                <>
+                    <DomicilioForm
+                        onChange={handleAddressChange}
+                        values={addressValues}
+                        onBack={() => setStep(1)}
+                        onSubmit={handleSubmit} // Se envía directamente
+                    />
+                </>
+            )}
         </form>
     );
 };
