@@ -7,9 +7,9 @@ import './MiddleCards.css'
 export function MiddleCards(){
     return(
         <div className="middle-cards">
-          <a href="/client/[id]" className="blue-button"><HomeCard texto="Hacer un envio" imagen={<BiPackage className="button-icon"/>}/></a>
+          <a href="/client/dashboard" className="blue-button"><HomeCard texto="Hacer un envio" imagen={<BiPackage className="button-icon"/>}/></a>
           <a href="#" className="blue-button"><HomeCard texto="Seguir mis envios" imagen={<BiMap className="button-icon"/>} /></a>
-          <a href="/driver/[id]" className="blue-button"><HomeCard texto="Portal de conductores" imagen={<FiTruck className="button-icon"/>} /></a>
+          <a href="/driver/dashboard" className="blue-button"><HomeCard texto="Portal de conductores" imagen={<FiTruck className="button-icon"/>} /></a>
         </div>
     )
 }

@@ -7,6 +7,7 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 
+
 const loadRoutingMachine = async (map: L.Map) => {
   const { RoutingMachine } = await import('./Routing');
   RoutingMachine(map);
@@ -29,7 +30,7 @@ const MapTravel: React.FC = () => {
     <MapContainer
       center={[39.5, -98.35]}
       zoom={4}
-      className="w-[900px] h-[450px]"
+      className="w-[900px] h-[450px] rounded-md"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

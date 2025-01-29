@@ -31,8 +31,8 @@ const NavBar = ({ links }: NavbarProps) => {
 	};
 
 	return (
-		<header className='fixed top-0 z-[9999999] w-full shadow-lg shadow-gray-400/30 h-[90px] m-auto bg-tertiary text-white'>
-			<div className='flex bg-tertiary relative z-[9999999] h-full justify-between items-center max-w-screen-lg lg:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10'>
+		<header className='fixed top-0 z-[9999999] w-full shadow-lg shadow-gray-400/30 h-[80px] m-auto bg-tertiary text-white'>
+			<div className='flex bg-tertiary relative z-[9999999] h-full justify-between items-center max-w-screen-lg lg:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-4 md:px-10'>
 				<div className='flex gap-[80px] py-[15px]'>
 					<Logo />
 					<nav className='hidden lg:flex align-center'>

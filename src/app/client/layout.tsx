@@ -28,7 +28,7 @@ export default function ClientLayout({
       <Navbar 
         links= {links}
       />
-      <main className="max-w-screen-lg mt-[90px] xl:max-w-screen-xl 2xl:max-w-screen-2xl m-auto px-10">
+      <main className="flex mt-[80px] m-auto min-h-[calc(100vh-80px)] ">
         {children}
       </main>
     </div>

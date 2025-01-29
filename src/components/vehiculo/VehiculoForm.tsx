@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 interface Props {
   addVehiculo: (vehiculo: any) => void;
@@ -6,8 +10,16 @@ interface Props {
   vehiculos: any[];
 }
 
+const StyledTitle = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  fontSize: '24px',
+  fontWeight: 'bold',
+  color: theme.palette.primary.main,
+  marginBottom: '25px',
+}));
+
 const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) => {
-  const [anio, setAnio] = useState('');
+  const [anio, setAnio] = useState<string>('');
   const [color, setColor] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [nomSeguro, setNomSeguro] = useState('');
@@ -37,27 +49,36 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  
     const errors: { [key: string]: string } = {};
-  
+
     if (documentoTitular.length < 6 || documentoTitular.length > 10 || isNaN(Number(documentoTitular))) {
       errors.documentoTitular = "El documento debe ser un número entre 6 y 10 dígitos.";
     }
+
     if (!/^[a-zA-Z\s]+$/.test(titular)) {
       errors.titular = "El nombre del titular solo debe contener caracteres alfabéticos.";
     }
-    if (!anio || !color || !descripcion || !nomSeguro || !patente || !tipoVehiculo || !modeloNombre || !marcaNombre) {
+
+    if (!/^\d{4}$/.test(anio)) {
+      errors.anio = "El año debe ser un número de 4 dígitos.";
+    }
+
+    if (!marcaNombre) {
+      errors.marcaNombre = "La marca es obligatoria.";
+    }
+
+    if (!color || !descripcion || !nomSeguro || !patente || !tipoVehiculo || !modeloNombre) {
       errors.generic = "Todos los campos son obligatorios.";
     }
-  
+
+    setErrorMessages((prev) => ({ ...prev, ...errors }));
+
     if (Object.keys(errors).length > 0) {
-      setErrorMessages(errors);
       return;
     }
 
-    setErrorMessages({});
     const vehiculo = {
-      anio,
+      anio: String(anio),
       color,
       descripcion,
       nomSeguro,
@@ -75,8 +96,7 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
       },
     };
     addVehiculo(vehiculo);
-    
-    // Resetear campos del formulario
+
     setAnio('');
     setColor('');
     setDescripcion('');
@@ -87,176 +107,121 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
     setMarcaNombre('');
     setTitular('');
     setDocumentoTitular('');
+    setErrorMessages({});
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col space-y-4 bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg rounded-lg p-8 max-w-lg mx-auto mt-10"
-    >
-      <h2 className="text-3xl font-bold text-white mb-6 text-center">Registro de Vehículo</h2>
+    <div onSubmit={handleSubmit} style={{ maxWidth: 900, margin: 'auto', marginTop: '24px' }}>
+      <h2 className="text-2xl font-bold text-center mb-6">Registro del Vehículo</h2>
 
-      {errorMessages.generic && (
-        <div className="mb-4 text-red-500 text-center">
-          {errorMessages.generic}
-        </div>
-      )}
+      {errorMessages.generic && <div style={{ color: 'red' }}>{errorMessages.generic}</div>}
+      {errorMessages.anio && <div style={{ color: 'red' }}>{errorMessages.anio}</div>}
+      {errorMessages.marcaNombre && <div style={{ color: 'red' }}>{errorMessages.marcaNombre}</div>}
 
-      {/* Titular */}
-      <div className="field">
-        <label className="block text-white font-semibold">Titular del Vehículo</label>
+      <div className="space-y-4">
         <input
           type="text"
+          name="titular"
           value={titular}
           onChange={(e) => setTitular(e.target.value)}
-          placeholder="Nombre del titular"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Titular del Vehículo"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
         />
-        {errorMessages.titular && <p className="text-red-500 text-sm">{errorMessages.titular}</p>}
-      </div>
+        {errorMessages.titular && <div style={{ color: 'red' }}>{errorMessages.titular}</div>}
 
-      {/* Documento del Titular */}
-      <div className="field">
-        <label className="block text-white font-semibold">Documento del Titular</label>
         <input
           type="text"
+          name="documentoTitular"
           value={documentoTitular}
           onChange={(e) => setDocumentoTitular(e.target.value)}
-          placeholder="Número de documento"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Documento del Titular"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.documentoTitular && <p className="text-red-500 text-sm">{errorMessages.documentoTitular}</p>}
-      </div>
+        {errorMessages.documentoTitular && <div style={{ color: 'red' }}>{errorMessages.documentoTitular}</div>}
 
-      {/* Año */}
-      <div className="field">
-        <label className="block text-white font-semibold">Año</label>
-        <select
+        <input
+          type="text"
+          name="anio"
           value={anio}
           onChange={(e) => setAnio(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Año"
           required
-        >
-          <option value="">Seleccione un año</option>
-          {[...Array(31)].map((_, index) => {
-            const year = new Date().getFullYear() - index;
-            return (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            );
-          })}
-        </select>
-        {errorMessages.anio && <p className="text-red-500 text-sm">{errorMessages.anio}</p>}
-      </div>
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      {/* Color */}
-      <div className="field">
-        <label className="block text-white font-semibold">Color</label>
         <input
           type="text"
+          name="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          placeholder="Ej. Rojo"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Color"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.color && <p className="text-red-500 text-sm">{errorMessages.color}</p>}
-      </div>
 
-      {/* Descripción */}
-      <div className="field">
-        <label className="block text-white font-semibold">Descripción</label>
         <textarea
+          name="descripcion"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripción del vehículo"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
-          rows={3}
+          placeholder="Descripción"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows={2} 
         />
-        {errorMessages.descripcion && <p className="text-red-500 text-sm">{errorMessages.descripcion}</p>}
-      </div>
 
-      {/* Nombre del Seguro */}
-      <div className="field">
-        <label className="block text-white font-semibold">Nombre de la Compañía de Seguro</label>
         <input
           type="text"
+          name="nomSeguro"
           value={nomSeguro}
           onChange={(e) => setNomSeguro(e.target.value)}
-          placeholder="Nombre de la compañía"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Nombre del Seguro"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.nomSeguro && <p className="text-red-500 text-sm">{errorMessages.nomSeguro}</p>}
-      </div>
 
-      {/* Patente */}
-      <div className="field">
-        <label className="block text-white font-semibold">Patente</label>
         <input
           type="text"
+          name="patente"
           value={patente}
           onChange={(e) => setPatente(e.target.value)}
-          placeholder="Ej. ABC123"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Patente"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.patente && <p className="text-red-500 text-sm">{errorMessages.patente}</p>}
-      </div>
 
-      {/* Tipo de Vehículo */}
-      <div className="field">
-        <label className="block text-white font-semibold">Tipo de Vehículo</label>
-        <input
-          type="text"
+        <input          type="text"
+          name="tipoVehiculo"
           value={tipoVehiculo}
           onChange={(e) => setTipoVehiculo(e.target.value)}
-          placeholder="Ej. Sedan"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Tipo de Vehículo"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.tipoVehiculo && <p className="text-red-500 text-sm">{errorMessages.tipoVehiculo}</p>}
-      </div>
 
-      {/* Modelo */}
-      <div className="field">
-        <label className="block text-white font-semibold">Modelo</label>
         <input
           type="text"
+          name="modeloNombre"
           value={modeloNombre}
           onChange={(e) => setModeloNombre(e.target.value)}
-          placeholder="Ej. Corolla"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Modelo"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.modeloNombre && <p className="text-red-500 text-sm">{errorMessages.modeloNombre}</p>}
-      </div>
 
-      {/* Marca */}
-      <div className="field">
-        <label className="block text-white font-semibold">Marca</label>
         <input
           type="text"
+          name="marcaNombre"
           value={marcaNombre}
           onChange={(e) => setMarcaNombre(e.target.value)}
-          placeholder="Ej. Toyota"
-          className="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-white transition duration-200"
+          placeholder="Marca"
           required
+          className="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errorMessages.marcaNombre && <p className="text-red-500 text-sm">{errorMessages.marcaNombre}</p>}
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-white text-blue-500 font-semibold py-2 rounded-lg hover:bg-gray-100 transition duration-200"
-      >
-        {editIndex !== null ? 'Actualizar Vehículo' : 'Registrar Vehículo'}
-      </button>
-    </form>
+    </div>
   );
 };
 

@@ -1,64 +1,84 @@
 "use client";
 
-import React, { useState } from 'react';
-import VehiculoForm from '@/components/vehiculo/VehiculoForm';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Container } from "@mui/material";
+import { FaArrowLeft } from "react-icons/fa"; 
+import VehiculoForm from "@/components/vehiculo/VehiculoForm"; 
 
-interface Vehiculo {
-  anio: string;
-  color: string;
-  descripcion: string;
-  nomSeguro: string;
-  patente: string;
-  tipoVehiculo: {
-    nombre: string;
-    modelo: {
-      nombre: string;
-      marca: string;
+const RegisterVehiculo: React.FC = () => {
+    const router = useRouter();
+    const [vehiculoData, setVehiculoData] = useState<any>(null); 
+
+    const addVehiculo = (vehiculo: any) => {
+        setVehiculoData(vehiculo); 
     };
-  };
-  titular: {
-    nombre: string;
-    documento: string;
-  };
-}
 
-const VehiculoPage: React.FC = () => {
-  const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(vehiculoData);
+    };
 
-  const addVehiculo = (vehiculo: Vehiculo) => {
-    if (editIndex !== null) {
-      setVehiculos((prev) => {
-        const updatedVehiculos = [...prev];
-        updatedVehiculos[editIndex] = vehiculo;
-        return updatedVehiculos;
-      });
-      setEditIndex(null);
-    } else {
-      setVehiculos((prev) => [...prev, vehiculo]);
-    }
-  };
+    return (
+        <StyledContainer>
 
-  const editVehiculo = (index: number) => {
-    setEditIndex(index);
-  };
+            <BackButton 
+                onClick={() => router.push('/auth/driverRegister')} 
+            />
 
-  const deleteVehiculo = (index: number) => {
-    if (index < 0 || index >= vehiculos.length) {
-      console.error("Índice de vehículo no válido.");
-      return;
-    }
-    setVehiculos((prev) => prev.filter((_, i) => i !== index));
-  };
+<form 
+    onSubmit={handleSubmit} 
+    className="w-full max-w-2xl space-y-6" 
+>
+    <VehiculoForm 
+        addVehiculo={addVehiculo} 
+        editIndex={null} 
+        vehiculos={vehiculoData ? [vehiculoData] : []} 
+    />
 
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-        {/* Formulario de registro de vehículo */}
-        <VehiculoForm addVehiculo={addVehiculo} editIndex={editIndex} vehiculos={vehiculos} />
-      </div>
-    </div>
-  );
+
+    <button 
+        type="submit" 
+        className="w-full py-3 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 mt-4" 
+    >
+        Registrar Vehículo
+    </button>
+</form>
+
+        </StyledContainer>
+    );
 };
 
-export default VehiculoPage;
+const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+    return (
+        <div className="w-full flex justify-start mb-4"> 
+            <button 
+                className="text-blue-600 hover:text-blue-800 flex items-center space-x-2" 
+                onClick={onClick}
+            >
+                <FaArrowLeft /> <span>Registrar conductor</span>
+            </button>
+        </div>
+    );
+};
+
+const StyledContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return (
+        <Container
+            maxWidth="xl"
+            sx={{
+                padding: "0", 
+                background: "#fff", 
+                minHeight: "100vh", 
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", 
+                justifyContent: "center", 
+            }}
+        >
+            {children}
+        </Container>
+    );
+};
+
+export default RegisterVehiculo;

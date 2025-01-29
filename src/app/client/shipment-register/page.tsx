@@ -1,114 +1,144 @@
-import { Button, Input, Label } from "@/components/ui";
-import { clientes } from "@/db/usuarios";
+"use client";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
+import Link from "next/link";
+import { useShipmentRegisterStore } from "@/stores/shipmentRegisterStore";
+import { Autocomplete, Select, Skeleton, Stack, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { LocalidadesService } from "@/services/localidades.service";
+import { Localidad } from "@/entities/localidad";
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function ShipmentRegisterPage() {
-	const user = clientes[0];
+	const shipment = useShipmentRegisterStore((state) => state.shipment);
+	const setShipment = useShipmentRegisterStore((state) => state.setShipment);
+	const [localidades, setLocalidades] = useState<Localidad[]>([]);
 
+	useEffect(() => {
+		LocalidadesService.getLocalidades().then((localidades) => setLocalidades(localidades));
+	}, []);
+
+	const handleChange = (key: string, value: any) =>{
+		setShipment({
+			...shipment,
+			destino: {
+				...shipment.destino,
+				[key]: value ? value : null
+			}
+		})
+	}
+
+	if (localidades.length === 0)
+		return (
+			<Stack spacing={2}>
+				<Skeleton variant='rectangular' height={70} sx={{ borderRadius: "4px" }} />
+				<Skeleton variant='rectangular' height={340} width='100%' sx={{ borderRadius: "4px" }} />
+			</Stack>
+		);
 	return (
-		<div className='py-8'>
-			<h1 className='text-3xl mb-6 font-semibold'>Realiza tu envio</h1>
-			<div className='grid grid-cols-2 gap-3'>
-				<section className="flex flex-col justify-between">
-					<form action='' className='flex gap-2 flex-1'>
-						<fieldset className='bg-white shadow-lg rounded-md text-tertiary flex-1'>
-							<p className='font-medium text-gray-50 text-xl px-10 py-4 rounded-t-md bg-primary'>
-								Destino
-							</p>
-							<div className='px-10 py-6 space-y-3'>
-								<div>
-									<Label>Calle</Label>
-									<Input required />
-								</div>
-								<div>
-									<Label>Numero</Label>
-									<Input type='number' required />
-								</div>
-								<div>
-									<Label>Departamento</Label>
-									<Input type='text' required={false} />
-								</div>
-								<div>
-									<Label>Piso</Label>
-									<Input type='number' required={false} />
-								</div>
-								<div>
-									<Label>Descripcion (opcional)</Label>
-									<Input type='text' required={false} />
-								</div>
-							</div>
-						</fieldset>
-						<fieldset className='bg-white shadow-lg rounded-md flex-1 text-tertiary'>
-							<p className='font-medium text-gray-50 text-xl px-10 py-4 rounded-t-md bg-primary'>
-								Paquete
-							</p>
-							<div className='px-10 py-6 space-y-3'>
-								<div>
-									<Label>Peso (gramos)</Label>
-									<Input type='number' required />
-								</div>
-								<div>
-									<Label>Hora</Label>
-									<Input type='time' />
-								</div>
-								<div>
-									<Label>Detalles (opcional)</Label>
-									<Input type='text' />
-								</div>
-							</div>
-						</fieldset>
-					</form>
-					<img
-						className='max-h-56 pt-5 w-full object-cover rounded-b-lg'
-						src='https://blogs.iadb.org/conocimiento-abierto/wp-content/uploads/sites/10/2018/05/calcular-distancias-banner-2.jpg'
-						alt=''
+		<div className='flex flex-col'>
+			<p className='font-medium text-xl px-10 py-4 rounded-t-md bg-white border-b-2 border-b-gray-300'>
+				Destino
+			</p>
+			<form className='bg-white shadow-lg rounded-b-md space-y-5 px-8 py-6 flex flex-col gap-4'>
+				<FormControl>
+					<InputLabel htmlFor='calle'>Calle</InputLabel>
+					<Input
+						id='calle'
+						defaultValue={shipment.destino.calle}
+						aria-describedby='Calle'
+						onChange={(e) => handleChange(e.target.id, e.target.value)}
 					/>
-				</section>
-				{/*Origen*/}
-				<section>
-					<div className='bg-white shadow-lg rounded-md h-full'>
-						<p className='font-medium text-gray-50 text-xl px-10 py-4 rounded-t-md bg-primary'>
-							Origen
-						</p>
-						<div className='px-10 mt-4'>
-							<div className='py-3 space-y-3'>
-								<div>
-									<Label>Calle</Label>
-									<Input required />
-								</div>
-								<div>
-									<Label>Numero</Label>
-									<Input type='number' required />
-								</div>
-								<div>
-									<Label>Departamento</Label>
-									<Input type='text' required={false} />
-								</div>
-								<div>
-									<Label>Piso</Label>
-									<Input type='number' required={false} />
-								</div>
-								<div>
-									<Label>Descripcion (opcional)</Label>
-									<Input type='text' required={false} />
-								</div>
-							</div>
-						</div>
-						<div className='h-[2px] bg-gray-300 mt-4'></div>
-						<div className="px-10 flex flex-col gap-3 mt-6">
-							<Label className="text-lg">Nombre y apellido</Label>
-							<p className='text-gray-500'>
-								{user.nombre} {user.apellido}
-							</p>
-						</div>
-						<div className='px-10 flex gap-3 mt-6 items-center text-lg'>
-							<p className='font-medium'>Precio: </p>
-							<span>${250}</span>
-						</div>
-						<div className='px-10 py-6'>
-							<Button className='w-full bg-primary text-gray-50 py-3'>Realizar envio</Button>
-						</div>
-					</div>
-				</section>
+				</FormControl>
+				<FormControl>
+					<InputLabel htmlFor='numero'>Número</InputLabel>
+					<Input
+						id='numero'
+						type='number'
+						defaultValue={shipment.destino.numero === 0 ? null : shipment.destino.numero}
+						aria-describedby='Número'
+						onChange={(e) => handleChange(e.target.id, parseInt(e.target.value))}
+					/>
+				</FormControl>
+				<FormControl>
+					<InputLabel htmlFor='departamento'>Departamento</InputLabel>
+					<Input
+						id='departamento'
+						defaultValue={shipment.destino.depto}
+						aria-describedby='Departamento'
+						onChange={(e) => handleChange(e.target.id, e.target.value)}
+					/>
+				</FormControl>
+				<FormControl>
+					<InputLabel htmlFor='piso'>Piso</InputLabel>
+					<Input
+						id='piso'
+						type='number'
+						defaultValue={shipment.destino.piso}
+						aria-describedby='Piso'
+						onChange={(e) => handleChange(e.target.id, parseInt(e.target.value))}
+					/>
+				</FormControl>
+				<FormControl>
+					<InputLabel htmlFor='descripcion'>Descripción (opcional)</InputLabel>
+					<Input
+						id='descripcion'
+						defaultValue={shipment.destino.descripcion}
+						aria-describedby='Descripción (opcional)'
+						onChange={(e) => handleChange(e.target.id, e.target.value)}
+					/>
+				</FormControl>
+				<FormControl>
+					<Stack spacing={2} sx={{ width: 300 }}>
+						<Autocomplete
+							freeSolo
+							options={localidades.map((option) => `${option.nombre} - ${option.provincia.nombre}`)} // Identificador unico
+							onChange={(e, value) => {
+								const localidad = localidades.find(
+									(l) => `${l.nombre} - ${l.provincia.nombre}` === value
+								) as Localidad;
+								const valueVerification = localidad ? localidad.id : null;
+
+								handleChange('localidadID', valueVerification);
+							}}
+							value={
+								(localidades.find((l) => l.id === shipment.destino.localidadID)?.nombre || "") +
+								(localidades.find((l) => l.id === shipment.destino.localidadID)?.provincia.nombre
+									? " - " +
+										localidades.find((l) => l.id === shipment.destino.localidadID)?.provincia.nombre
+									: "")
+							}
+							renderInput={(params) => (
+								<TextField
+									key={shipment.destino.localidadID}
+									{...params}
+									label="Buscar localidad"
+									slotProps={{
+										input: {
+											...params.InputProps,
+											type: "search",
+											endAdornment: (
+												<SearchIcon />
+											)
+										},
+										
+									}}
+								/>
+							)}
+						/>
+					</Stack>
+				</FormControl>
+			</form>
+			<div className='flex justify-end'>
+				<Button
+					variant='contained'
+					className='mt-4'
+					href='/client/shipment-register/details'
+					LinkComponent={Link}>
+					Siguiente
+				</Button>
 			</div>
 		</div>
 	);
