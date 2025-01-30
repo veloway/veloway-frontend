@@ -272,7 +272,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 													</li>
 												))
 											) : (
-												shipments.slice().reverse().slice(0, 3).map((shipment, index) => (
+												shipments.slice(0, 3).map((shipment, index) => (
 													<li key={shipment.nroSeguimiento} className='py-4'>
 														<div className='flex items-center space-x-4'>
 															<div className='flex-1 min-w-0'>
@@ -283,6 +283,9 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 																	{shipment.destino.calle} {shipment.destino.numero}{" "}
 																	{shipment.destino.localidad.nombre}{" "}
 																	{shipment.destino.localidad.provincia.nombre}
+																</p>
+																<p className='text-sm text-gray-500 truncate'>
+																	{shipment.descripcion.length > 50 ? shipment.descripcion.substring(0, 50) + "..." : shipment.descripcion}
 																</p>
 															</div>
 															<div>
