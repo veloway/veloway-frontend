@@ -1,5 +1,6 @@
 import { EnvioDto } from '@/entities/envio';
 import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
+import { EnvioFilters } from '@/types/types';
 import axios, { CancelTokenSource} from 'axios';
 import dayjs from 'dayjs';
 
@@ -81,17 +82,45 @@ export class EnviosService {
         }
     }
 
-    static async getAllByClienteIdPagination(clienteId: string, page: number): Promise<GetEnvioDtoPagination>{
-        try{
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}?limit=5&page=${page}`);
-            
-            if (res.status !== 200) throw new Error(res.data.message);
+static async getAllByClienteIdPagination(
+    clienteId: string,
+    page: number,
+    filters?: EnvioFilters
+): Promise<GetEnvioDtoPagination> {
+    try {
 
-            return res.data;
-        }catch(error){
-            throw new Error("No se pudo obtener la lista de envíos");
+        const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}`);
+
+        // Parámetros fijos
+        url.searchParams.append("limit", "5");
+        url.searchParams.append("page", page.toString());
+
+        // filtros
+        if (filters) {
+            const { estado, fechaDesde, fechaHasta, descripcion } = filters;
+
+            if (estado) url.searchParams.append("estado", estado.toString());
+            if (fechaDesde) url.searchParams.append("fechaDesde", fechaDesde);
+            if (fechaHasta) url.searchParams.append("fechaHasta", fechaHasta);
+            if (descripcion) url.searchParams.append("descripcion", descripcion);
+        }
+
+        const res = await axios.get(url.toString());
+
+        if (res.status !== 200) {
+            throw new Error(res.data.message || "Error al obtener los envíos");
+        }
+
+        return res.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const errorMessage = error.response?.data?.message || error.message;
+            throw new Error(`Error en la solicitud: ${errorMessage}`);
+        } else {
+            throw new Error("Error desconocido al obtener los envíos");
         }
     }
+}
 
     static async getByNroSeguimiento(nroSeguimiento: number): Promise<GetEnvioDto>{
         try{

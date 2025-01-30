@@ -4,6 +4,15 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { EnviosService } from '@/services/envios.service';
 import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
 import Link from 'next/link';
+import { EnvioFilters } from '@/types/types';
+
+const stateOptions = [
+    { id: 1, label: "Confirmado" },
+    { id: 2, label: "Cancelado" },
+    { id: 3, label: "En proceso de retiro" },
+    { id: 4, label: "En traslado a destino" },
+    { id: 5, label: "Entregado" },
+];
 
 const AllShipmentsPage = () => {
     const [shipments, setShipments] = useState<GetEnvioDto[]>([]);
@@ -15,40 +24,49 @@ const AllShipmentsPage = () => {
         nextPage: 0,
     });
     const [page, setPage] = useState(1);
-    const [filters, setFilters] = useState({
-        estado: '',
-        fechaDesde: '',
-        fechaHasta: '',
-        horaDesde: '',
-        horaHasta: '',
-        descripcion: '',
-    });
+    const [filters, setFilters] = useState<EnvioFilters>();
 
     useEffect(() => {
         setLoading(true);
-        EnviosService.getAllByClienteIdPagination('123e4567-e89b-12d3-a456-426614174000', page, filters).then((data) => {
-            const { envios, totalEnvios, lastPage, previusPage, nextPage } = data;
-            setShipments(envios);
-            setPagination({
-                totalEnvios,
-                lastPage,
-                previusPage,
-                nextPage,
+        EnviosService.getAllByClienteIdPagination('123e4567-e89b-12d3-a456-426614174000', page, filters)
+            .then((data) => {
+                const { envios, totalEnvios, lastPage, previusPage, nextPage } = data;
+                setShipments(envios);
+                setPagination({
+                    totalEnvios,
+                    lastPage,
+                    previusPage,
+                    nextPage,
+                });
+                setLoading(false);
+            })
+            .catch((error) => {
+                setShipments([]);
+                setPagination({
+                    totalEnvios: 0,
+                    lastPage: 0,
+                    previusPage: 0,
+                    nextPage: 0,
+                })
+                setLoading(false);
             });
-            setLoading(false);
-        });
     }, [page, filters]);
 
-    const handlePageChange = (value: number) => {
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
 
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
-        const { name, value } = event.target;
-        setFilters({
-            ...filters,
+    const handleFilterChange = (event: any | React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target as HTMLInputElement;
+        setFilters((prev) => ({
+            ...prev,
             [name as string]: value,
-        });
+        }));
+        setPagination({
+            ...pagination,
+            lastPage: 0
+        })
+        setPage(1);
     };
 
     return (
@@ -66,23 +84,21 @@ const AllShipmentsPage = () => {
                         <InputLabel>Estado</InputLabel>
                         <Select
                             name="estado"
-                            value={filters.estado}
+                            value={filters?.estado}
                             onChange={handleFilterChange}
                             label="Estado"
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
-                            <MenuItem value="Entregado">Entregado</MenuItem>
-                            <MenuItem value="En traslado a destino">En traslado a destino</MenuItem>
-                            <MenuItem value="En proceso de retiro">En proceso de retiro</MenuItem>
-                            <MenuItem value="Confirmado">Confirmado</MenuItem>
-                            <MenuItem value="Cancelado">Cancelado</MenuItem>
+                            {stateOptions.map(option => (
+                                <MenuItem key={option.id} value={option.id}>{option.label}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                     <TextField
                         name="fechaDesde"
                         label="Fecha Desde"
                         type="date"
-                        value={filters.fechaDesde}
+                        value={filters?.fechaDesde}
                         onChange={handleFilterChange}
                         InputLabelProps={{
                             shrink: true,
@@ -93,29 +109,7 @@ const AllShipmentsPage = () => {
                         name="fechaHasta"
                         label="Fecha Hasta"
                         type="date"
-                        value={filters.fechaHasta}
-                        onChange={handleFilterChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        className='w-1/4'
-                    />
-                    <TextField
-                        name="horaDesde"
-                        label="Hora Desde"
-                        type="time"
-                        value={filters.horaDesde}
-                        onChange={handleFilterChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        className='w-1/4'
-                    />
-                    <TextField
-                        name="horaHasta"
-                        label="Hora Hasta"
-                        type="time"
-                        value={filters.horaHasta}
+                        value={filters?.fechaHasta}
                         onChange={handleFilterChange}
                         InputLabelProps={{
                             shrink: true,
@@ -125,7 +119,7 @@ const AllShipmentsPage = () => {
                     <TextField
                         name="descripcion"
                         label="Descripción"
-                        value={filters.descripcion}
+                        value={filters?.descripcion}
                         onChange={handleFilterChange}
                         className='w-1/4'
                     />
@@ -160,6 +154,10 @@ const AllShipmentsPage = () => {
                                         <TableCell><Skeleton variant="text" className='h-9'/></TableCell>
                                     </TableRow>
                                 ))
+                            ) : shipments.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={8} align="center">No se encontraron envíos</TableCell>
+                                </TableRow>
                             ) : (
                                 shipments.map((shipment, index) => (
                                     <TableRow key={index} hover>
@@ -173,18 +171,16 @@ const AllShipmentsPage = () => {
                                         <TableCell>{shipment.descripcion}</TableCell>
                                         <TableCell>
                                             <span
-                                                className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                    shipment.estado === "Entregado"
+                                                className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${
+                                                    shipment.estado === stateOptions[4].label
                                                         ? "bg-green-100 text-green-800"
-                                                        : shipment.estado === "En traslado a destino"
+                                                        : shipment.estado === stateOptions[3].label
                                                             ? "bg-yellow-100 text-yellow-800"
-                                                            : shipment.estado === "En proceso de retiro"
+                                                            : shipment.estado === stateOptions[2].label
                                                                 ? "bg-blue-100 text-blue-800"
-                                                                : shipment.estado === "Confirmado"
+                                                                : shipment.estado === stateOptions[0].label
                                                                     ? "bg-purple-100 text-purple-800"
-                                                                    : shipment.estado === "Cancelado"
-                                                                        ? "bg-gray-100 text-gray-800"
-                                                                        : "bg-red-100 text-red-800"
+                                                                    : "bg-red-100 text-red-800"
                                                 }`}
                                             >
                                                 {shipment.estado}
@@ -207,17 +203,18 @@ const AllShipmentsPage = () => {
                     </Table>
                 </TableContainer>
             </div>
+            
+                <Pagination 
+                    count={pagination.lastPage}
+                    page={page} 
+                    color="primary" 
+                    className='containerMarginResposive my-8 flex justify-center items-center'
+                    shape='rounded'
+                    showFirstButton
+                    showLastButton
+                    onChange={handlePageChange}
+                />
         
-            <Pagination 
-                count={pagination.lastPage}
-                page={page} 
-                color="primary" 
-                className='containerMarginResposive my-8 flex justify-center items-center'
-                shape='rounded'
-                showFirstButton
-                showLastButton
-                onChange={(event, value) => handlePageChange(value)}
-            />
         </div>
     );
 };
