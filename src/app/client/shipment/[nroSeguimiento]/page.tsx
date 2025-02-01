@@ -2,9 +2,10 @@
 import SkeletonShipmentFound from "@/components/client/skeleton-shipment-found/SkeletonShipmentFound";
 import { GetEnvioDto } from "@/entities/envios/getEnvioDto";
 import { EnviosService } from "@/services/envios.service";
-import { Step, StepLabel, Stepper } from "@mui/material";
+import { Button, Step, StepLabel, Stepper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 enum ShipmentStatus {
   Confirmado = 'Confirmado',
@@ -68,6 +69,7 @@ function getStatusIcon(status: ShipmentStatus) {
 
 function ShipmentPage() {
   const [shipment, setShipment] = useState<GetEnvioDto>();
+  const [openDialog, setOpenDialog] = useState(false);
   const { nroSeguimiento } = useParams();
 
   useEffect(() => {
@@ -85,22 +87,50 @@ function ShipmentPage() {
     }`;
   };
 
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmCancel = () => {
+    toast.loading('Cancelando envío...');
+    EnviosService.cancelarEnvio(shipment.nroSeguimiento)
+      .then(() => {
+        toast.dismiss();
+        toast.success('Envío cancelado correctamente');
+        setShipment({ ...shipment, estado: ShipmentStatus.Cancelado });
+      })
+      .catch(error => {
+        toast.dismiss();
+        toast.error(error.message);
+      });
+    handleCloseDialog();
+  };
+
   return (
     <div className="bg-gradient-to-b from-[#1565c0]/5 to-[#f8fafc] w-full flex flex-col">
       {/* Status Banner */}
       <div className="bg-gradient-to-r from-[#1565c0] to-[#1976d2] text-white">
         <div className="containerMarginResposive py-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="text-lg font-medium">Estado del Envío</span>
-            </div>
-            <div className={`px-4 py-2 rounded-full border ${getStatusColor(shipment.estado as ShipmentStatus)} flex items-center gap-2`}>
-              {getStatusIcon(shipment.estado as ShipmentStatus)}
-              <span className="font-medium">{shipment.estado}</span>
-            </div>
+        <div className="flex items-center gap-2">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-lg font-medium">Estado del Envío</span>
+        </div>
+        <div className="flex items-center gap-4">
+          {shipment.estado === ShipmentStatus.Confirmado && (
+            <Button variant="contained" color="error" onClick={handleOpenDialog}>Cancelar Envío</Button>
+          )}
+          <div className={`px-4 py-2 rounded-md border ${getStatusColor(shipment.estado as ShipmentStatus)} flex items-center gap-2`}>
+            {getStatusIcon(shipment.estado as ShipmentStatus)}
+            <span className="font-medium">{shipment.estado}</span>
+          </div>
+        </div>
           </div>
         </div>
       </div>
@@ -261,6 +291,25 @@ function ShipmentPage() {
           </div>
         </div> */}
       </div>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+      >
+        <DialogTitle>{"Confirmar Cancelación"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas cancelar este envío?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            No
+          </Button>
+          <Button onClick={handleConfirmCancel} color="primary" autoFocus>
+            Sí
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

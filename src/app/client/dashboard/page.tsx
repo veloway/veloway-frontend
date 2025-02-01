@@ -10,6 +10,7 @@ import Link from "next/link";
 import { NewShipmentButton } from "@/components/client/new-shipment-button/NewShipmentButton";
 import { TrackShipmentButton } from "@/components/client/track-shipment-button/TrackShipmentButton";
 import { SkeletonDashboard } from "@/components/client/skeleton-dashboard/SkeletonDashboard";
+import { calculateMonthlyStats } from "@/utils/utils";
 
 // export const metadata = { title: "Client Home" };
 
@@ -48,36 +49,10 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 		numero: clietId,
 	};
 
-	const calculateMonthlyStats = (envios: GetEnvioDto[]) => {
-		const stats = [
-			{ month: "Ene", shipments: 0 },
-			{ month: "Feb", shipments: 0 },
-			{ month: "Mar", shipments: 0 },
-			{ month: "Abr", shipments: 0 },
-			{ month: "May", shipments: 0 },
-			{ month: "Jun", shipments: 0 },
-			{ month: "Jul", shipments: 0 },
-			{ month: "Ago", shipments: 0 },
-			{ month: "Sep", shipments: 0 },
-			{ month: "Oct", shipments: 0 },
-			{ month: "Nov", shipments: 0 },
-			{ month: "Dic", shipments: 0 },
-		];
-
-		envios.forEach((envio) => {
-			const month = new Date(envio.fecha).getMonth();
-			if (month >= 0 && month < stats.length) {
-				stats[month].shipments += 1;
-			}
-		});
-
-		return stats;
-	};
-
 	useEffect(() => {
 		EnviosService.getAllByClienteId(clietId).then((data) => {
 			setShipments(data.envios);
-			setCantEnvios(data.envios.length);
+			setCantEnvios(data.totalEnvios);
 			setCantiEnviosEnTransito(
 				data.envios.filter(
 					(envio) =>
@@ -272,12 +247,12 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 													</li>
 												))
 											) : (
-												shipments.slice().reverse().slice(0, 3).map((shipment, index) => (
+												shipments.slice(0, 3).map((shipment, index) => (
 													<li key={shipment.nroSeguimiento} className='py-4'>
 														<div className='flex items-center space-x-4'>
 															<div className='flex-1 min-w-0'>
 																<p className='text-sm font-medium text-gray-900 truncate'>
-																	Envío #{index + 1}
+																	{shipment.descripcion.length > 50 ? shipment.descripcion.substring(0, 50) + "..." : shipment.descripcion}
 																</p>
 																<p className='text-sm text-gray-500 truncate'>
 																	{shipment.destino.calle} {shipment.destino.numero}{" "}
@@ -287,7 +262,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 															</div>
 															<div>
 																<span
-																	className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+																	className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${
 																		shipment.estado === "Entregado"
 																			? "bg-green-100 text-green-800"
 																			: shipment.estado === "En traslado a destino"

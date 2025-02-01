@@ -36,7 +36,7 @@ export default function ShippingCalculator() {
 				<TextField
 					id='outlined-basic'
 					inputRef={inputRef}
-					label='Peso paquete (kg)'
+					label='Peso paquete (gramos)'
 					variant='filled'
 					className='rounded-t-md bg-secondary'
 					type='number'
