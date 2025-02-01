@@ -2,10 +2,11 @@
 
 import { FaLocationDot } from "react-icons/fa6";
 import { useCarAdvance } from '@/utils/driver/carAdvance'; // Usa el custom hook
-import { StepContent, Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import VerticalLinearStepper from "@/components/ui/verticalStepper/VerticalStepper";
 
 export default function TravelDetail() {
+    //TODO: CORREGIR PORQUE TIRA ERROR EN EL BUILD
     const { currentCheckpoint, moveCarToNextCheckpoint } = useCarAdvance();  // Usamos el hook para gestionar el avance
 
     return (

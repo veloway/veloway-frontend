@@ -2,7 +2,7 @@ import { ShippingCalculator } from "@/components/client";
 import ClientButtons from "@/components/client/client-buttons/ClientButtons";
 import { ParsedUrlQuery } from "querystring";
 import { dataEnviosTabla } from "@/db/envios";
-import { Pagination } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import { TableComponent } from "@/components/ui";
 
 export const metadata = { title: "Client Home" };

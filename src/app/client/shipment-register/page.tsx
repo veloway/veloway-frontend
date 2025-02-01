@@ -1,4 +1,7 @@
-import { FormControl, InputLabel, Input, Button } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
 import Link from "next/link";
 
 export default function ShipmentRegisterPage() {
