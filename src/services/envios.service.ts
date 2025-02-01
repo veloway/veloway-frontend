@@ -133,4 +133,16 @@ static async getAllByClienteIdPagination(
             throw new Error("No se pudo obtener el envío");
         }
     }
+
+    static async cancelarEnvio(nroSeguimiento: number): Promise<any>{
+        try{
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/cancelar/nro-seguimiento/${nroSeguimiento}`);
+
+            if (res.status !== 200) throw new Error(res.data.message);
+
+            return res.data;
+        }catch(error){
+            throw new Error("No se pudo cancelar el envío");
+        }
+    }
 }
