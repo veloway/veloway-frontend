@@ -1,117 +1,79 @@
-"use client"
-import SkeletonShipmentFound from "@/components/client/skeleton-shipment-found/SkeletonShipmentFound";
 import { GetEnvioDto } from "@/entities/envios/getEnvioDto";
-import { EnviosService } from "@/services/envios.service";
-import { Button, Step, StepLabel, Stepper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { useParams } from "next/navigation"
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { Step, StepLabel, Stepper } from "@mui/material";
+
+interface ShipmentFoundProps {
+    shipment: GetEnvioDto;
+}
 
 enum ShipmentStatus {
-  Confirmado = 'Confirmado',
-  Cancelado = 'Cancelado',
-  EnProcesoDeRetiro = 'En proceso de retiro',
-  EnTrasladoADestino = 'En traslado a destino',
-  Entregado = 'Entregado'
-}
-
-function getStatusColor(status: ShipmentStatus) {
-  switch (status) {
-    case ShipmentStatus.Confirmado:
-      return 'bg-amber-100 text-amber-800 border-amber-200';
-    case ShipmentStatus.Cancelado:
-      return 'bg-red-100 text-red-800 border-red-200';
-    case ShipmentStatus.EnProcesoDeRetiro:
-      return 'bg-purple-100 text-purple-800 border-purple-200';
-    case ShipmentStatus.EnTrasladoADestino:
-      return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-    case ShipmentStatus.Entregado:
-      return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+    Confirmado = 'Confirmado',
+    Cancelado = 'Cancelado',
+    EnProcesoDeRetiro = 'En proceso de retiro',
+    EnTrasladoADestino = 'En traslado a destino',
+    Entregado = 'Entregado'
   }
-}
-
-function getStatusIcon(status: ShipmentStatus) {
-  const baseClasses = "w-5 h-5";
   
-  switch (status) {
-    case ShipmentStatus.Confirmado:
-      return (
-        <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      );
-    case ShipmentStatus.Cancelado:
-      return (
-        <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      );
-    case ShipmentStatus.EnProcesoDeRetiro:
-      return (
-        <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-        </svg>
-      );
-    case ShipmentStatus.EnTrasladoADestino:
-      return (
-        <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      );
-    case ShipmentStatus.Entregado:
-      return (
-        <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-      );
+  function getStatusColor(status: ShipmentStatus) {
+    switch (status) {
+      case ShipmentStatus.Confirmado:
+        return 'bg-amber-100 text-amber-800 border-amber-200';
+      case ShipmentStatus.Cancelado:
+        return 'bg-red-100 text-red-800 border-red-200';
+      case ShipmentStatus.EnProcesoDeRetiro:
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case ShipmentStatus.EnTrasladoADestino:
+        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case ShipmentStatus.Entregado:
+        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+    }
   }
-}
-
-function ShipmentPage() {
-  const [shipment, setShipment] = useState<GetEnvioDto>();
-  const [openDialog, setOpenDialog] = useState(false);
-  const { nroSeguimiento } = useParams();
-
-  useEffect(() => {
-    EnviosService.getByNroSeguimiento(Number(nroSeguimiento))
-      .then((shipment) => {
-        setShipment(shipment);
-      })
-  }, [])
   
-  if (!shipment) return <SkeletonShipmentFound />;
+  function getStatusIcon(status: ShipmentStatus) {
+    const baseClasses = "w-5 h-5";
+    
+    switch (status) {
+      case ShipmentStatus.Confirmado:
+        return (
+          <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+      case ShipmentStatus.Cancelado:
+        return (
+          <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+      case ShipmentStatus.EnProcesoDeRetiro:
+        return (
+          <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+        );
+      case ShipmentStatus.EnTrasladoADestino:
+        return (
+          <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        );
+      case ShipmentStatus.Entregado:
+        return (
+          <svg className={baseClasses} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        );
+    }
+  }
 
-  const formatAddress = (address: typeof shipment.origen) => {
-    return `${address.calle} ${address.numero}, ${address.localidad.nombre}, ${address.localidad.provincia.nombre}${
-      address.descripcion ? ` (${address.descripcion})` : ''
-    }`;
-  };
+export const ShipmentFound = ({ shipment }: ShipmentFoundProps) => {
+    const formatAddress = (address: typeof shipment.origen) => {
+        return `${address.calle} ${address.numero}, ${address.localidad.nombre}, ${address.localidad.provincia.nombre}${
+          address.descripcion ? ` (${address.descripcion})` : ''
+        }`;
+    };
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handleConfirmCancel = () => {
-    toast.loading('Cancelando envío...');
-    EnviosService.cancelarEnvio(shipment.nroSeguimiento)
-      .then(() => {
-        toast.dismiss();
-        toast.success('Envío cancelado correctamente');
-        setShipment({ ...shipment, estado: ShipmentStatus.Cancelado });
-      })
-      .catch(error => {
-        toast.dismiss();
-        toast.error(error.message);
-      });
-    handleCloseDialog();
-  };
-
-  return (
-    <div className="bg-gradient-to-b from-[#1565c0]/5 to-[#f8fafc] w-full flex flex-col">
+    return (
+        <div className="bg-gradient-to-b from-[#1565c0]/5 to-[#f8fafc] w-full flex flex-col">
       {/* Status Banner */}
       <div className="bg-gradient-to-r from-[#1565c0] to-[#1976d2] text-white">
         <div className="containerMarginResposive py-6">
@@ -122,14 +84,9 @@ function ShipmentPage() {
           </svg>
           <span className="text-lg font-medium">Estado del Envío</span>
         </div>
-        <div className="flex items-center gap-4">
-          {shipment.estado === ShipmentStatus.Confirmado && (
-            <Button variant="contained" color="error" onClick={handleOpenDialog}>Cancelar Envío</Button>
-          )}
-          <div className={`px-4 py-2 rounded-md border ${getStatusColor(shipment.estado as ShipmentStatus)} flex items-center gap-2`}>
-            {getStatusIcon(shipment.estado as ShipmentStatus)}
-            <span className="font-medium">{shipment.estado}</span>
-          </div>
+        <div className={`px-4 py-2 rounded-md border ${getStatusColor(shipment.estado as ShipmentStatus)} flex items-center gap-2`}>
+          {getStatusIcon(shipment.estado as ShipmentStatus)}
+          <span className="font-medium">{shipment.estado}</span>
         </div>
           </div>
         </div>
@@ -210,7 +167,7 @@ function ShipmentPage() {
         </div>
 
          {/* Info Cards */}
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-5">
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4">
             <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -244,35 +201,52 @@ function ShipmentPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
           <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
             <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 0V4m0 8v8m-4-4h8" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3-3-3zm0 0V4m0 8v8m-4-4h8" />
             </svg>
           </div>
           <span className="text-sm font-medium text-gray-500 mb-1">Monto</span>
           <p className="text-lg font-semibold text-gray-900">${shipment.monto}</p>
           </div>
         </div>
-      </div>
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-      >
-        <DialogTitle>{"Confirmar Cancelación"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            ¿Estás seguro de que deseas cancelar este envío?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            No
-          </Button>
-          <Button onClick={handleConfirmCancel} color="primary" autoFocus>
-            Sí
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
 
-export default ShipmentPage;
+        {/* Customer Info */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+              <svg className="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Información del Remitente</h2>
+              <p className="text-gray-500">Detalles del destinatario</p>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Nombre Completo</p>
+                <p className="text-gray-900">{shipment.cliente.nombre} {shipment.cliente.apellido}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">DNI</p>
+                <p className="text-gray-900">{shipment.cliente.dni}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Email</p>
+                <p className="text-gray-900">{shipment.cliente.email}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Teléfono</p>
+                <p className="text-gray-900">{shipment.cliente.telefono}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    )
+}
