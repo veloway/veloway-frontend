@@ -12,6 +12,7 @@ import { dataEnviosTabla } from "@/db/envios";
 import { useEffect, useState } from "react";
 import ReservationsTable from "@/components/driver/reservationsTable/ReservationsTable";
 import Link from "next/link";
+import { ViajesService } from "@/services/viajes.service";
 
 interface driverPageProp {
 	params: ParsedUrlQuery;
@@ -34,6 +35,8 @@ export default function DriverHomePage({ params }: driverPageProp) {
 	const user = clientes.find((c) => (c.dni = 43897801));
 	const envios = dataEnviosTabla.filter((e) => e.dni === user?.dni);
     const userReservations = envios.filter((e) => e.reserva === true); 
+
+	const idCoonductor = "987f6543-e21c-54d3-b789-426614174001"
 
 	useEffect(() => {
 		const currentTravel = envios.find((e) => e.reserva === false);
