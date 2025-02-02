@@ -1,6 +1,3 @@
-// auth/driverregister/Licencia.tsx
-import React from 'react';
-
 interface LicenciaProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     values: {
@@ -11,6 +8,7 @@ interface LicenciaProps {
 }
 
 const Licencia: React.FC<LicenciaProps> = ({ onChange, values }) => {
+
     return (
         <>
         <div className="space-y-4">
@@ -36,7 +34,7 @@ const Licencia: React.FC<LicenciaProps> = ({ onChange, values }) => {
                 type="date" 
                 name="vencimiento" 
                 value={values.vencimiento} 
-                onChange={onChange} 
+                onChange={onChange}
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

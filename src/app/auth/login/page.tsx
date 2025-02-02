@@ -7,11 +7,11 @@ const Login = () => {
       <h2 className="text-3xl font-bold text-center mb-6">¡Bienvenido de vuelta!</h2>
 
       <form className="flex flex-col">
-        <label className="mb-1 font-semibold" htmlFor="email">Mail</label>
+        <label className="mb-1 font-semibold" htmlFor="email">Correo Electronico</label>
         <input
           type="email"
           id="email"
-          placeholder="Correo electrónico"
+          placeholder="Ingrese correo electrónico"
           required
           className="mb-4 p-2 border rounded"
         />
@@ -20,7 +20,7 @@ const Login = () => {
         <input
           type="password"
           id="password"
-          placeholder="Contraseña"
+          placeholder="Ingrese contraseña"
           required
           className="mb-4 p-2 border rounded"
         />

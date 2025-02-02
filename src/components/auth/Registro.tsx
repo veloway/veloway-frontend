@@ -16,7 +16,7 @@ interface RegistroProps {
 
 const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
     return (
-        <div className="space-y-4"> {/* Espacio entre los inputs */}
+        <div className="space-y-3"> {/* Espacio entre los inputs */}
             <input 
                 type="email" 
                 name="email" 
