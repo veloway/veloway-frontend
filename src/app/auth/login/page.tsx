@@ -3,10 +3,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
+import { useRegistroStoreDto } from '@/stores/userRegisterStore';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const router = useRouter();
+  const {setAddressData , setUserData} = useRegistroStoreDto()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -16,9 +19,40 @@ const Login = () => {
     e.preventDefault();
     try {
       const data = await authService.login(formData);
-      // Aquí podrías, por ejemplo, almacenar el token en el localStorage o context
+
       console.log('Login exitoso:', data);
-      router.push('/'); // Redirige a la página principal o a otra ruta protegida
+
+      const { usuarioDTO, domicilioDTO } = data;
+
+      if (!usuarioDTO || !domicilioDTO) {
+        console.error('Datos incompletos:', data);
+        throw new Error('Datos del usuario o domicilio faltantes');
+      }
+    
+      console.log('Configurando datos de la dirección...');
+      setAddressData({
+        calle: domicilioDTO.calle,
+        numero: domicilioDTO.numero,
+        descripcion: domicilioDTO.descripcion,
+        piso: domicilioDTO.piso,
+        depto: domicilioDTO.depto,
+        localidadID: domicilioDTO.localidadID,
+      });
+    
+      console.log('Configurando datos del usuario...');
+      setUserData({
+        dni: usuarioDTO.dni,
+        email: usuarioDTO.email,
+        fechaNac: usuarioDTO.fechaNac,
+        nombre: usuarioDTO.nombre,
+        apellido: usuarioDTO.apellido,
+        esConductor: usuarioDTO.esConductor,
+        telefono: usuarioDTO.telefono,
+        apiKey: usuarioDTO.apiKey,
+      });
+    
+      console.log('Redirigiendo a la página principal...');
+      router.push(`http://localhost:3000/client/dashboard`);
     } catch (error) {
       alert("Error de autenticación. Revisa tus credenciales e intenta nuevamente.");
     }

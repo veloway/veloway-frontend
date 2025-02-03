@@ -4,12 +4,13 @@ import { useRegistroStore, useRegistroStoreDto } from "@/stores/userRegisterStor
 const API_URL = process.env.API_URL; // Asegúrate de definir esta variable en tu .env
 
 
+    
+
 
 export const authService = {
 
-  async register(): Promise<any> {
-    const { userValues, setUserValues , addressValues, setAddressValues } = useRegistroStore();
-    
+  async register(userValues: any, addressValues: any): Promise<any> {
+
     const formattedData = {
       ...userValues,
       dni: Number(userValues.dni),
@@ -20,9 +21,6 @@ export const authService = {
     };
     try {
       await axios.post(`http://localhost:3001/api/usuarios/register`, formattedData);
-      
-      setUserValues({})
-      setAddressValues({})
 
     } catch (error: any) {
       console.error("Error en el registro:", error.response?.data || error);
@@ -32,35 +30,13 @@ export const authService = {
 
   async login(user: any): Promise<any> {
 
-    const {setAddressData, addressData , setUserData, userData} = useRegistroStoreDto()
-
     try {
       const response = await axios.post(
         `http://localhost:3001/api/auth/login`,
         user, { withCredentials: true }
       );
-      const { domicilioDto , usuarioDto } =  response.data;
+      return response.data
 
-      setAddressData({
-        calle: domicilioDto.calle,
-        numero: domicilioDto.numero,
-        descripcion: domicilioDto.descripcion,
-        piso: domicilioDto.piso,
-        depto: domicilioDto.depto,
-        localidadID: domicilioDto.localidadID,
-      });
-      setUserData({
-      dni: usuarioDto.dni,
-      email: usuarioDto.email,
-      fechaNac: usuarioDto.fechaNac,
-      nombre: usuarioDto.nombre,
-      apellido: usuarioDto.apellido,
-      esConductor: usuarioDto.esConductor,
-      telefono: usuarioDto.telefono,
-      apiKey: usuarioDto.apiKey
-      })
-
-      console.log(userData, addressData)
     } catch (error: any) {
       console.error("Error en el login:", error.response?.data || error);
       throw error;

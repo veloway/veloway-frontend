@@ -14,9 +14,9 @@ import { Localidad } from "@/entities/localidad";
 const RegisterCliente = () => {
   const API_URL = process.env.API_URL;
   const [step, setStep] = useState(1);
-  const { userValues } = useRegistroStore();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { userValues, setUserValues , addressValues, setAddressValues } = useRegistroStore();
 
   // Si necesitas cargar las localidades desde un API, puedes hacerlo con useEffect.
   const [localidades, setLocalidades] = useState<Localidad[]>([]);
@@ -38,8 +38,10 @@ const RegisterCliente = () => {
     setLoading(true);
 
     try {
-      await authService.register();
+      await authService.register(userValues, addressValues);
       alert("Registro exitoso");
+      setUserValues({})
+      setAddressValues({})
       router.push(`http://localhost:3000/auth/login`);
     } catch (error) {
       alert("Error en el registro. Revisa los datos e intenta nuevamente.");
