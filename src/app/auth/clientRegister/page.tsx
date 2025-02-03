@@ -1,97 +1,92 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Registro from "../../../components/auth/Registro";
 import DomicilioForm from "../../../components/auth/DomicilioForm";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
+import { authService } from "@/services/auth.service";
+import { useRegistroStore } from "@/stores/userRegisterStore";
+import { LocalidadesService } from "@/services/localidades.service";
+import { Localidad } from "@/entities/localidad";
+
 
 const RegisterCliente = () => {
-    const [step, setStep] = useState(1);
-    const [userValues, setUserValues] = useState({
-        email: "",
-        password: "",
-        dni: "",
-        fechaNacimiento: "",
-        nombre: "",
-        apellido: "",
-        telefono: "",
-    });
-    const [addressValues, setAddressValues] = useState({
-        calle: "",
-        numero: "",
-        descripcion: "",
-        piso: "",
-        depto: "",
-        localidadID: "",
-    });
+  const API_URL = process.env.API_URL;
+  const [step, setStep] = useState(1);
+  const { userValues } = useRegistroStore();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-    const router = useRouter();
+  // Si necesitas cargar las localidades desde un API, puedes hacerlo con useEffect.
+  const [localidades, setLocalidades] = useState<Localidad[]>([]);
+    useEffect(() => {
+        LocalidadesService.getLocalidades().then((localidades) => setLocalidades(localidades));
+    }, []);
 
-    const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserValues({ ...userValues, [e.target.name]: e.target.value });
-    };
+  const handleNext = () => {
+    if (Object.values(userValues).some((value) => value === "")) {
+      alert("Por favor, completa todos los campos antes de continuar.");
+      return;
+    }
+    setStep(2);
+  };
 
-    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAddressValues({ ...addressValues, [e.target.name]: e.target.value });
-    };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    const handleNext = () => {
-        if (Object.values(userValues).some(value => value === "")) {
-            alert("Por favor, completa todos los campos antes de continuar.");
-            return;
-        }
-        setStep(2);
-    };
+    setLoading(true);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (Object.values(addressValues).some(value => value === "")) {
-            alert("Por favor, completa todos los campos del domicilio.");
-            return;
-        }
-        console.log({ user: userValues, address: addressValues });
-        router.push("/");
-    };
+    try {
+      await authService.register();
+      alert("Registro exitoso");
+      router.push(`http://localhost:3000/auth/login`);
+    } catch (error) {
+      alert("Error en el registro. Revisa los datos e intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white rounded space-y-6">
-            <button
-                className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-4"
-                onClick={() => step === 1 ? router.push("/auth/login") : setStep(1)} // Cambio en el onClick
-                type="button"
-            >
-                <FaArrowLeft />
-                <span>{step === 1 ? "Inicio de Sesión" : "Volver al Formulario de Usuario"}</span>
-            </button>
+  return (
+    <>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white rounded space-y-6">
+      <button
+        className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-4"
+        onClick={() => (step === 1 ? router.push("/auth/login") : setStep(1))}
+        type="button"
+      >
+        <FaArrowLeft />
+        <span>{step === 1 ? "Inicio de Sesión" : "Volver al Formulario de Usuario"}</span>
+      </button>
 
-            <h2 className="text-2xl font-bold text-center">
-                {step === 1 ? "Registro de Cliente" : "Datos de Domicilio"}
-            </h2>
+      <h2 className="text-2xl font-bold text-center">
+        {step === 1 ? "Registro de Cliente" : "Datos de Domicilio"}
+      </h2>
 
-            {step === 1 ? (
-                <>
-                    <Registro onChange={handleUserChange} values={userValues} />
-                    <button
-                        type="button"
-                        onClick={handleNext}
-                        className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
-                    >
-                        Siguiente
-                    </button>
-                </>
-            ) : (
-                <>
-                    <DomicilioForm
-                        onChange={handleAddressChange}
-                        values={addressValues}
-                        onBack={() => setStep(1)}
-                        onSubmit={handleSubmit} // Se envía directamente
-                    />
-                </>
-            )}
-        </form>
-    );
+      {step === 1 ? (
+        <>
+          <Registro />
+          <button
+            type="button"
+            onClick={handleNext}
+            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+          >
+            Siguiente
+          </button>
+        </>
+      ) : (
+        <>
+          <DomicilioForm  // Para el Autocomplete (localidad)
+            localidades={localidades}
+            onBack={() => setStep(1)}
+            onSubmit={handleSubmit}
+          />
+        </>
+      )}
+    </form>
+    </>
+  );
 };
 
 export default RegisterCliente;
