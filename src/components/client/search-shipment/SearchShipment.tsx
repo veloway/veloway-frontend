@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, IconButton } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 
 interface SearchShipmentProps {
     open: boolean;

@@ -97,7 +97,7 @@ export default function DetailsPage() {
 				</FormControl>
 				<FormControl>
 					<FormLabel>¿Cuándo quiere realizar el envío?</FormLabel>
-					{dayjs().hour() < 8 || dayjs().hour() > 18 ? (
+					{!isInTime(dayjs().hour()) ? (
 						<p className='text-red-500 mb-2 mt-2 '>No se puede realizar un envío en este horario</p>
 					) : null}
 					<RadioGroup
@@ -116,7 +116,7 @@ export default function DetailsPage() {
 						<FormControlLabel
 							value='ahora'
 							control={<Radio />}
-							disabled={dayjs().hour() < 8 || dayjs().hour() > 18}
+							disabled={!isInTime(dayjs().hour())}
 							label='Ahora'
 						/>
 						<FormControlLabel value='reserva' control={<Radio />} label='Reservar' />

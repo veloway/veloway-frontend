@@ -17,11 +17,12 @@ import { LocalidadesService } from "@/services/localidades.service";
 import { Localidad } from "@/entities/localidad";
 import { EnviosService } from "@/services/envios.service";
 import axios from 'axios';
-import Link from "next/link";
 import { DomiciliosService } from "@/services/domicilios.service";
 import { LoadingFindDriver } from "@/components/client/loading-find-driver/LoadingFindDriver";
 import { ConfirmFindDriver } from "@/components/client/confirm-find-driver/ConfirmFindDriver";
+
 import { toast } from 'react-toastify';
+import { ShipmentCreatedConfirmation } from "@/components/client/shipment-created-confirmation/ShipmentCreatedConfirmation";
 
 interface ShipmentRegisterLayoutProps {
 	children: React.ReactNode;
@@ -127,27 +128,30 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 	const handleGoBack = () => {
 		setIsCreated(false);
 		setNroSeguimiento(0);
+		// Se reinician los valores del formulario
+		setShipment({
+			...shipment,
+			descripcion: "",
+			pesoGramos: 0,
+			destino: {
+				calle: "",
+				numero: 0,
+				piso: null,
+				depto: null,
+				descripcion: null,
+				localidadID: 0,
+			},
+			reserva: null,
+			fecha: "",
+			hora: "",
+		});
 	}	
 
 	if (loading) return <LoadingFindDriver handleCancelar={handleCancelar} intentos={intentos} />;
 
 	if (isConfirmed) return <ConfirmFindDriver/>;
 
-	if (isCreated) {
-		return (
-			<div className="flex justify-center items-center w-full">
-				<div className="flex flex-col gap-10">
-					<div className="flex flex-col items-center gap-4">
-						<p className="text-xl font-semibold">Envío realizado con éxito</p>
-						<p>Nro. de seguimiento: {nroSeguimiento}</p>
-						<Button variant="contained" LinkComponent={Link} href="/client/dashboard" onClick={handleGoBack}>
-							Volver al Inicio
-						</Button>
-					</div>
-				</div>
-			</div>
-		);
-	}
+	if (isCreated) return <ShipmentCreatedConfirmation nroSeguimiento={nroSeguimiento} handleGoBack={handleGoBack} />;
 	
 	return (
 		<div className='py-10 max-w-screen-xl 2xl:max-w-screen-2xl px-4 md:px-10 flex flex-col justify-center w-full m-auto'>
@@ -170,7 +174,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 								</AccordionSummary>
 								<AccordionDetails className='flex flex-col gap-8'>
 									<FormControl>
-										<InputLabel htmlFor='calle'>Calle</InputLabel>
+										<InputLabel htmlFor='calle' shrink={true}>Calle</InputLabel>
 										<Input
 											id='calle'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
@@ -179,7 +183,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='numero'>Número</InputLabel>
+										<InputLabel htmlFor='numero' shrink={true}>Número</InputLabel>
 										<Input
 											id='numero'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
@@ -188,7 +192,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='depto'>Departamento (opcional)</InputLabel>
+										<InputLabel htmlFor='depto' shrink={true}>Departamento (opcional)</InputLabel>
 										<Input
 											id='depto'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
@@ -197,7 +201,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='piso'>Piso (opcional)</InputLabel>
+										<InputLabel htmlFor='piso' shrink={true}>Piso (opcional)</InputLabel>
 										<Input
 											id='piso'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
@@ -206,7 +210,7 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 										/>
 									</FormControl>
 									<FormControl>
-										<InputLabel htmlFor='descripcion'>Descripción (opcional)</InputLabel>
+										<InputLabel htmlFor='descripcion' shrink={true}>Descripción (opcional)</InputLabel>
 										<Input
 											id='descripcion'
 											onChange={(e) => handleChange(e.target.id, e.target.value)}
@@ -291,15 +295,6 @@ export default function ShipmentRegisterLayout({ children }: ShipmentRegisterLay
 					</div>
 				</div>
 			</div>
-			{/* <Toaster containerStyle={{zIndex: 99999999}} toastOptions={{
-				style: {
-					borderRadius: '4px',
-				},
-				duration: 5000,
-				removeDelay: 400,
-			}}/> */}
-
-			
 		</div>
 	)
 }

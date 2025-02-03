@@ -9,9 +9,8 @@ import { EnviosService } from "@/services/envios.service";
 import Link from "next/link";
 import { NewShipmentButton } from "@/components/client/new-shipment-button/NewShipmentButton";
 import { TrackShipmentButton } from "@/components/client/track-shipment-button/TrackShipmentButton";
-import { SkeletonDashboard } from "@/components/client/skeleton-dashboard/SkeletonDashboard";
 import { calculateMonthlyStats } from "@/utils/utils";
-import { SearchShipment } from "@/components/client/search-/SearchShipment";
+import { SearchShipment } from "@/components/client/search-shipment/SearchShipment";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
