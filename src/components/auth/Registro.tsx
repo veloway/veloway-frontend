@@ -1,27 +1,25 @@
 // auth/Registro.tsx
 import React from 'react';
+import { useRegistroStore } from '@/stores/userRegisterStore';
 
-interface RegistroProps {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    values: {
-        email: string;
-        password: string;
-        dni: string;
-        fechaNacimiento: string;
-        nombre: string;
-        apellido: string;
-        telefono: string;
-    };
-}
 
-const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
+
+const Registro  = () => {
+
+    const  { userValues , setUserValues } = useRegistroStore();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setUserValues({ [name]: value });  // Actualizando el estado global
+      };
+
     return (
         <div className="space-y-4"> {/* Espacio entre los inputs */}
             <input 
                 type="email" 
                 name="email" 
-                value={values.email} 
-                onChange={onChange} 
+                value={userValues.email} 
+                onChange={handleChange} 
                 placeholder="Email" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -29,8 +27,8 @@ const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
             <input 
                 type="password" 
                 name="password" 
-                value={values.password} 
-                onChange={onChange} 
+                value={userValues.password} 
+                onChange={handleChange} 
                 placeholder="Contraseña" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -38,8 +36,8 @@ const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
             <input 
                 type="text" 
                 name="dni" 
-                value={values.dni} 
-                onChange={onChange} 
+                value={userValues.dni} 
+                onChange={handleChange} 
                 placeholder="DNI" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -47,16 +45,16 @@ const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
             <input 
                 type="date" 
                 name="fechaNacimiento" 
-                value={values.fechaNacimiento} 
-                onChange={onChange} 
+                value={userValues.fechaNacimiento} 
+                onChange={handleChange} 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input 
                 type="text" 
                 name="nombre" 
-                value={values.nombre} 
-                onChange={onChange} 
+                value={userValues.nombre} 
+                onChange={handleChange} 
                 placeholder="Nombre" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -64,8 +62,8 @@ const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
             <input 
                 type="text" 
                 name="apellido" 
-                value={values.apellido} 
-                onChange={onChange} 
+                value={userValues.apellido} 
+                onChange={handleChange} 
                 placeholder="Apellido" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -73,8 +71,8 @@ const Registro: React.FC<RegistroProps> = ({ onChange, values }) => {
             <input 
                 type="tel" 
                 name="telefono" 
-                value={values.telefono} 
-                onChange={onChange} 
+                value={userValues.telefono} 
+                onChange={handleChange} 
                 placeholder="Teléfono" 
                 required 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

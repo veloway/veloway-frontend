@@ -11,10 +11,10 @@ export interface Domicilio {
 }
 
 export interface DomicilioDto {
-    calle: string
-    numero: number
-    piso: number | null
-    depto: string | null
-    descripcion: string | null
-    localidadID: number
+    calle: string;
+    numero: string;
+    descripcion?: string;
+    piso?: number;
+    depto?: string;
+    localidadID: number | null;
 }

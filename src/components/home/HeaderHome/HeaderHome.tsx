@@ -1,6 +1,5 @@
 import { PiLightning } from "react-icons/pi";
 import './HeaderHome.css';
-import Button from '@mui/material/Button';
 import Link from "next/link";
 export function HeaderHome (){
     return(
@@ -15,8 +14,8 @@ export function HeaderHome (){
                     <li><Link href="#">API</Link></li>
                 </div>
                 <div className="links-header-2">
-                    <li><a href="/auth/login">Iniciar Sesion</a></li>
-                    <li><a href="/auth/clientRegister"><Button bgColor='white' textColor='black'>Registrarse</Button></a></li>
+                    <li> <Link href="/auth/login">Iniciar Sesion</Link></li>
+                    <li> <Link href="/auth/clientRegister">Registrarse</Link> </li>
                 </div>
             </ul>
             </nav>
