@@ -9,8 +9,10 @@ import { EnviosService } from "@/services/envios.service";
 import Link from "next/link";
 import { NewShipmentButton } from "@/components/client/new-shipment-button/NewShipmentButton";
 import { TrackShipmentButton } from "@/components/client/track-shipment-button/TrackShipmentButton";
-import { SkeletonDashboard } from "@/components/client/skeleton-dashboard/SkeletonDashboard";
 import { calculateMonthlyStats } from "@/utils/utils";
+import { SearchShipment } from "@/components/client/search-shipment/SearchShipment";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 // export const metadata = { title: "Client Home" };
 
@@ -43,10 +45,28 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 	const [cantEnvios, setCantEnvios] = useState(0);
 	const [cantiEnviosEnTransito, setCantiEnviosEnTransito] = useState(0);
 	const [monthlyStats, setMonthlyStats] = useState(monthlyStatsInitial);
+	const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+	const navigation = useRouter();
 
 	const dataClient = {
 		name: "Jose Francisco Arce",
 		numero: clietId,
+	};
+
+	const handleSearchShipment = (trackingNumber: string) => {
+		toast.loading("Buscando envío...");
+		EnviosService.getByNroSeguimiento(Number(trackingNumber))
+			.then((data) => {
+				if (data) {
+					toast.dismiss();
+					toast.success("Envío encontrado");
+					navigation.push(`track-shipment/${trackingNumber}`);
+				}
+			})
+			.catch((error) => {
+				toast.dismiss();
+				toast.error("No se encontró ningun envío");
+			})
 	};
 
 	useEffect(() => {
@@ -121,7 +141,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 												/>
 											</svg>
 										</div>
-										<TrackShipmentButton />
+										<TrackShipmentButton onClick={() => setSearchDialogOpen(true)} />
 									</div>
 								</div>
 								<div className='bg-gray-50 px-5 py-3'>
@@ -363,6 +383,11 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 					</div>
 				</div>
 			</div>
+			<SearchShipment
+				open={searchDialogOpen}
+				onClose={() => setSearchDialogOpen(false)}
+				onSearch={handleSearchShipment}
+			/>
 		</div>
 	);
 }
