@@ -15,7 +15,7 @@ export function HeaderHome (){
                 </div>
                 <div className="links-header-2">
                     <li> <Link href="/auth/login">Iniciar Sesion</Link></li>
-                    <li> <Link href="/auth/clientRegister">Registrarse</Link> </li>
+                    <li> <Link href="/howRegister/userOrDriver">Registrarse</Link> </li>
                 </div>
             </ul>
             </nav>
