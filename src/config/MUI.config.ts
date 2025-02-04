@@ -4,8 +4,8 @@ export const theme = createTheme({
   palette: {
     primary: {
       light: '#1976d2',
-      main: '#1565c0',
-      dark: '#1058a5',
+      main: '#176bc4',
+      dark: '#1360ad',
       contrastText: '#fff',
     },
     secondary: {
@@ -15,4 +15,16 @@ export const theme = createTheme({
       contrastText: '#000',
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+        },
+      },
+    }
+  }
 });
