@@ -41,9 +41,9 @@ export const useRegistroStore = create<RegistroStore>((set) => ({
   },
   addressValues: {
     calle: "",
-    numero: "",
+    numero: 0,
     descripcion: "",
-    piso: undefined,
+    piso: null,
     depto: "",
     localidadID: null,
   },
@@ -66,10 +66,10 @@ export const useRegistroStoreDto = create <RegistroStoreDTO>((set) => ({
   },
   addressData: {
     calle: "",
-    numero: "",
-    descripcion: "",
-    piso: undefined,
-    depto: "",
+    numero: 0,
+    descripcion: null,
+    piso: null,
+    depto: null,
     localidadID: null,
   },
   setUserData: (values) =>

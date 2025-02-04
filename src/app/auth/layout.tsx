@@ -1,6 +1,8 @@
 // auth/layout.tsx
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
+import { Button, IconButton } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -14,10 +16,17 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         {/* Imagen fija */}
       </div>
 
-      {/* Mitad derecha con scroll solo en el formulario */}
       <div className="w-1/2 h-screen flex justify-center items-center bg-gray-100">
-      <Link className="absolute top-4 right-4 text-blue-600 hover:text-blue-800 font-semibold" href="/">Home</Link>
-        <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
+        <Button
+         LinkComponent={Link}
+         href="/"
+         className='absolute top-4 right-4 rounded-md'
+         color='primary'
+         variant='contained'
+        > 
+          <HomeIcon className='text-2xl'/>
+        </Button>
+        <div className="w-full max-w-md bg-white p-6 rounded-md shadow-md">
           {children}
         </div>
       </div>
