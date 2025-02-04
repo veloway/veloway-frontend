@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 
 interface Props {
   addVehiculo: (vehiculo: any) => void;
   editIndex: number | null;
   vehiculos: any[];
 }
-
-const StyledTitle = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  fontSize: '24px',
-  fontWeight: 'bold',
-  color: theme.palette.primary.main,
-  marginBottom: '25px',
-}));
 
 const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) => {
   const [anio, setAnio] = useState<string>('');
@@ -112,7 +100,6 @@ const VehiculoForm: React.FC<Props> = ({ addVehiculo, editIndex, vehiculos }) =>
 
   return (
     <div onSubmit={handleSubmit} style={{ maxWidth: 900, margin: 'auto', marginTop: '24px' }}>
-      <h2 className="text-2xl font-bold text-center mb-6">Registro del Vehículo</h2>
 
       {errorMessages.generic && <div style={{ color: 'red' }}>{errorMessages.generic}</div>}
       {errorMessages.anio && <div style={{ color: 'red' }}>{errorMessages.anio}</div>}

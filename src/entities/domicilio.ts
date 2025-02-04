@@ -16,5 +16,5 @@ export interface DomicilioDto {
     piso: number | null
     depto: string | null
     descripcion: string | null
-    localidadID: number
+    localidadID: number | null
 }
