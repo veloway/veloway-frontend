@@ -1,6 +1,9 @@
+import { GetEnvioDto } from "../envios/getEnvioDto";
+
 export type GetAllByConductorID = {
     idViaje:        number;
     idConductor:    string;
-    nroSeguimiento: number;
-    fechaInicio:    Date;
+    envio: GetEnvioDto;
+    fechaInicio:    string;
 }
+

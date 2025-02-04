@@ -3,6 +3,7 @@ import { GetEnvioDto } from '@/entities/envios/getEnvioDto';
 import { EnvioFilters } from '@/types/types';
 import axios, { CancelTokenSource} from 'axios';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 interface GetEnvioDtoPagination{
     totalEnvios: number
@@ -143,6 +144,20 @@ static async getAllByClienteIdPagination(
             return res.data;
         }catch(error){
             throw new Error("No se pudo cancelar el envío");
+        }
+    }
+
+    static async updateEstadoEnvio(numeroSeguimiento: number, estadoEnvioID: number): Promise<void> {
+        try {
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/update-estado/nro-seguimiento/${numeroSeguimiento}`,
+                { estadoEnvioID }
+            )
+
+            if (res.status !== 200) throw new Error(res.data.message);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message)
+            } 
         }
     }
 }
