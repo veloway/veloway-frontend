@@ -13,37 +13,30 @@ import { useEffect, useState } from "react";
 import ReservationsTable from "@/components/driver/reservationsTable/ReservationsTable";
 import Link from "next/link";
 import { ViajesService } from "@/services/viajes.service";
+import { GetViajeDto } from "@/entities/viajes/getViajeDto";
 
 interface driverPageProp {
 	params: ParsedUrlQuery;
 }
-interface Viaje {
-	id: number;
-	origen: string;
-	destino: string;
-	estado: string;
-	fecha: string;
-	reserva: boolean;
-	dni: number;
-}
+
 
 export default function DriverHomePage({ params }: driverPageProp) {
-	const [viajeActual, setViajeActual] = useState<Viaje | null>(null);
+	const [viajeActual, setViajeActual] = useState<GetViajeDto | null>(null);
 	const columns = ["Numero", "Origen", "Destino", "Fecha", "Monto"];
     const columnsReservations = ["Origen", "Destino", "Fecha"] 
 
-	const user = clientes.find((c) => (c.dni = 43897801));
-	const envios = dataEnviosTabla.filter((e) => e.dni === user?.dni);
-    const userReservations = envios.filter((e) => e.reserva === true); 
 
-	const idCoonductor = "987f6543-e21c-54d3-b789-426614174001"
+	const idConductor = "987f6543-e21c-54d3-b789-426614174001"
 
 	useEffect(() => {
-		const currentTravel = envios.find((e) => e.reserva === false);
-		if (currentTravel) {
-			setViajeActual(currentTravel);
-		}
-	});
+		if (!idConductor) return
+
+		ViajesService.getViajeActual(idConductor).then((data) => {
+			if (data) setViajeActual(data)
+		}).catch(error => {
+			console.error(error);
+		});
+	}, [idConductor]);
 
 	return (
 		<div className='py-20'>
@@ -56,12 +49,16 @@ export default function DriverHomePage({ params }: driverPageProp) {
 							</p>
 							<div className='bg-white shadow-lg space-y-5 px-8 py-6 flex-1 rounded-b-md'>
 								<div className='flex flex-col gap-1'>
+									<p className='text-lg font-medium'>Cliente</p>
+									<p className='text-gray-500'>{`${viajeActual.envio.cliente.nombre} ${viajeActual.envio.cliente.apellido}`}</p>
+								</div>
+								<div className='flex flex-col gap-1'>
 									<p className='text-lg font-medium'>Origen</p>
-									<p className='text-gray-500'>{viajeActual.origen}</p>
+									<p className='text-gray-500'>{`${viajeActual.envio.origen.calle} N°${viajeActual.envio.origen.numero}, ${viajeActual.envio.origen.localidad.nombre}, ${viajeActual.envio.origen.localidad.provincia.nombre}`}</p>
 								</div>
 								<div className='flex flex-col gap-1'>
 									<p className='text-lg font-medium'>Destino</p>
-									<p className='text-gray-500'>{viajeActual.destino}</p>
+									<p className='text-gray-500'>{`${viajeActual.envio.destino.calle} N°${viajeActual.envio.destino.numero}, ${viajeActual.envio.destino.localidad.nombre}, ${viajeActual.envio.origen.localidad.provincia.nombre}`}</p>
 								</div>
 								<Button variant='contained' LinkComponent={Link} href="/driver/requestTravel" >ver viaje actual</Button>
 							</div>

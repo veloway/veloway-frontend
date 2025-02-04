@@ -1,11 +1,13 @@
 import { TableComponent } from "@/components/ui";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { Pagination } from "@mui/material";
 import { clientes } from "@/db/usuarios";
 import { dataEnviosTabla } from "@/db/envios";
 import { useState } from "react";
+import { ViajesService } from "@/services/viajes.service";
+import { GetAllByConductorID } from "@/entities/viajes/getAllViajeByConductorIdDto";
 
 interface TableProps {
 	columns: string[];
@@ -17,8 +19,26 @@ export default function ReservationsTable({columns, className}: TableProps) {
 
 	const user = clientes.find((c) => (c.dni = 43897801));
 	const envios = dataEnviosTabla.filter((e) => e.dni === user?.dni);
-    const userReservations = envios.filter((e) => e.reserva === true);
-    
+    // const userReservations = envios.filter((e) => e.reserva === true);
+    const idConductor = "987f6543-e21c-54d3-b789-426614174001"
+
+    const [userReservations, setUserReservations] = useState<GetAllByConductorID[]>([]);
+
+    useEffect(() => {
+        if(!idConductor) return
+
+        ViajesService.getAllViajesByConductorId(idConductor).then((data) => {   
+            
+            setUserReservations(
+                data.filter(
+                    (reserva) =>
+                        reserva.envio.reserva === true
+                ),
+            )
+            
+
+        });
+    })
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const rXPage = 3;
@@ -26,7 +46,7 @@ export default function ReservationsTable({columns, className}: TableProps) {
     const lastReservation = currentPage * rXPage;
     const firstReservation = lastReservation - rXPage;
 
-    const currentReservation = userReservations.slice(firstReservation, lastReservation);
+    const tripsReserved = userReservations.slice(firstReservation, lastReservation);
 
     const handlePagChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setCurrentPage(value)
@@ -54,11 +74,11 @@ export default function ReservationsTable({columns, className}: TableProps) {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-                    {currentReservation.map((r, index) => (
+                    {tripsReserved.map((r, index) => (
                         <tr key={index}>
-                            <td className='py-2 px-4 text-start'>{r.origen}</td>
-                            <td className='py-2 px-4 text-center'>{r.destino}</td>
-                            <td className='py-2 px-4 text-end'>{r.fecha}</td>
+                            <td className='py-2 px-4 text-start'>{`${r.envio.origen.calle} N°${r.envio.origen.numero}, ${r.envio.origen.localidad.nombre}`}</td>
+                            <td className='py-2 px-4 text-center'>{`${r.envio.destino.calle} N°${r.envio.origen.numero}, ${r.envio.origen.localidad.nombre}`}</td>
+                            <td className='py-2 px-4 text-end'>{r.fechaInicio}</td>
                         </tr>
                     ))}
 					</TableBody>
