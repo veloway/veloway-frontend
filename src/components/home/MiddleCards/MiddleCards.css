@@ -6,8 +6,8 @@
     top: 90%;
     z-index: 2;
     width: 100%;
-    padding-right: 150px;
-    padding-left: 150px;
+    padding-right: 10%;
+    padding-left: 10%;
 }
 
   .blue-button{  /* Estilo para boton azul */
@@ -25,3 +25,11 @@
     font-size: 40px;
 }
 
+@media (max-width: 770px){
+  .middle-cards {
+    grid-template-columns: 1fr; /* Cambia a una sola columna */
+    grid-template-rows: repeat(1, 3fr);
+    position: relative;
+    margin-top: 10%;
+  }
+}

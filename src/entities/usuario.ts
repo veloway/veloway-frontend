@@ -9,14 +9,3 @@ export interface Usuario{
     esConductor: boolean,
     telefono?: string | null,
 }
-
-export interface UsuarioDto{
-    dni: number,
-    email: string,
-    fechaNac: Date,
-    nombre: string,
-    apellido: string,
-    esConductor: boolean,
-    telefono?: string | null,
-    apiKey: string
-}

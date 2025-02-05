@@ -7,7 +7,8 @@ export function FirstViewHome(){
         <section className="home-1">
           <img src="/images/hero_image.webp" className="background-home-1"/>
           <div className="text-home-1">
-            <h1><strong>Envios rápidos y seguros <br />a cualquier destino</strong></h1>
+            <h1>
+              <strong>Envios rápidos y seguros <br />a cualquier destino</strong></h1>
           </div>
           <div className="text-img-home-1">
               <GiPathDistance className="envio-icon"/>

@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100vh;
     position: relative;
-    padding: 150px 0px 0px 120px;
+    padding: 150px 0px 0px 10%;
     gap: 30px;
   }
 
@@ -44,4 +44,12 @@
 
   .buttom-seguim{
     border: 1px solid black;
+  }
+
+  @media (max-width: 960px) {
+    .text-home-1{
+      margin-top: 80px;
+    }
+
+  
   }
