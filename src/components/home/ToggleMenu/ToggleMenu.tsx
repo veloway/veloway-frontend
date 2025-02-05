@@ -45,8 +45,6 @@ export default function ToggleMenu() {
           "& .MuiPaper-root": {
             backgroundColor: "white", 
             borderRadius: "10px",
-            maxWidth: "150px",  
-            overflow: "hidden",
           },
         }}
       >
