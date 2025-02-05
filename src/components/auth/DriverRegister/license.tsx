@@ -1,48 +1,88 @@
-// auth/driverregister/Licencia.tsx
-import React from 'react';
+import { useDriverRegistroStore } from "@/stores/driverRegisterStore";
+import { Stack, TextField } from "@mui/material";
+import { useState } from "react";
 
-interface LicenciaProps {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    values: {
-        numeroRegistro: string;
-        categoria: string;
-        vencimiento: string;
-    };
-}
+const LicenciaForm: React.FC = () => {
+  const { licenseValues, setLicenseValues } = useDriverRegistroStore();
+  const [errors, setErrors] = useState({
+    numero: false,
+    categoria: false,
+    fecha_vencimiento: false,
+  });
 
-const Licencia: React.FC<LicenciaProps> = ({ onChange, values }) => {
-    return (
-        <>
-        <div className="space-y-4">
-            <input 
-                type="text" 
-                name="numeroRegistro" 
-                value={values.numeroRegistro} 
-                onChange={onChange} 
-                placeholder="Número de Registro" 
-                required 
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <input 
-                type="text" 
-                name="categoria" 
-                value={values.categoria} 
-                onChange={onChange} 
-                placeholder="Categoría" 
-                required 
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <input 
-                type="date" 
-                name="vencimiento" 
-                value={values.vencimiento} 
-                onChange={onChange} 
-                required 
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-        </div>
-        </>
-    );
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "numero") {
+      const num = Number(value);
+      if (!num) {
+        setErrors((prev) => ({ ...prev, numero: true }));
+      } else {
+        setErrors((prev) => ({ ...prev, numero: false }));
+      }
+      setLicenseValues({ [name]: num });
+      // console.log(licenseValues)
+
+    } else {
+      if (value.trim() === "") {
+        setErrors((prev) => ({ ...prev, [name]: true }));
+      } else {
+        setErrors((prev) => ({ ...prev, [name]: false }));
+      }
+      setLicenseValues({ [name]: value });
+      // console.log(licenseValues)
+    }
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const date = new Date(value);
+    const hoy = new Date();
+    if (isNaN(date.getTime()) || date <= hoy) {
+      setErrors((prev) => ({ ...prev, fecha_vencimiento: true }));
+    } else {
+      setErrors((prev) => ({ ...prev, fecha_vencimiento: false }));
+    }
+    setLicenseValues({ [name]: date });
+    // console.log(licenseValues)
+
+  };
+
+  return (
+    <Stack spacing={2}>
+      <TextField
+        label="Número de Licencia"
+        name="numero"
+        type="number"
+        value={licenseValues.numero === 0 ? "" : licenseValues.numero}
+        onChange={handleChange}
+        required
+        error={errors.numero}
+        helperText={errors.numero ? "Debe ingresar un número válido" : ""}
+        fullWidth
+      />
+      <TextField
+        label="Categoría"
+        name="categoria"
+        value={licenseValues.categoria}
+        onChange={handleChange}
+        required
+        error={errors.categoria}
+        helperText={errors.categoria ? "La categoría es obligatoria" : ""}
+        fullWidth
+      />
+      <TextField
+        label="Fecha de Vencimiento"
+        name="fecha_vencimiento"
+        type="date"
+        onChange={handleDateChange}
+        required
+        error={errors.fecha_vencimiento}
+        helperText={errors.fecha_vencimiento ? "La fecha debe ser posterior a hoy" : ""}
+        InputLabelProps={{ shrink: true }}
+        fullWidth
+      />
+    </Stack>
+  );
 };
 
-export default Licencia;
+export default LicenciaForm;

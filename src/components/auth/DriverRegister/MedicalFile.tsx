@@ -1,36 +1,119 @@
-// auth/driverregister/FichaMedica.tsx
-import React from 'react';
+import React, { useState } from "react";
+import { useDriverRegistroStore } from "@/stores/driverRegisterStore";
+import { Stack, TextField, FormControlLabel, Checkbox } from "@mui/material";
 
-interface FichaMedicaProps {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    compartirFichaMedica: boolean;
-}
+const FichaMedica: React.FC = () => {
+  const {
+    carnetValues,
+    setCarnetValues,
+  } = useDriverRegistroStore();
 
-const FichaMedica: React.FC<FichaMedicaProps> = ({ onChange, compartirFichaMedica }) => {
-    return (
-        <div className="space-y-4">
-            <label className="block">
-                Adjuntar Ficha Médica:
-                <input 
-                    type="file" 
-                    name="fichaMedica" 
-                    onChange={onChange} 
-                    required 
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-            </label>
-            <label className="flex items-center">
-                Compartir Ficha Médica:
-                <input 
-                    type="checkbox" 
-                    name="compartirFichaMedica" 
-                    checked={compartirFichaMedica} 
-                    onChange={onChange} 
-                    className="ml-2 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-            </label>
-        </div>
-    );
+  const [errors, setErrors] = useState({
+    altura: false,
+    peso: false,
+  });
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setCarnetValues({ [name]: checked });
+    } else {
+      if (name === "altura") {
+        const num = Number(value);
+        if (num < 100 || num > 999) {
+          setErrors((prev) => ({ ...prev, altura: true }));
+        } else {
+          setErrors((prev) => ({ ...prev, altura: false }));
+        }
+      }
+      if (name === "peso") {
+        const num = Number(value);
+        if (num < 10 || num > 999) {
+          setErrors((prev) => ({ ...prev, peso: true }));
+        } else {
+          setErrors((prev) => ({ ...prev, peso: false }));
+        }
+      }
+      setCarnetValues({ [name]: value });
+    }
+  };
+
+  return (
+    <Stack spacing={1}>
+      <TextField
+        label="Altura (cm)"
+        name="altura"
+        value={carnetValues.altura || ""}
+        onChange={handleChange}
+        required
+        error={errors.altura}
+        helperText={errors.altura ? "Debe ser un número de 3 dígitos (entre 100 y 999)" : ""}
+        fullWidth
+      />
+      <TextField
+        label="Peso (kg)"
+        name="peso"
+        value={carnetValues.peso || ""}
+        onChange={handleChange}
+        required
+        error={errors.peso}
+        helperText={errors.peso ? "Debe ser un número de 2 o 3 dígitos (entre 10 y 999)" : ""}
+        fullWidth
+      />
+      <TextField
+        label="Enfermedad Cardiaca (opcional)"
+        name="enfermedadCardiaca"
+        value={carnetValues.enfermedadCardiaca || ""}
+        onChange={handleChange}
+        fullWidth
+      />
+      <TextField
+        label="Enfermedad Respiratoria (opcional)"
+        name="enfermedadRespiratoria"
+        value={carnetValues.enfermedadRespiratoria || ""}
+        onChange={handleChange}
+        fullWidth
+      />
+      <TextField
+        label="Alergias (opcional)"
+        name="alergias"
+        value={carnetValues.alergias || ""}
+        onChange={handleChange}
+        fullWidth
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="epilepsia"
+            checked={carnetValues.epilepsia || false}
+            onChange={handleChange}
+          />
+        }
+        label="Epilepsia"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="diabetes"
+            checked={carnetValues.diabetes || false}
+            onChange={handleChange}
+          />
+        }
+        label="Diabetes"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="compartir"
+            checked={carnetValues.compartir || false}
+            onChange={handleChange}
+          />
+        }
+        label="Compartir Ficha Médica"
+      />
+    </Stack>
+  );
 };
 
 export default FichaMedica;

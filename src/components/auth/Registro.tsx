@@ -15,6 +15,7 @@ const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setUserValues({ [name]: value }); // Actualizando el estado global
+        // console.log(userValues)
 	};
 
     const handlePhoneInput = (telefono: string) => {
