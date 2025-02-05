@@ -1,6 +1,7 @@
-import { GetAllByConductorID } from "@/entities/viajes/getAllViajeByConductorIdDto";
+import { GetAllByConductorIDDto } from "@/entities/viajes/getAllViajeByConductorIdDto";
 import { GetViajeDto } from "@/entities/viajes/getViajeDto";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export class ViajesService {
     static async getViajeActual(idConductor: string): Promise<GetViajeDto> {
@@ -17,7 +18,7 @@ export class ViajesService {
 
     
 
-    static async getAllViajesByConductorId(idConductor: string): Promise<GetAllByConductorID[]> {
+    static async getAllViajesByConductorId(idConductor: string): Promise<GetAllByConductorIDDto[]> {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/viajes/all/conductor/${idConductor}`);
 
@@ -38,6 +39,22 @@ export class ViajesService {
             return res.data
         } catch (error) {
             throw new Error(`No se pudo obtener el viaje de id ${idViaje}`);
+        }
+    }
+
+    static async updateCheckpointActual(idViaje: number, checkpointActual: number): Promise<void> {
+        try {
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/viajes/update-checkpoint/idViaje/${idViaje}`,
+                { checkpointActual}
+            )
+            console.log(res);
+            
+
+            if (res.status !== 200) throw new Error(res.data.message);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message)
+            }
         }
     }
 }
