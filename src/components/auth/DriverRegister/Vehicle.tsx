@@ -39,7 +39,7 @@ const VehiculoForm = ({ tiposVehiculo = [], modelos = [], marcas = [] }: Vehicul
     const { name, value } = e.target;
     if (name === "anio") {
       const num = Number(value);
-      if (num < 1000 || num > 9999) {
+      if (num < 1970 || num > new Date().getFullYear()) {
         setErrors((prev) => ({ ...prev, anio: true }));
       } else {
         setErrors((prev) => ({ ...prev, anio: false }));
@@ -90,7 +90,7 @@ const VehiculoForm = ({ tiposVehiculo = [], modelos = [], marcas = [] }: Vehicul
         value={vehicleValues.anio === 0 ? "" : vehicleValues.anio}
         onChange={handleInputChange}
         error={errors.anio}
-        helperText={errors.anio ? "El año debe ser un número de 4 dígitos" : ""}
+        helperText={errors.anio ? "El año debe ser un número entre 1970 y 2025" : ""}
         required
       />
       <TextField
@@ -150,15 +150,17 @@ const VehiculoForm = ({ tiposVehiculo = [], modelos = [], marcas = [] }: Vehicul
       <FormControl>
         <Autocomplete
           options={(modelosFiltrados ?? []).map((option) => `${option.nombre}`)}
-          onChange={(event, value) => handleSelectChange(event, value, "modeloId", modelos)}
+          onChange={(event, value) => handleSelectChange(event, value, "modeloId", modelosFiltrados)}
           value={
-            modelos.find(m => m.id === vehicleValues.modeloId)?.nombre || ""
+            modelosFiltrados.find(m => m.id === vehicleValues.modeloId)?.nombre || ""
           }
-          renderInput={(params) => <TextField {...params} label="Modelo"
+          renderInput={(params) => <TextField {...params} 
+          label="Modelo"
           required
           error={errors.modeloId}
           helperText={errors.modeloId ? "Debe seleccionar un modelo" : ""}
           />}
+          disabled={vehicleValues.marcaId === 0}
         />
       </FormControl>
     </Stack>

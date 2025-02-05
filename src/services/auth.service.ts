@@ -68,17 +68,22 @@ export const authService = {
 
 
 		try {
-			console.log("xdddd")
 			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/conductores/register`, formattedData);
 			
-			const conductorId = response.data.conductorId
-			const formattedCarnet = {...carnetValues, conductorId}
-			const formattedLicense = {...licenseValues, conductorId}
-			const formattedVehicle = {...vehicleValues, conductorId}
+			const id_conductor = response.data.conductorId
+			const formattedCarnet = {...carnetValues, 
+				peso: Number(carnetValues.peso),
+				altura: Number(carnetValues.altura),
+			    id_conductor}
+			const formattedLicense = {...licenseValues, 
+				id_conductor}
+			const formattedVehicle = {...vehicleValues, id_conductor}
 
-			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/fichasMedicas/create`, {formattedCarnet});
-			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/licencias/register`, {formattedLicense});
-			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/vehiculos/create`, {formattedVehicle});
+			console.log(formattedVehicle)
+
+			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/fichasMedicas/create`, formattedCarnet);
+			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/licencias/create`, formattedLicense);
+			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/vehiculos/create`, formattedVehicle);
 		} catch (error: any) {
 			console.error("Error en el registro:", error.response?.data || error);
 			throw error;

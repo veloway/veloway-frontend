@@ -7,19 +7,23 @@ const LicenciaForm: React.FC = () => {
   const [errors, setErrors] = useState({
     numero: false,
     categoria: false,
-    fecha_vencimiento: false,
+    fechavencimiento: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === "numero") {
-      const num = Number(value);
-      if (!num) {
+      // Filtrar para que solo queden dígitos (en caso de que se ingresen otros caracteres)
+      const numericStr = value.replace(/\D/g, '');
+      const numLength = numericStr.length;
+
+      if (numLength < 8 || numLength > 10) {
         setErrors((prev) => ({ ...prev, numero: true }));
       } else {
         setErrors((prev) => ({ ...prev, numero: false }));
       }
-      setLicenseValues({ [name]: num });
+      // Actualizamos el valor convertido a número
+      setLicenseValues({ numero: Number(numericStr) });
       // console.log(licenseValues)
 
     } else {
@@ -37,14 +41,18 @@ const LicenciaForm: React.FC = () => {
     const { name, value } = e.target;
     const date = new Date(value);
     const hoy = new Date();
-    if (isNaN(date.getTime()) || date <= hoy) {
+    if (date <= hoy) {
       setErrors((prev) => ({ ...prev, fecha_vencimiento: true }));
     } else {
       setErrors((prev) => ({ ...prev, fecha_vencimiento: false }));
     }
-    setLicenseValues({ [name]: date });
-    // console.log(licenseValues)
 
+    const año = date.getFullYear();
+    const mes = String(date.getMonth() + 1).padStart(2, '0'); // Sumamos 1 porque los meses van de 0 a 11
+    const dia = String(date.getDate()).padStart(2, '0');
+
+    const fechaFormateada = `${año}-${mes}-${dia}`;
+    setLicenseValues({ [name]: fechaFormateada });
   };
 
   return (
@@ -57,7 +65,7 @@ const LicenciaForm: React.FC = () => {
         onChange={handleChange}
         required
         error={errors.numero}
-        helperText={errors.numero ? "Debe ingresar un número válido" : ""}
+        helperText={errors.numero ? "Debe ingresar entre 8 y 10 dígitos" : ""}
         fullWidth
       />
       <TextField
@@ -72,12 +80,12 @@ const LicenciaForm: React.FC = () => {
       />
       <TextField
         label="Fecha de Vencimiento"
-        name="fecha_vencimiento"
+        name="fechavencimiento"
         type="date"
         onChange={handleDateChange}
         required
-        error={errors.fecha_vencimiento}
-        helperText={errors.fecha_vencimiento ? "La fecha debe ser posterior a hoy" : ""}
+        error={errors.fechavencimiento}
+        helperText={errors.fechavencimiento ? "La fecha debe ser posterior a hoy" : ""}
         InputLabelProps={{ shrink: true }}
         fullWidth
       />

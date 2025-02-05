@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import Registro from "../../../components/auth/Registro";
 import DomicilioForm from "../../../components/auth/DomicilioForm";
 import VehiculoForm from "@/components/auth/DriverRegister/Vehicle";
-import LicenciaForm from "@/components/auth/DriverRegister/License";
 import FichaMedica from "@/components/auth/DriverRegister/MedicalFile";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa"; 
 import { authService } from "@/services/auth.service";
 import { useRegistroStore } from "@/stores/userRegisterStore";
 import { LocalidadesService } from "@/services/localidades.service";
@@ -21,6 +20,7 @@ import { MarcasService } from "@/services/marca.service";
 import { Modelo } from "@/entities/modelo";
 import { TiposService } from "@/services/tipoVehiculo";
 import { TipoVehiculo } from "@/entities/tipoVehiculo";
+import LicenciaForm from "@/components/auth/DriverRegister/license";
 
 const RegisterCliente = () => {
     const [step, setStep] = useState(1);
@@ -80,7 +80,7 @@ const RegisterCliente = () => {
             // - numero: obligatorio, solo números (> 0)
             // - categoria: obligatorio (no vacío)
             // - fecha vencimiento: obligatorio, debe ser posterior a la fecha actual
-            const fechaVencimiento = new Date(licenseValues.fecha_vencimiento);
+            const fechaVencimiento = new Date(licenseValues.fechavencimiento);
             const hoy = new Date();
             if (
               licenseValues.numero <= 0 ||
@@ -128,7 +128,7 @@ const RegisterCliente = () => {
         console.log(userValues, addressValues, licenseValues, carnetValues, vehicleValues)
 
         if (
-            vehicleValues.anio < 1000 || vehicleValues.anio > 9999 ||
+            vehicleValues.anio < 1970 || vehicleValues.anio > new Date().getFullYear() ||
             vehicleValues.color.trim() === "" || !/^[A-Za-z]+$/.test(vehicleValues.color) ||
             vehicleValues.patente.trim() === "" ||
             vehicleValues.tipoVehiculoId === 0 ||
@@ -171,7 +171,7 @@ const RegisterCliente = () => {
             setLicenseValues({
                 numero: 0,
                 categoria: "",
-                fecha_vencimiento: new Date(0) 
+                fechavencimiento: ""
             });
             setVehicleValues({
                 anio: 0,
@@ -199,7 +199,7 @@ const RegisterCliente = () => {
             case 2:
                 return <DomicilioForm localidades={localidades} />;
             case 3:
-                return <LicenciaForm />;
+                return <LicenciaForm/>;
             case 4:
                 return <FichaMedica />;
             case 5:

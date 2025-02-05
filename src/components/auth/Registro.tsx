@@ -11,10 +11,24 @@ interface RegistroProps {
 const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
 	const { userValues, setUserValues } = useRegistroStore();
     const [phoneInputError, setPhoneInputError] = useState(false);
+    const [dniError, setDniError] = useState(false);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setUserValues({ [name]: value }); // Actualizando el estado global
+        if (name === 'dni') {
+            // Filtramos para que solo queden dígitos
+            const onlyDigits = value.replace(/\D/g, '');
+            // Si el valor original es distinto al filtrado, significa que se intentó ingresar letras u otros caracteres
+            if (onlyDigits !== value) {
+              setDniError(true);
+            } else {
+              setDniError(false);
+            }
+            // Actualizamos el estado con el valor filtrado
+            setUserValues({ dni: onlyDigits });
+          } else {
+            setUserValues({ ...userValues, [name]: value });
+          }
         // console.log(userValues)
 	};
 
@@ -62,13 +76,15 @@ const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
                 value={userValues.dni}
                 onChange={handleChange}
                 required
-                error={
-                    handleErrorRequireInputs && userValues.dni === "" || 
-                    handleErrorRequireInputs && userValues.dni.length < 8
-                    ? true 
-                    : false
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                error={dniError || (userValues.dni.length > 0 && userValues.dni.length !== 8)}
+                helperText={
+                  dniError
+                    ? "El DNI solo acepta números"
+                    : userValues.dni.length > 0 && userValues.dni.length !== 8
+                    ? "El DNI debe tener 8 dígitos"
+                    : ""
                 }
-                helperText={handleErrorRequireInputs && userValues.dni.length < 8 ? "El DNI debe tener al menos 8 dígitos" : ""}
             />
             <TextField
                 label='Fecha de Nacimiento'
