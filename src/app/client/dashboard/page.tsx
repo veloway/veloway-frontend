@@ -56,7 +56,7 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 	const handleSearchShipment = (trackingNumber: string) => {
 		toast.loading("Buscando envío...");
 		EnviosService.getByNroSeguimiento(Number(trackingNumber))
-			.then((data) => {
+			.then((data) => {	
 				if (data) {
 					toast.dismiss();
 					toast.success("Envío encontrado");

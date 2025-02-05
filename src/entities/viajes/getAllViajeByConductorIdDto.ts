@@ -1,6 +1,6 @@
 import { GetEnvioDto } from "../envios/getEnvioDto";
 
-export type GetAllByConductorID = {
+export type GetAllByConductorIDDto = {
     idViaje:        number;
     idConductor:    string;
     envio: GetEnvioDto;
