@@ -9,14 +9,21 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-const origen: LatLngTuple = [-34.92208926643218, -57.9529867527089];
-const destino: LatLngTuple = [-34.904045188515084, -57.92589693187078];
+// const origen: LatLngTuple = [-34.92208926643218, -57.9529867527089];
+// const destino: LatLngTuple = [-34.904045188515084, -57.92589693187078];
+
+let globalOrigen: LatLngTuple;
+let globalDestino: LatLngTuple;
 
 let carMarker: L.Marker | null = null; // Variable para almacenar el marcador del auto
 let checkpoints: LatLngTuple[] = [];   // Variable para almacenar los checkpoints
 
-export const RoutingMachine = (map: L.Map) => {
+export const RoutingMachine = (map: L.Map, origen: LatLngTuple, destino: LatLngTuple) => {
     if (typeof window === 'undefined' || !map) return;
+
+    console.log("routing", origen, destino);
+    
+    
 
     const carIcon = L.icon({
         iconUrl: 'https://img.icons8.com/?size=100&id=KX1EJ8mb4zzD&format=png&color=005490',
@@ -68,6 +75,9 @@ export const RoutingMachine = (map: L.Map) => {
         return checkpoints;
     };
 
+    globalOrigen = origen;
+    globalDestino = destino;
+
     const control = L.Routing.control({
         waypoints: [L.latLng(origen), L.latLng(destino)],
         routeWhileDragging: false,
@@ -91,7 +101,7 @@ export const RoutingMachine = (map: L.Map) => {
 };
 
 // Exportar el marcador del auto y los checkpoints para usarlos en carAdvance.tsx
-export { carMarker, checkpoints, origen, destino };
+export { carMarker, checkpoints, globalOrigen as origen, globalDestino as destino };
 
 
 
