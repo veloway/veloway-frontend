@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { ViajesService } from "@/services/viajes.service";
 import { EnviosService } from "@/services/envios.service";
 import { EstadoEnvioEnum } from "@/types/enums";
+import { Skeleton } from "@mui/material";
 
 export default function TravelDetail() {
     const numeroSeguimiento = 46280958 
@@ -17,7 +18,6 @@ export default function TravelDetail() {
     const [viajeActual, setViajeActual] = useState<GetViajeDto | null>(null)
     
     const { currentCheckpoint, moveCarToNextCheckpoint } = useCarAdvance();  // Usamos el hook para gestionar el avance
-    
     
     useEffect(() => {
         if (!idViaje) return
@@ -30,7 +30,6 @@ export default function TravelDetail() {
 
     //handleUpdateCheckpointActual de mover el checkpoint
     const handleUpdateCheckpointActual = async () => {
-
         let checkpointActual = currentCheckpoint;
         let nuevoCheckpointActual = checkpointActual + 2;
         
@@ -44,13 +43,11 @@ export default function TravelDetail() {
     }
 
     const handleUpdateEstadoEnvio = async () => {
-
-        const nuevoEstado = EstadoEnvioEnum.EnProcesoDeRetiro      
+        const nuevoEstado = EstadoEnvioEnum.EnProcesoDeRetiro;      
 
         try {
           await EnviosService.updateEstadoEnvio(numeroSeguimiento, nuevoEstado);
           console.log("Estado del envío actualizado correctamente.");
-
         } catch (error) {
           console.error("Error al actualizar el estado del envío:", error);
         }
@@ -59,16 +56,22 @@ export default function TravelDetail() {
     return (
         <>
         {!viajeActual ? (
-            <div className="flex flex-col bg-primary p-6 h-full w-[450px] rounded-md justify-around animate-pulse">
-                <div className="h-10 bg-gray-300 rounded w-3/4 mx-auto mb-3" /> {/* Origen */}
-                <div className="h-10 bg-gray-300 rounded w-3/4 mx-auto mb-3" /> {/* Destino */}
-                
-                <div className="flex flex-col gap-2 bg-secondary p-2 rounded-lg w-[300px]">
-                    <div className="h-12 bg-gray-300 rounded w-full mb-3" /> {/* Botón Comenzar Viaje */}
-                    <div className="h-32 bg-gray-300 rounded w-full" /> {/* Stepper (simulación) */}
+            <div className="flex flex-col bg-primary p-6 h-full w-[450px] rounded-md justify-around">
+                <div className="flex gap-2 bg-secondary items-center p-2 rounded-lg mb-3">
+                    <Skeleton variant="rectangular" width={300} height={40} />
                 </div>
-        
-                <div className="h-12 bg-gray-300 rounded w-3/4 mx-auto mt-3" /> {/* Botón Siguiente Checkpoint */}
+                <div className="flex gap-2 bg-secondary items-center p-2 rounded-lg mb-3">
+                    <Skeleton variant="rectangular" width={300} height={40} />
+                </div>
+                <div className="flex flex-col gap-2 bg-secondary p-2 rounded-lg">
+                    <div className="flex justify-center mt-3 mb-3 bottom-0">
+                        <Skeleton variant="rectangular" width="100%" height={40} />
+                    </div>
+                    <Skeleton variant="rectangular" width="100%" height={200} />
+                </div>
+                <div className="flex justify-center mt-3 bottom-0">
+                    <Skeleton variant="rectangular" width="100%" height={40} />
+                </div>
             </div>
         ) : (
             <div className="flex flex-col bg-primary p-6 h-full w-[450px] rounded-md justify-around">
@@ -81,7 +84,7 @@ export default function TravelDetail() {
                     <p>{`${viajeActual?.envio.destino.calle} N°${viajeActual?.envio.destino.numero}, ${viajeActual?.envio.destino.localidad.nombre} ${viajeActual?.envio.destino.localidad.provincia.nombre}`}</p>
                 </div>
         
-                <div className="flex flex-col gap-2 bg-secondary p-2 rounded-lg w-[300px]">
+                <div className="flex flex-col gap-2 bg-secondary p-2 rounded-lg">
                     <div className="flex justify-center mt-3 mb-3 bottom-0">
                         <Button onClick={handleUpdateEstadoEnvio} variant="contained" color="primary" style={{ fontWeight: 'bold' }} className="flex w-full">
                             Comenzar viaje
@@ -92,7 +95,6 @@ export default function TravelDetail() {
         
                 <div className="flex justify-center mt-3 bottom-0">
                     <Button
-                        // onClick={moveCarToNextCheckpoint}
                         onClick={() => { 
                             moveCarToNextCheckpoint();
                             handleUpdateCheckpointActual();
@@ -107,5 +109,5 @@ export default function TravelDetail() {
             </div>
         )}
         </>
-        );
-    }
+    );
+}
