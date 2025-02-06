@@ -1,10 +1,14 @@
-// auth/Registro.tsx
 import React from "react";
 import { useRegistroStore } from "@/stores/userRegisterStore";
 import { TextField, Stack } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
+import { useState } from "react";
 
-const Registro = () => {
+interface RegistroProps {
+    handleErrorRequireInputs: boolean;
+}
+
+const Registro = ({ handleErrorRequireInputs }: RegistroProps) => {
 	const { userValues, setUserValues } = useRegistroStore();
 
     const [phoneInputError, setPhoneInputError] = useState(false);

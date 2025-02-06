@@ -80,80 +80,7 @@ export default function DriverHomePage({ params }: driverPageProp) {
 
 			<div className='grid gap-6 md:grid-cols-2 mb-6 containerMarginResposive'>
 				{loading && !viajeActual ? (
-					<div className='bg-white rounded-md shadow-lg'>
-						<div className='bg-primary px-6 py-4 rounded-t-md'>
-							<h2 className='text-2xl font-semibold text-white flex items-center'>
-								<svg
-									xmlns='http://www.w3.org/2000/svg'
-									className='h-6 w-6 mr-2'
-									fill='none'
-									viewBox='0 0 24 24'
-									stroke='currentColor'>
-									<path
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										strokeWidth={2}
-										d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-									/>
-								</svg>
-								Viaje Actual
-							</h2>
-						</div>
-						<div className='p-6 space-y-4'>
-							<div className='flex items-center space-x-4'>
-								<svg
-									xmlns='http://www.w3.org/2000/svg'
-									className='h-10 w-10 text-[#1565c0]'
-									viewBox='0 0 20 20'
-									fill='currentColor'>
-									<path
-										fillRule='evenodd'
-										d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'
-										clipRule='evenodd'
-									/>
-								</svg>
-								<div>
-									<h3 className='text-lg font-semibold text-gray-800'>Cliente</h3>
-									<div className='h-4 bg-gray-300 rounded w-32 animate-pulse'></div>
-								</div>
-							</div>
-							<div className='flex items-center space-x-4'>
-								<svg
-									xmlns='http://www.w3.org/2000/svg'
-									className='h-10 w-10 text-[#1565c0]'
-									viewBox='0 0 20 20'
-									fill='currentColor'>
-									<path
-										fillRule='evenodd'
-										d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-										clipRule='evenodd'
-									/>
-								</svg>
-								<div>
-									<h3 className='text-lg font-semibold text-gray-800'>Origen</h3>
-									<div className='h-4 bg-gray-300 rounded w-48 animate-pulse'></div>
-								</div>
-							</div>
-							<div className='flex items-center space-x-4'>
-								<svg
-									xmlns='http://www.w3.org/2000/svg'
-									className='h-10 w-10 text-[#1565c0]'
-									viewBox='0 0 20 20'
-									fill='currentColor'>
-									<path
-										fillRule='evenodd'
-										d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-										clipRule='evenodd'
-									/>
-								</svg>
-								<div>
-									<h3 className='text-lg font-semibold text-gray-800'>Destino</h3>
-									<div className='h-4 bg-gray-300 rounded w-48 animate-pulse'></div>
-								</div>
-							</div>
-							<div className='h-10 bg-gray-300 rounded w-1/2 animate-pulse'></div>
-						</div>
-					</div>
+					<p>Cargando...</p>
 				) : viajeActual && !loading ? (
 					<div className='bg-white rounded-md shadow-lg'>
 						<div className='bg-primary px-6 py-4 rounded-t-md'>
@@ -208,7 +135,7 @@ export default function DriverHomePage({ params }: driverPageProp) {
 								</svg>
 								<div>
 									<h3 className='text-lg font-semibold text-gray-800'>Origen</h3>
-									<p className='text-gray-600'>{`${viajeActual?.envio.origen.calle} ${viajeActual?.envio.origen.numero}, ${viajeActual?.envio.origen.localidad.nombre} ${viajeActual?.envio.origen.localidad.provincia.nombre}`}</p>
+									<p className='text-gray-600'>{`${viajeActual?.envio.origen.calle} ${viajeActual?.envio.origen.numero}, ${viajeActual?.envio.origen.localidad.nombre} ${viajeActual?.envio.origen.localidad.provincia.nombre}}`}</p>
 								</div>
 							</div>
 							<div className='flex items-center space-x-4'>
@@ -225,7 +152,7 @@ export default function DriverHomePage({ params }: driverPageProp) {
 								</svg>
 								<div>
 									<h3 className='text-lg font-semibold text-gray-800'>Destino</h3>
-									<p className='text-gray-600'>{`${viajeActual?.envio.destino.calle} ${viajeActual?.envio.destino.numero}, ${viajeActual?.envio.destino.localidad.nombre} ${viajeActual?.envio.destino.localidad.provincia.nombre}`}</p>
+									<p className='text-gray-600'>{`${viajeActual?.envio.destino.calle} ${viajeActual?.envio.destino.numero}, ${viajeActual?.envio.destino.localidad.nombre} ${viajeActual?.envio.destino.localidad.provincia.nombre}}`}</p>
 								</div>
 							</div>
 							<Button variant='contained' LinkComponent={Link} href='/driver/requestTravel'>
@@ -342,4 +269,89 @@ export default function DriverHomePage({ params }: driverPageProp) {
 			</div>
 		</div>
 	);
+
+	// return (
+	// 	<div className='py-20 flex flex-col justify-center items-center'>
+	// 		<header className='bg-primary shadow w-full'>
+	// 				<div className='max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-6 px-4 md:px-10'>
+	// 					<div className='flex flex-col gap-2 text-white'>
+	// 						<h1 className='text-[25px] md:text-[23px] font-semibold'>{dataConductor.name}</h1>
+	// 						<h3 className='text-[18px] md:text-[13px] font-normal'>N°Conductor: {dataConductor.numero}</h3>
+	// 					</div>
+	// 				</div>
+	// 			</header>
+	// 		<section className="flex justify-between w-[80%] h-[450px] mt-12 mb-16">
+	// 		{loading ? (
+	// 				<ContainerFlex>
+	// 				<div className="rounded-md flex flex-col w-[500px] h-full">
+	// 					<p className="font-medium text-gray-50 text-xl px-8 py-4 rounded-t-md bg-primary">
+	// 					Cargando viaje...
+	// 					</p>
+	// 					<div className="bg-white shadow-lg space-y-5 px-8 py-9 flex-1 rounded-b-md animate-pulse">
+	// 					<div className="h-6 bg-gray-300 rounded w-3/4" />
+	// 					<div className="h-6 bg-gray-300 rounded w-2/3" />
+	// 					<div className="h-6 bg-gray-300 rounded w-2/3" />
+	// 					<div className="h-10 bg-gray-300 rounded w-1/2" />
+	// 					</div>
+	// 				</div>
+	// 				</ContainerFlex>
+	// 			) : viajeActual ? (
+	// 				<ContainerFlex>
+	// 				<div className="rounded-md flex flex-col w-[500px] h-full">
+	// 					<p className="font-medium text-gray-50 text-xl px-8 py-4 rounded-t-md bg-primary">
+	// 					Viaje Actual
+	// 					</p>
+	// 					<div className="bg-white shadow-lg space-y-5 px-8 py-9 flex-1 rounded-b-md">
+	// 					<div className="flex flex-col gap-1">
+	// 						<p className="text-lg font-medium">Cliente</p>
+	// 						<p className="text-gray-500">{`${viajeActual.envio.cliente.nombre} ${viajeActual.envio.cliente.apellido}`}</p>
+	// 					</div>
+	// 					<div className="flex flex-col gap-1">
+	// 						<p className="text-lg font-medium">Origen</p>
+	// 						<p className="text-gray-500">{`${viajeActual.envio.origen.calle} N°${viajeActual.envio.origen.numero}, ${viajeActual.envio.origen.localidad.nombre}, ${viajeActual.envio.origen.localidad.provincia.nombre}`}</p>
+	// 					</div>
+	// 					<div className="flex flex-col gap-1">
+	// 						<p className="text-lg font-medium">Destino</p>
+	// 						<p className="text-gray-500">{`${viajeActual.envio.destino.calle} N°${viajeActual.envio.destino.numero}, ${viajeActual.envio.destino.localidad.nombre}, ${viajeActual.envio.destino.localidad.provincia.nombre}`}</p>
+	// 					</div>
+	// 					<Button variant="contained" LinkComponent={Link} href="/driver/requestTravel">
+	// 						ver viaje actual
+	// 					</Button>
+	// 					</div>
+	// 				</div>
+	// 				</ContainerFlex>
+	// 			) : (
+	// 				<SinViaje />
+	// 			)}
+	//             <div className='rounded-md flex flex-col w-[500px] h-full'>
+	// 				<p className='font-medium text-gray-50 text-xl px-8 py-4 rounded-t-md bg-primary'>
+	// 					Reservas
+	// 				</p>
+	// 				<div className='bg-white shadow-lg space-y-5 flex justify-center h-full'>
+	// 						<ReservationsTable columns={columnsReservations} className="rounded-none shadow-none"/>
+	// 				</div>
+	// 			</div>
+	//         </section>
+	// 		<section className="w-[80%]">
+	// 			<TableComponent columns={columns} title='Historial de Viajes' >
+	// 			{!allViajesByConductor ? (
+	// 				<p>No hay viajes disponibles</p>  // Si no hay viajes, muestra un mensaje
+	// 			) : (
+	// 				allViajesByConductor.map((data) => (
+	// 					<tr key={data.idViaje}>
+	// 						<td className='py-2 px-4 text-center'>{data.idViaje}</td>
+	// 						<td className='py-2 px-4 text-center'>{data.fechaInicio}</td>
+	// 						<td className='py-2 px-4 text-center'>{`${data.envio.origen.calle} ${data.envio.origen.numero}, ${data.envio.origen.localidad.nombre}`}</td>
+	// 						<td className='py-2 px-4 text-center'>{`${data.envio.destino.calle} ${data.envio.destino.numero}, ${data.envio.destino.localidad.nombre}`}</td>
+	// 						<td className='py-2 px-4 text-center'>{data.envio.estado}</td>
+	// 					</tr>
+	// 				))
+	// 			)}
+	// 			</TableComponent>
+	// 			<div className='flex justify-center'>
+	// 				<Pagination count={8} color='primary' />
+	// 			</div>
+	// 		</section>
+	// 	</div>
+	// );
 }
