@@ -32,7 +32,8 @@ export class EnviosService {
                     {
                         validateStatus: (status) => status < 500, // Permite retornar códigos de estado < a 500
                         cancelToken: cancelToken.token, // Agregar token de cancelación
-                    }
+                        withCredentials: true, // Enviar cookies
+                    },
                 );
 
                 if (res.status === 201) {
@@ -73,7 +74,7 @@ export class EnviosService {
 
     static async getAllByClienteId(clienteId: string): Promise<GetEnvioDtoPagination>{
         try{
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/cliente/${clienteId}`, { withCredentials: true });
             
             if (res.status !== 200) throw new Error(res.data.message);
 
@@ -106,7 +107,7 @@ static async getAllByClienteIdPagination(
             if (descripcion) url.searchParams.append("descripcion", descripcion);
         }
 
-        const res = await axios.get(url.toString());
+        const res = await axios.get(url.toString(), { withCredentials: true });
 
         if (res.status !== 200) {
             throw new Error(res.data.message || "Error al obtener los envíos");
@@ -125,7 +126,7 @@ static async getAllByClienteIdPagination(
 
     static async getByNroSeguimiento(nroSeguimiento: number): Promise<GetEnvioDto>{
         try{
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/nro-seguimiento/${nroSeguimiento}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/envios/nro-seguimiento/${nroSeguimiento}`, { withCredentials: true });
             
             if (res.status !== 200) throw new Error(res.data.message);
 
@@ -137,7 +138,7 @@ static async getAllByClienteIdPagination(
 
     static async cancelarEnvio(nroSeguimiento: number): Promise<any>{
         try{
-            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/cancelar/nro-seguimiento/${nroSeguimiento}`);
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/cancelar/nro-seguimiento/${nroSeguimiento}`, { withCredentials: true });
 
             if (res.status !== 200) throw new Error(res.data.message);
 
@@ -150,7 +151,7 @@ static async getAllByClienteIdPagination(
     static async updateEstadoEnvio(numeroSeguimiento: number, estadoEnvioID: number): Promise<void> {
         try {
             const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/update-estado/nro-seguimiento/${numeroSeguimiento}`,
-                { estadoEnvioID }
+                { estadoEnvioID }, {withCredentials: true}
             )
 
             if (res.status !== 200) throw new Error(res.data.message);
