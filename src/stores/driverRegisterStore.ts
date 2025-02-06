@@ -35,7 +35,7 @@ export const useDriverRegistroStore = create<DriverRegistroStore>((set) => ({
     licenseValues: {
         numero: 0,
         categoria: "",
-        fecha_vencimiento: new Date()
+        fechavencimiento: ""
     },
 
     setLicenseValues: (values) =>

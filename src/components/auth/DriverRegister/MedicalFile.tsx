@@ -20,7 +20,8 @@ const FichaMedica: React.FC = () => {
       setCarnetValues({ [name]: checked });
     } else {
       if (name === "altura") {
-        const num = Number(value);
+        const numericValue = value.replace(/\D/g, '');
+        const num = Number(numericValue);
         if (num < 100 || num > 999) {
           setErrors((prev) => ({ ...prev, altura: true }));
         } else {
@@ -28,7 +29,8 @@ const FichaMedica: React.FC = () => {
         }
       }
       if (name === "peso") {
-        const num = Number(value);
+        const numericValue = value.replace(/\D/g, '');
+        const num = Number(numericValue);
         if (num < 10 || num > 999) {
           setErrors((prev) => ({ ...prev, peso: true }));
         } else {
