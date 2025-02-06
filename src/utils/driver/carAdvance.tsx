@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { carMarker, checkpoints, origen, destino } from '@/components/driver/mapTravel/Routing';
+import { carMarker, checkpoints, destino } from '@/components/driver/mapTravel/Routing';
+import { CheckpointsService } from '@/services/checkpoint.service';
 
 export const useCarAdvance = () => {
     const [currentCheckpoint, setCurrentCheckpoint] = useState(0);
@@ -20,7 +21,6 @@ export const useCarAdvance = () => {
         } else {
             // Mueve el coche al destino al terminar todos los checkpoints
             carMarker?.setLatLng(destino);
-        
         }
     };
 

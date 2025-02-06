@@ -1,5 +1,5 @@
+import React from "react";
 import { useRegistroStore } from "@/stores/userRegisterStore";
-import { MAX_LENGTH_PHONE } from "@/types/constants";
 import { TextField, Stack } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
 import { useState } from "react";
@@ -8,10 +8,13 @@ interface RegistroProps {
     handleErrorRequireInputs: boolean;
 }
 
-const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
+const Registro = ({ handleErrorRequireInputs }: RegistroProps) => {
 	const { userValues, setUserValues } = useRegistroStore();
+
     const [phoneInputError, setPhoneInputError] = useState(false);
     const [dniError, setDniError] = useState(false);
+
+
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -32,18 +35,8 @@ const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
         // console.log(userValues)
 	};
 
-    const handlePhoneInput = (telefono: string) => {
-        const cleanedTelefono = telefono.replace(/\s/g, '');
-        setUserValues({ telefono: cleanedTelefono });
-
-        if (cleanedTelefono.length < MAX_LENGTH_PHONE) {
-            setPhoneInputError(true);
-        } else {
-            setPhoneInputError(false);
-        }
-    };
-
 	return (
+
         <Stack spacing={1.5} sx={{ width: 400 }}>
             <TextField
                 label='Email'
@@ -132,18 +125,16 @@ const Registro = ({handleErrorRequireInputs}: RegistroProps) => {
                     handleErrorRequireInputs && !isNaN(Number(userValues.apellido)) ? "El apellido no puede ser un número" : ""
                 }
             />
+
             <MuiTelInput 
                 label='Teléfono'
                 name='telefono'
                 value={userValues.telefono}
-                onChange={handlePhoneInput}
+                onChange={(telefono: string) => setUserValues({ telefono: telefono })}
                 defaultCountry="AR"
                 required
-                error={handleErrorRequireInputs && phoneInputError}
-                helperText={handleErrorRequireInputs && phoneInputError ? `El teléfono debe tener al menos ${MAX_LENGTH_PHONE} dígitos` : ""}
-                
             />
-        </Stack>
+		</Stack>
 	);
 };
 export default Registro;

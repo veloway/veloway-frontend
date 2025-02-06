@@ -13,6 +13,7 @@ import { calculateMonthlyStats } from "@/utils/utils";
 import { SearchShipment } from "@/components/client/search-shipment/SearchShipment";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useAuthStore } from "@/stores/authStore";
 
 // export const metadata = { title: "Client Home" };
 
@@ -41,22 +42,19 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 	//TODO: Una vez recuperado el id del cliente, ya podemos hacer una peticion a la bbdd para
 	//obtener mas informacion del cliente.
 	const [shipments, setShipments] = useState<GetEnvioDto[]>([]);
-	const clietId = "123e4567-e89b-12d3-a456-426614174000";
 	const [cantEnvios, setCantEnvios] = useState(0);
 	const [cantiEnviosEnTransito, setCantiEnviosEnTransito] = useState(0);
 	const [monthlyStats, setMonthlyStats] = useState(monthlyStatsInitial);
 	const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 	const navigation = useRouter();
-
-	const dataClient = {
-		name: "Jose Francisco Arce",
-		numero: clietId,
-	};
+	const userPayload = useAuthStore((state) => state.userPayload);
+	const loadingUserPayload = useAuthStore((state) => state.loadingUserPayload);
+	const [loadingShipments, setLoadingShipments] = useState(true);
 
 	const handleSearchShipment = (trackingNumber: string) => {
 		toast.loading("Buscando envío...");
 		EnviosService.getByNroSeguimiento(Number(trackingNumber))
-			.then((data) => {	
+			.then((data) => {
 				if (data) {
 					toast.dismiss();
 					toast.success("Envío encontrado");
@@ -66,22 +64,27 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 			.catch((error) => {
 				toast.dismiss();
 				toast.error("No se encontró ningun envío");
-			})
+			});
 	};
 
 	useEffect(() => {
-		EnviosService.getAllByClienteId(clietId).then((data) => {
-			setShipments(data.envios);
-			setCantEnvios(data.totalEnvios);
-			setCantiEnviosEnTransito(
-				data.envios.filter(
-					(envio) =>
-						envio.estado === "En proceso de retiro" || envio.estado === "En traslado a destino"
-				).length
-			);
-			setMonthlyStats(calculateMonthlyStats(data.envios))
-		});
-	}, []);
+		if (!userPayload.id) return;
+		EnviosService.getAllByClienteId(userPayload.id)
+			.then((data) => {
+				setShipments(data.envios);
+				setCantEnvios(data.totalEnvios);
+				setCantiEnviosEnTransito(
+					data.envios.filter(
+						(envio) =>
+							envio.estado === "En proceso de retiro" || envio.estado === "En traslado a destino"
+					).length
+				);
+				setMonthlyStats(calculateMonthlyStats(data.envios));
+			})
+			.finally(() => {
+				setLoadingShipments(false);
+			});
+	}, [userPayload]);
 
 	return (
 		<div className='w-full flex flex-col'>
@@ -89,8 +92,13 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 				<header className='bg-primary shadow'>
 					<div className='max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-6 px-4 md:px-10'>
 						<div className='flex flex-col gap-2 text-white'>
-							<h1 className='text-[25px] md:text-[30px] font-semibold'>{dataClient.name}</h1>
-							<h3 className='text-[18px] md:text-[20px] font-normal'>N°Cliente: {2345446677}</h3>
+							{
+								loadingUserPayload ? (
+									<div className='h-10 bg-gray-300 rounded w-96 animate-pulse'></div>
+								) : (
+									<h1 className='text-[25px] md:text-[30px] font-semibold'>Bienvenido {userPayload.nombre}!</h1>
+								)
+							}
 						</div>
 					</div>
 				</header>
@@ -172,10 +180,12 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 											<dl>
 												<dt className='text-sm font-medium text-gray-500 truncate'>Total Envíos</dt>
 												<dd>
-													{shipments.length === 0 ? (
+													{loadingShipments && loadingUserPayload ? (
 														<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
 													) : (
-														<div className='text-lg font-medium text-gray-900'>{cantEnvios}</div>
+														<div className='text-lg font-medium text-gray-900'>
+															{shipments.length === 0 ? 0 : cantEnvios}
+														</div>
 													)}
 												</dd>
 											</dl>
@@ -211,11 +221,11 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 											<dl>
 												<dt className='text-sm font-medium text-gray-500 truncate'>En Tránsito</dt>
 												<dd>
-													{shipments.length === 0 ? (
+													{loadingShipments && loadingUserPayload ? (
 														<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
 													) : (
 														<div className='text-lg font-medium text-gray-900'>
-															{cantiEnviosEnTransito}
+															{shipments.length === 0 ? 0 : cantiEnviosEnTransito}
 														</div>
 													)}
 												</dd>
@@ -253,26 +263,40 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 									</h3>
 									<div className='mt-5 flow-root min-h-[200px]'>
 										<ul className='-my-4 divide-y divide-gray-200'>
-											{shipments.length === 0 ? (
-												Array(3).fill(0).map((_, index) => (
-													<li key={index} className='py-4'>
-														<div className='flex items-center space-x-4'>
-															<div className='flex-1 min-w-0'>
-																<div className='h-4 bg-gray-300 rounded w-32 animate-pulse mb-2'></div>
-																<div className='h-4 bg-gray-300 rounded w-48 animate-pulse'></div>
+											{loadingShipments && loadingUserPayload ? (
+												Array(3)
+													.fill(0)
+													.map((_, index) => (
+														<li key={index} className='py-4'>
+															<div className='flex items-center space-x-4'>
+																<div className='flex-1 min-w-0'>
+																	<div className='h-4 bg-gray-300 rounded w-32 animate-pulse mb-2'></div>
+																	<div className='h-4 bg-gray-300 rounded w-48 animate-pulse'></div>
+																</div>
+																<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
+																<div className='h-8 bg-gray-300 rounded w-24 animate-pulse'></div>
 															</div>
-															<div className='h-6 bg-gray-300 rounded w-16 animate-pulse'></div>
-															<div className='h-8 bg-gray-300 rounded w-24 animate-pulse'></div>
+														</li>
+													))
+											) : shipments.length === 0 ? (
+												<li className='py-4'>
+													<div className='flex items-center space-x-4'>
+														<div className='flex-1 min-w-0'>
+															<p className='text-sm font-medium text-gray-900 truncate'>
+																No hay envíos recientes
+															</p>
 														</div>
-													</li>
-												))
+													</div>
+												</li>
 											) : (
 												shipments.slice(0, 3).map((shipment, index) => (
 													<li key={shipment.nroSeguimiento} className='py-4'>
 														<div className='flex items-center space-x-4'>
 															<div className='flex-1 min-w-0'>
 																<p className='text-sm font-medium text-gray-900 truncate'>
-																	{shipment.descripcion.length > 50 ? shipment.descripcion.substring(0, 50) + "..." : shipment.descripcion}
+																	{shipment.descripcion.length > 50
+																		? shipment.descripcion.substring(0, 50) + "..."
+																		: shipment.descripcion}
 																</p>
 																<p className='text-sm text-gray-500 truncate'>
 																	{shipment.destino.calle} {shipment.destino.numero}{" "}
@@ -296,12 +320,11 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 																	{shipment.estado}
 																</span>
 															</div>
-															<Button 
-																variant="outlined" 
-																color="primary" 
+															<Button
+																variant='outlined'
+																color='primary'
 																LinkComponent={Link}
-																href={`/client/shipment/${shipment.nroSeguimiento}`}
-															>
+																href={`/client/shipment/${shipment.nroSeguimiento}`}>
 																Ver
 															</Button>
 														</div>
@@ -344,8 +367,10 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 									</h3>
 									<div className='mt-5'>
 										<div className='flex items-end'>
-												{shipments.length === 0 ? (
-													Array(12).fill(0).map((_, index) => (
+											{loadingShipments && loadingUserPayload ? (
+												Array(12)
+													.fill(0)
+													.map((_, index) => (
 														<div key={index} className='flex-1 text-center'>
 															<div className='relative'>
 																<div className='absolute inset-0 flex items-center justify-center'>
@@ -353,28 +378,46 @@ export default function ClientHomePage({ params }: ClientPageProps) {
 																</div>
 																<div
 																	className='bg-gray-300 rounded-t animate-pulse'
-																	style={{ height: '50px' }}></div>
+																	style={{ height: "50px" }}></div>
 															</div>
-															<span className='text-sm text-gray-500'>{monthlyStatsInitial[index].month}</span>
+															<span className='text-sm text-gray-500'>
+																{monthlyStatsInitial[index].month}
+															</span>
 														</div>
 													))
-												) : (
-													monthlyStats.map((stat, index) => (
-														<div key={index} className='flex-1 text-center'>
-															<div className='relative'>
-																<div className='absolute inset-0 flex items-center justify-center'>
-																	<span className='text-sm font-medium text-gray-600'>
-																		{stat.shipments}
-																	</span>
-																</div>
-																<div
-																	className='bg-blue-500 rounded-t'
-																	style={{ height: `${stat.shipments * 2}px` }}></div>
+											) : shipments.length === 0 ? (
+												monthlyStatsInitial.map((stat, index) => (
+													<div key={index} className='flex-1 text-center'>
+														<div className='relative'>
+															<div className='absolute inset-0 flex items-center justify-center'>
+																<span className='text-sm font-medium text-gray-600'>
+																	0
+																</span>
 															</div>
-															<span className='text-sm text-gray-500'>{stat.month}</span>
+															<div
+																className='bg-blue-500 rounded-t'
+																style={{ height: `0px` }}></div>
 														</div>
-													))
-												)}
+														<span className='text-sm text-gray-500'>{stat.month}</span>
+													</div>
+												))
+											) : (
+												monthlyStats.map((stat, index) => (
+													<div key={index} className='flex-1 text-center'>
+														<div className='relative'>
+															<div className='absolute inset-0 flex items-center justify-center'>
+																<span className='text-sm font-medium text-gray-600'>
+																	{stat.shipments}
+																</span>
+															</div>
+															<div
+																className='bg-blue-500 rounded-t'
+																style={{ height: `${stat.shipments * 2}px` }}></div>
+														</div>
+														<span className='text-sm text-gray-500'>{stat.month}</span>
+													</div>
+												))
+											)}
 										</div>
 									</div>
 								</div>
