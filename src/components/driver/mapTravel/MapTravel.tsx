@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
@@ -7,6 +7,7 @@ import L, { LatLngTuple } from "leaflet";
 import "leaflet-routing-machine";
 import { useViajeActualStore } from "@/stores/viajeActualStore";
 import { Skeleton } from "@mui/material";
+import { crearCheckpoints } from "@/utils/driver/crearCheckpoints";
 
 const loadRoutingMachine = async (map: L.Map, origen: LatLngTuple, destino: LatLngTuple) => {
 	const { RoutingMachine } = await import("./Routing");
@@ -32,12 +33,30 @@ const MapTravel: React.FC = () => {
 	const loading = useViajeActualStore((state) => state.loading);
 
 	useEffect(() => {
-		getViajeActual("987f6543-e21c-54d3-b789-426614174001");
-	}, [loading]);
+		getViajeActual("987f6543-e21c-54d3-b789-426614174001").then();
+	}, []);
 
+  // useEffect(() => {
+	// 	if (viajeActual?.idViaje) {
+	// 		console.log("Creando checkpoints para el viaje:", viajeActual.idViaje);
+	// 		crearCheckpoints(viajeActual.idViaje)
+	// 			.then(() => {
+	// 				console.log("Checkpoints creados con éxito");
+	// 			})
+	// 			.catch((error) => {
+	// 				console.error("Error creando checkpoints:", error);
+	// 			});
+	// 	}
+	// }, [viajeActual]);
+
+  
 	if (!viajeActual || loading) {
-		return <Skeleton variant="rectangular" width="100%" height="100%" />;
+    return <Skeleton variant="rectangular" width="100%" height="100%" />;
 	}
+
+  // (async () => { 
+  //   await crearCheckpoints(viajeActual?.idViaje)
+  // })()
   
 	const origen: L.LatLngTuple = [
 		viajeActual.origenCord.latitud || 0,

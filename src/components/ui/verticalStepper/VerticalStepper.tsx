@@ -25,7 +25,7 @@ const steps = [
 ];
 
 export default function VerticalLinearStepper() {
-  const numeroSeguimiento = 46280958 
+  const numeroSeguimiento = 11539095
   const [activeStep, setActiveStep] = React.useState(0);
   const router = useRouter()
 
