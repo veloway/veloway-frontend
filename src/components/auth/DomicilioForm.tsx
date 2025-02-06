@@ -1,4 +1,4 @@
-import { TextField, CircularProgress, Stack, Autocomplete, FormControl } from "@mui/material";
+import { TextField, Stack, Autocomplete, FormControl } from "@mui/material";
 import { Localidad } from "@/entities/localidad";
 import { useRegistroStore } from "@/stores/userRegisterStore";
 import { useState } from "react";
@@ -79,7 +79,6 @@ const DomicilioForm = ({ localidades }: DomicilioFormProps) => {
 				type='number'
 				defaultValue={addressValues.piso === 0 ? "" : addressValues.piso}
 				onChange={handleInputChange}
-				helperText="Opcional, solo números"
 			/>
 			<TextField
 				label='Depto'
