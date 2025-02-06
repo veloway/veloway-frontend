@@ -60,7 +60,7 @@ const NavBar = ({ links }: NavbarProps) => {
 					</picture>
 					<div>
 						<p className='font-medium text-base'>{userData.nombre} {userData.apellido} </p>
-						<p className='font-light text-sm hover:underline cursor-pointer'>Mi cuenta</p>
+						<Link href="/client/profile">Mi cuenta</Link>
 					</div>
 				</ContainerFlex>
 			</div>
