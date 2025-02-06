@@ -18,3 +18,25 @@
     font-size: 30px;
     padding: 0 2% 0 2%;
 }
+
+.input-error {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+@media (max-width: 960px) {
+    .form-contenedor{
+        display: flex;
+        flex-direction: row;
+        border: 3px solid white;
+        border-radius: 5px;
+        width: 89%;
+        background-color: white;
+    }
+  }

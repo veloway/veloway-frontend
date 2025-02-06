@@ -15,7 +15,7 @@ export function SecondViewHome(){
           <div className="line-home"></div>
           <div className="servicios-home-2">
             <HomeCard texto="Seguridad" imagen={<IoLockClosedOutline className="button-icon"/>}/>
-            <HomeCard texto="Seguimiento en tiempo real" imagen={<BiMap className="button-icon"/>}/>
+            {/* <HomeCard texto="Seguimiento en tiempo real" imagen={<BiMap className="button-icon"/>}/> */}
             <HomeCard texto="Entrega rapida" imagen={<FiTruck className="button-icon"/>}/>
             <HomeCard texto="Integración fácil con tu negocio" imagen={<BsGear className="button-icon"/>}/>
             <HomeCard texto="Gestión personalizada" imagen={<FiTool className="button-icon"/>}/>
