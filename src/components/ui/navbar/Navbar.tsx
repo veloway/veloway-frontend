@@ -8,6 +8,7 @@ import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import styles from "./Navbar.module.css";
 import { useRegistroStoreDto } from "@/stores/userRegisterStore";
+import { useAuthStore } from "@/stores/authStore";
 
 type LinkType = {
 	name: string;
@@ -20,13 +21,7 @@ interface NavbarProps {
 
 const NavBar = ({ links }: NavbarProps) => {
 	const [clickMenu, setClickMenu] = useState<boolean>(false);
-	const {userData, addressData} = useRegistroStoreDto()
-	const user = {
-		name: userData.nombre + userData.apellido,
-		role: "Admin",
-		image:
-			"https://th.bing.com/th/id/OIP.Z8J_Ho1F_9qacAbb9ZwInQHaJQ?w=800&h=1000&rs=1&pid=ImgDetMain",
-	};
+	const userPayload = useAuthStore((state) => state.userPayload);
 
 	const handleClick = (): void => {
 		setClickMenu(!clickMenu);
@@ -49,7 +44,7 @@ const NavBar = ({ links }: NavbarProps) => {
 				</div>
 				<IoMenu className='text-3xl cursor-pointer lg:hidden' onClick={handleClick} />
 				<ContainerFlex className='gap-3 hidden lg:flex'>
-					<picture>
+					{/* <picture>
 						<Image
 							src={user.image}
 							width={50}
@@ -57,9 +52,9 @@ const NavBar = ({ links }: NavbarProps) => {
 							alt=''
 							className='rounded-full w-[50px] h-[50px] object-cover'
 						/>
-					</picture>
+					</picture> */}
 					<div>
-						<p className='font-medium text-base'>{userData.nombre} {userData.apellido} </p>
+						<p className='font-medium text-base'>{userPayload.nombre} {userPayload.apellido} </p>
 						<p className='font-light text-sm hover:underline cursor-pointer'>Mi cuenta</p>
 					</div>
 				</ContainerFlex>
@@ -73,7 +68,7 @@ const NavBar = ({ links }: NavbarProps) => {
 						</li>
 					))}
 					<ContainerFlex className='gap-3 xl:flex !justify-start'>
-						<picture>
+						{/* <picture>
 							<Image
 								src={user.image}
 								width={50}
@@ -81,9 +76,9 @@ const NavBar = ({ links }: NavbarProps) => {
 								alt=''
 								className='rounded-full w-[50px] h-[50px] object-cover'
 							/>
-						</picture>
+						</picture> */}
 						<div>
-							<p className='font-medium text-base'>{userData.nombre}</p>
+							<p className='font-medium text-base'>{userPayload.nombre}</p>
 							<p className='font-light text-sm hover:underline cursor-pointer'>Mi cuenta</p>
 						</div>
 					</ContainerFlex>

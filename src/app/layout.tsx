@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui";
 import localFont from "next/font/local";
 import MuiProvider from "@/context/mui";
 import { Slide, ToastContainer } from "react-toastify";
+import { LoginVerification } from "@/components/auth/LoginVerification";
 
 export const rubik = Rubik({
 	subsets: ["latin"],
@@ -33,14 +34,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<MuiProvider>
-				<body className={`${rubik.className} ${nicoMoji.variable} antialiased`}>
-					{children}
-					<ToastContainer style={{zIndex: 999999999}} position="top-center" transition={Slide} autoClose={4000}/>
-					<Footer />
-				</body>
-			</MuiProvider>
-		</html>
+		<LoginVerification>
+			<html lang='en'>
+				<MuiProvider>
+					<body className={`${rubik.className} ${nicoMoji.variable} antialiased`}>
+						{children}
+						<ToastContainer style={{zIndex: 999999999}} position="top-center" transition={Slide} autoClose={4000}/>
+						<Footer />
+					</body>
+				</MuiProvider>
+			</html>
+		</LoginVerification>
 	);
 }

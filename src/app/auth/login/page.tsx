@@ -1,18 +1,15 @@
 "use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";
-import { useRegistroStoreDto } from "@/stores/userRegisterStore";
-import { useDriverRegistroStore } from "@/stores/driverRegisterStore";
 import Link from "next/link";
 import { Button, CircularProgress } from "@mui/material";
+import { useAuthStore } from "@/stores/authStore";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const router = useRouter();
-	const { setAddressData, setUserData } = useRegistroStoreDto();
-	const { setCarnetValues, setLicenseValues , setVehicleValues  } = useDriverRegistroStore()
+	const setUserPayload = useAuthStore((state) => state.setUserPayload);
 	const [errorLogin, setErrorLogin] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -24,64 +21,10 @@ const Login = () => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const data = await authService.login(formData);
-
-			const { usuarioDTO, domicilioDTO, fichaDTO, licenciaDTO, vehiculoDTO } = data;
-
-			if (!usuarioDTO || !domicilioDTO) {
-				throw new Error("Datos del usuario o domicilio faltantes");
-			}
-
+			const payload = await authService.login(formData);
+			setUserPayload(payload.user);
 			setErrorLogin("");
-			setAddressData({
-				calle: domicilioDTO.calle,
-				numero: domicilioDTO.numero,
-				descripcion: domicilioDTO.descripcion,
-				piso: domicilioDTO.piso,
-				depto: domicilioDTO.depto,
-				localidadID: domicilioDTO.localidadID,
-			});
-
-			setUserData({
-				dni: usuarioDTO.dni,
-				email: usuarioDTO.email,
-				fechaNac: usuarioDTO.fechaNac,
-				nombre: usuarioDTO.nombre,
-				apellido: usuarioDTO.apellido,
-				esConductor: usuarioDTO.esConductor,
-				telefono: usuarioDTO.telefono,
-				apiKey: usuarioDTO.apiKey,
-			});
-
-			if (fichaDTO && licenciaDTO && vehiculoDTO) {
-				setCarnetValues({
-					altura: fichaDTO.altura,
-					peso: fichaDTO.peso,
-					enfermedadCardiaca: fichaDTO.enfermedadCardiaca,
-					enfermedadRespiratoria: fichaDTO.enfermedadRespiratoria,
-					alergias: fichaDTO.alergias,
-					epilepsia: fichaDTO.epilepsia,
-					diabetes: fichaDTO.diabetes,
-					compartir: fichaDTO.compartir
-				})
-
-				setLicenseValues ({
-					categoria: licenciaDTO.categoria,
-					fechavencimiento: licenciaDTO.fechaVenc,
-					numero: licenciaDTO.numero
-				})
-
-				setVehicleValues ({
-					anio: vehiculoDTO.anio,
-					color: vehiculoDTO.color,
-					descripcion: vehiculoDTO.descripcion,
-					patente: vehiculoDTO.patente,
-					tipoVehiculoId: vehiculoDTO.tipoVehiculo.id,
-					modeloId: vehiculoDTO.modelo.id
-				})
-			}
-
-
+		
 			router.push(`/client/dashboard`);
 			setLoading(false);
 		} catch (error) {
