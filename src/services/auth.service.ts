@@ -15,7 +15,7 @@ export const authService = {
 			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/usuarios/register`, formattedData);
 		} catch (error: any) {
 			console.error("Error en el registro:", error.response?.data || error);
-			throw error;
+			throw error;	
 		}
 	},
 
@@ -77,7 +77,7 @@ export const authService = {
 			    id_conductor}
 			const formattedLicense = {...licenseValues, 
 				id_conductor}
-			const formattedVehicle = {...vehicleValues, id_conductor}
+			const formattedVehicle = {...vehicleValues, id_conductor}	
 
 			console.log(formattedVehicle)
 
