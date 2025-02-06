@@ -34,10 +34,12 @@ export function InputHome () {
         }
 
         setTimeout(() => {
-          router.push(`/shipment/${trackingNumber}`);
+          router.push(`/search-shipment/${trackingNumber}`);
           setLoading(false); // Desactiva el loading (en caso de cancelar la navegación)
         }, 1500); // Simula una carga de 1.5s
       };
+
+      
     
       //   setErrorMessage(""); // Limpia el error si todo está bien
       //   setLoading(true); // Activa el loading
