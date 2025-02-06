@@ -148,7 +148,7 @@ static async getAllByClienteIdPagination(
         }
     }
 
-    static async updateEstadoEnvio(numeroSeguimiento: number, estadoEnvioID: number): Promise<void> {
+    static async updateEstadoEnvio(numeroSeguimiento: number, estadoEnvioID: number): Promise<void> {       
         try {
             const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/envios/update-estado/nro-seguimiento/${numeroSeguimiento}`,
                 { estadoEnvioID }, {withCredentials: true}

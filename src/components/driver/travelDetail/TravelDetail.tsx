@@ -10,14 +10,15 @@ import { ViajesService } from "@/services/viajes.service";
 import { EnviosService } from "@/services/envios.service";
 import { EstadoEnvioEnum } from "@/types/enums";
 import { Skeleton } from "@mui/material";
+import { crearCheckpoints } from "@/utils/driver/crearCheckpoints";
 
 export default function TravelDetail() {
-    const numeroSeguimiento = 46280958 
-    const idViaje = 1
+    const numeroSeguimiento = 11539095 
+    const idViaje = 3
 
     const [viajeActual, setViajeActual] = useState<GetViajeDto | null>(null)
-    
-    const { currentCheckpoint, moveCarToNextCheckpoint } = useCarAdvance();  // Usamos el hook para gestionar el avance
+    const [checkpointsCreado, setCheckpointsCreado] = useState(false);
+    const { currentCheckpoint, moveCarToNextCheckpoint } = useCarAdvance(); 
     
     useEffect(() => {
         if (!idViaje) return
@@ -27,6 +28,18 @@ export default function TravelDetail() {
             }).catch(error => {
         console.error(error);
     })}, [idViaje]);
+
+    useEffect(() => {
+        if (viajeActual) {
+            console.log("Creando checkpoints para el viaje:", viajeActual.idViaje);
+            crearCheckpoints(idViaje)     //Ver cuando tenga el inicio de sesion por id
+                .then(() => {
+                    console.log("Checkpoints creados con éxito")
+                    setCheckpointsCreado(true)
+                })
+                .catch((error) => console.error("Error creando checkpoints:", error));
+        }
+    }, [viajeActual, checkpointsCreado]);
 
     //handleUpdateCheckpointActual de mover el checkpoint
     const handleUpdateCheckpointActual = async () => {

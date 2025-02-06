@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { carMarker, checkpoints, destino } from '@/components/driver/mapTravel/Routing';
+import { CheckpointsService } from '@/services/checkpoint.service';
 
 export const useCarAdvance = () => {
     const [currentCheckpoint, setCurrentCheckpoint] = useState(0);

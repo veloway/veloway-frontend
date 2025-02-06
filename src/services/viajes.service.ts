@@ -57,4 +57,20 @@ export class ViajesService {
             }
         }
     }
+
+    static async solicitarAmbulancia(idViaje: number): Promise<void> {
+        console.log(idViaje);
+        
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/viajes/solicitarAmbulancia/${idViaje}`);
+            if (res.status !== 200) throw new Error(res.data.message);
+
+            toast.success("Ambulancia solicitada exitosamente.");
+            
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+            }
+        }
+    }
 }
